@@ -38,27 +38,22 @@ public class RESTApi implements FetcherListener
     /* class members here */
     private Fetcher connFetcher;
 
-    public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "www.mofiler.net/";
+    //public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "www.mofiler.net/";
+    public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
     public static final String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
     public static final String K_MOFILER_API_URL_METHOD_inject           = "/api/values/";
 
-    public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "x-session-id";
+    public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "X-Mofiler-SessionID";
 
     private String strCurrentMethodName = null;
     
-    private String strAppVersionValue = null;
-
     static private Hashtable msgListeners;
 
     private boolean bThreadedConnections = false;
     private boolean bUseBlockingThreads = true;
+    
+    private Hashtable hashApplicationHeaders = null;
 
-    private boolean bIsRetry = false;
-    /*private String strMethodToRetry = null;
-    private boolean bMethodRetryIsPost = false;
-    private String strPayloadToRetry = null;
-    private String strRetryTHREAD_ID = null;*/
-    //private ApiListener objRetryListener;
 
     public RESTApi()
     {
@@ -121,47 +116,30 @@ public class RESTApi implements FetcherListener
         }
     }
 
-    static private void setMethodListener(String a_code, ApiListener listener, Hashtable msgListeners)
-    {
-        if (msgListeners == null)
-        {
-            msgListeners = new Hashtable();
-        }
-        Vector vec = (Vector) msgListeners.get(a_code);
-        if (vec == null)
-        {
-            vec = new Vector();
-            vec.addElement(listener);
-            msgListeners.put(a_code, vec);
-            return;
-        }
-        if (!vec.contains(listener))
-        {
-            vec.removeAllElements();
-            vec.addElement(listener);
-        }
-    }
-
 
     public void useThreadedConnections(boolean a_bUseThreadedConns, boolean a_bBlockThem)
     {
         bThreadedConnections = a_bUseThreadedConns;
         bUseBlockingThreads = a_bBlockThem;
     }
-    
-    public void setAppVersion(String a_strAppVersion)
-    {
-    	if (a_strAppVersion != null)
-    		strAppVersionValue = a_strAppVersion;
-    	else
-    		strAppVersionValue = "";
-    }
 
-    private void setHTTPPOSTPayload(String a_strPayload)
+    
+    public void addPropertyKeyValuePair(String header, String value)
+    {
+    	if (hashApplicationHeaders == null)
+    		hashApplicationHeaders = new Hashtable();
+    	hashApplicationHeaders.put(header, value);
+    }
+    
+    private void setHTTPPOSTPayload(String a_strPayload) throws JSONException
     {
         connFetcher.setPayload(a_strPayload);
     }
 
+    private void setHTTPPOSTPayload(JSONObject a_jsonPayload) throws JSONException
+    {
+        connFetcher.setPayload(a_jsonPayload);
+    }
 
     private int connWrapper(String a_strMethod, String a_strURL, boolean a_bHTTPMethodIsPost)
     {
@@ -171,6 +149,8 @@ public class RESTApi implements FetcherListener
         //show some sign here that we are fetching data
         /**/
 
+    	connFetcher.addApplicationHeaders(hashApplicationHeaders);    	
+        
         if (bThreadedConnections)
         {
             connFetcher.connPlainHitURL_Threaded(a_strMethod, a_strURL, this, bUseBlockingThreads, a_bHTTPMethodIsPost, null);
@@ -193,77 +173,47 @@ public class RESTApi implements FetcherListener
         return retCode;
     }
 
-    private int connWrapper_unThreaded(String a_strMethod, String a_strURL, boolean a_bHTTPMethodIsPost, String a_strExtraHeaderAuth, String a_strPayload)
-    {
-        int retCode  = 0;
-
-        //Add BB stuff
-        //a_strURL = a_strURL + ";deviceside=true";
-        //a_strURL = a_strURL + getConnectionString();
-        //show some sign here that we are fetching data
-        /**/
-
-        //connFetcher.connSetExtraHeader("Authentication", a_strExtraHeaderAuth);
-        connFetcher.setPayload(a_strPayload);
-
-        connFetcher.connPlainHitURL_UnThreaded(a_strMethod, a_strURL, this, a_bHTTPMethodIsPost);
-        retCode = connFetcher.iLastretCode;
-
-        if (retCode < 0)
-        {
-            //ToDo: treat the error here
-            //System.err.println("AN ERROR HAPPENED TRYING TO FETCH: " + a_strURL);
-
-        } /* end if */
-        else
-        {
-            //ToDo: ALL GOOD
-        }
-
-        return retCode;
-    }
-
-
-
 
     /*
 
-    /banner
+    /pushKeyValue
 
 Method:
-    GET
+    PUT
 
 Request:
     No content
 
-Response:
-    {show, click}
-
-Notas:
-    Show indica la url del banner a mostrar, click la url a la que linekar dicha imágen.
-
     */
-    public int pushKeyValue(String a_strKey, String a_strValue)
+    public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter) throws JSONException
     {
-
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-        //String strPayload = "{" + a_strMID + "}";
-
         strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
 
-//      Base64 base64EnDecoder = new Base64();
-//      String strFullJIDb64 = new String(base64EnDecoder.encode(a_strFullJID.getBytes()));
-
-        //connFetcher.connSetExtraHeader("Authentication", a_strFullJID);
-        //connFetcher.connSetExtraHeader(null, null);
-        //connFetcher.connSetSessionIDHeader(K_PillReminder_API_HEADER_X_SESSION_ID, DataSingleton.getInstance().getSessionID());
-        //setHTTPPOSTPayload(strPayload);
-        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, false);
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_strValue);
+        json.put("expireAfter", expireAfter);
+        //setHTTPPOSTPayload("{\"" + a_strKey + "\": \"" + a_strValue + "\", \"expireAfter\": "  + expireAfter + "}");
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
 
         return retCode;
-
     }
 
+    public int pushKeyValue(String a_strKey, String a_strValue) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
+        
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_strValue);
+        //setHTTPPOSTPayload("{\"" + a_strKey + "\": \"" + a_strValue + "\"}");
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
+
+        return retCode;
+    }
+    
 
     public String getMethodForError(String a_strErrored_Method)
     {
@@ -348,15 +298,6 @@ Notas:
         } /* end if */
 
     }
-
-
-    public String getTime()
-    {
-        Calendar c = Calendar.getInstance();        
-        Date d = new Date(c.getTime().getTime());
-        return d.toString() + " || ";
-        //System.out.println("cal2: " + Calendar.getInstance(TimeZone.getTimeZone("GMT+1")).getTime().getTime()); 
-    }
-
+    
 }
 

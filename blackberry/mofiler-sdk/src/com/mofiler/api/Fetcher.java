@@ -23,6 +23,7 @@ package com.mofiler.api;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -50,8 +51,10 @@ public class Fetcher
 
     private String strSessionIDValue = null;
     private Hashtable hashSessionHeaders = null;
+    private Hashtable hashApplicationHeaders = null;
 
     private String strPayload = null;
+    private JSONObject jsonPayload = null;
 
 	public Fetcher()
 	{
@@ -72,11 +75,20 @@ public class Fetcher
         iLastretCode = 0;
     }
 
-    public void setPayload(String a_strPayload)
+    public void setPayload(String a_strPayload) throws JSONException 
     {
         strPayload = a_strPayload;
+        //clarify object
+        JSONObject tmpObj = new JSONObject(strPayload);
+        jsonPayload = tmpObj;
     }
 
+    public void setPayload(JSONObject a_jsonPayload) throws JSONException 
+    {
+    	strPayload = a_jsonPayload.toString();
+        jsonPayload = a_jsonPayload;
+    }
+    
     private void connPlainHitURL_UnThreaded()
     {
         try {
@@ -183,6 +195,32 @@ public class Fetcher
 
     }
     
+    
+    /**
+     * Initializator. Sets a property key/value pair.
+     * 
+     * @param a_propertyKey
+     *                 holds ad-hoc http header name
+     * @param a_propertyValue
+     *                 holds ad-hoc header value for propertyKey
+     */
+    public void addApplicationHeaders(Hashtable a_adhocHeaders)
+    {
+        /* set local vars */
+        //headerHashtable. = a_adhocHeaders;
+        if (a_adhocHeaders != null)
+        {
+        	if (hashApplicationHeaders == null)
+        		hashApplicationHeaders = new Hashtable();
+        	
+        	for (Enumeration e = a_adhocHeaders.keys(); e.hasMoreElements() ;) {
+        		String oneKey = (String) e.nextElement();
+        		String oneValue = (String) a_adhocHeaders.get(oneKey);
+        		hashApplicationHeaders.put(oneKey, oneValue);
+            }
+        }
+    }
+    
     /* this class is responsible for the following headers
      * 
      * -Fetcher: maneja el seteo de sesion, api version, devicecontextstring. Provee threading a las conexiones.
@@ -214,9 +252,9 @@ public class Fetcher
     	
     }
 
-    private String buildDeviceContextJSONObject()
+    private JSONObject buildDeviceContextJSONObject()
     {
-    	JSONObject jsonobj = new JSONObject();
+    	//JSONObject jsonobj = new JSONObject();
     	JSONObject jsonobjInner = new JSONObject();
     	
     	try {
@@ -225,15 +263,17 @@ public class Fetcher
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MODELNAME, MO_Device.getDeviceModelName());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE, MO_Device.getDisplaySize());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_NETWORK, MO_Device.getConnectionString());
-        	jsonobj.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, jsonobjInner);
+        	//jsonobj.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, jsonobjInner);
     	}
     	catch (JSONException ex)
     	{
-    		System.err.println("FECK, something went quite wrong");
+    		System.err.println("FECK, something went wrong");
     		ex.printStackTrace();
     	}
     	
-		return jsonobj.toString();
+    	System.err.println("BUILD CONTEXT cadena es esto: " + jsonobjInner.toString());
+		//return jsonobj; //jsonobj.toString();
+		return jsonobjInner;
     }
 
     public int connPlainHitURL(String a_strURL, boolean a_bHTTPMethodIsPost)
@@ -247,6 +287,8 @@ public class Fetcher
     	conn = new MO_Connection();
         constructHeaders();
         conn.MO_Msg_AddPropertyKeyValuePair(hashSessionHeaders);
+        conn.MO_Msg_AddPropertyKeyValuePair(hashApplicationHeaders);
+        
 
         try
         {
@@ -280,7 +322,10 @@ public class Fetcher
 //@//                         rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
 //@                    } /* end if */
 //#else
-                    rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
+                	jsonPayload.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, buildDeviceContextJSONObject());
+                	strPayload = jsonPayload.toString();
+                    //rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
+                    rc = conn.MO_Msg_Connect(a_strURL, strPayload, HttpConnection.POST);
 //#endif
 
                 }
@@ -375,15 +420,5 @@ public class Fetcher
     }
 
 
-    public String getTime(){
-		Calendar c = Calendar.getInstance();		
-        Date d = new Date(c.getTime().getTime());
-        return d.toString() + " || ";
-        //System.out.println("cal2: " + Calendar.getInstance(TimeZone.getTimeZone("GMT+1")).getTime().getTime()); 
-	}
-
-    
-
-    
 }
 
