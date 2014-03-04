@@ -141,6 +141,11 @@ public class RESTApi implements FetcherListener
         connFetcher.setPayload(a_jsonPayload);
     }
 
+    public void setIdentity(Hashtable hashIds)
+    {
+    	connFetcher.setIdentity(hashIds);
+    }
+    
     private int connWrapper(String a_strMethod, String a_strURL, boolean a_bHTTPMethodIsPost)
     {
         //int retCode = connFetcher.connPlainHitURL_Threaded(a_strURL);
@@ -193,7 +198,6 @@ Request:
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
         json.put("expireAfter", expireAfter);
-        //setHTTPPOSTPayload("{\"" + a_strKey + "\": \"" + a_strValue + "\", \"expireAfter\": "  + expireAfter + "}");
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
 
@@ -207,7 +211,6 @@ Request:
         
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
-        //setHTTPPOSTPayload("{\"" + a_strKey + "\": \"" + a_strValue + "\"}");
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
 

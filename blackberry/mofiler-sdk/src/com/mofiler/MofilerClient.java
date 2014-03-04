@@ -1,5 +1,7 @@
 package com.mofiler;
 
+import java.util.Hashtable;
+
 import org.json.me.JSONException;
 
 import com.mofiler.api.RESTApi;
@@ -37,5 +39,9 @@ public class MofilerClient {
 		{
 			ex.printStackTrace();
 		}
+	}
+	
+	public void setIdentity(Hashtable hashIds){
+		restApi.setIdentity(hashIds);
 	}
 }

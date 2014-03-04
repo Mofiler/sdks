@@ -1,13 +1,13 @@
 package com.mofiler.exception;
 
-public class AppKeyNotSetException extends RuntimeException {
+public class IdentityNotSetException extends RuntimeException {
 
-	public AppKeyNotSetException() {
+	public IdentityNotSetException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public AppKeyNotSetException(String s) {
+	public IdentityNotSetException(String s) {
 		super(s);
 		// TODO Auto-generated constructor stub
 	}

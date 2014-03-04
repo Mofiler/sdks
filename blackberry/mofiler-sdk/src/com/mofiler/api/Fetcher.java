@@ -21,14 +21,14 @@ package com.mofiler.api;
 */
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.Vector;
 
 import javax.microedition.io.HttpConnection;
 
+import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
@@ -55,6 +55,8 @@ public class Fetcher
 
     private String strPayload = null;
     private JSONObject jsonPayload = null;
+    
+    private Hashtable identity = null;
 
 	public Fetcher()
 	{
@@ -88,6 +90,12 @@ public class Fetcher
     	strPayload = a_jsonPayload.toString();
         jsonPayload = a_jsonPayload;
     }
+    
+    public void setIdentity(Hashtable hashIds)
+    {
+    	identity = hashIds;
+    }
+    
     
     private void connPlainHitURL_UnThreaded()
     {
@@ -275,6 +283,28 @@ public class Fetcher
 		//return jsonobj; //jsonobj.toString();
 		return jsonobjInner;
     }
+    
+    private JSONArray buildIdentityVector()
+    {
+    	Enumeration e = identity.keys();
+    	JSONArray jsonToReturn = new JSONArray();
+    	
+    	try {
+        	while ( e.hasMoreElements() ) { 
+        	    String sKey = (String)e.nextElement();
+        	    JSONObject tmpObj = new JSONObject();
+        	    tmpObj.put(sKey, identity.get(sKey));
+        	    jsonToReturn.put(tmpObj);
+        	}     	
+    	}
+    	catch(JSONException ex)
+    	{
+    		System.err.println("FECK, something went wrong with identity vector building");
+    		ex.printStackTrace();
+    	}
+    	
+    	return jsonToReturn;
+    }
 
     public int connPlainHitURL(String a_strURL, boolean a_bHTTPMethodIsPost)
     {
@@ -322,6 +352,7 @@ public class Fetcher
 //@//                         rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
 //@                    } /* end if */
 //#else
+                	jsonPayload.put(Constants.K_MOFILER_API_IDENTITY, buildIdentityVector());
                 	jsonPayload.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, buildDeviceContextJSONObject());
                 	strPayload = jsonPayload.toString();
                     //rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);

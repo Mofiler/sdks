@@ -296,7 +296,7 @@ public final class MO_Connection
                 method = a_method;
                 if (a_method == HttpConnection.POST)
                 {
-                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestProperty("Content-Type", "application/json");
                     //conn.setRequestProperty("Content-Type", "application/octet-stream");
                 }
                 

@@ -1,7 +1,10 @@
 package com.mofiler;
 
+import java.util.Hashtable;
+
 import com.mofiler.api.Constants;
 import com.mofiler.exception.AppKeyNotSetException;
+import com.mofiler.exception.IdentityNotSetException;
 
 
 public final class Mofiler{
@@ -12,6 +15,7 @@ public final class Mofiler{
 	private String appName;
 	private String appVersion;
 	private String cookie;
+	private Hashtable identity;
 
 	private Mofiler() {
 		moClient = new MofilerClient();
@@ -54,26 +58,47 @@ public final class Mofiler{
 	public void setCookie(String cookie) {
 		this.cookie = cookie;
 	}
+
+	public void addIdentity(String key, String value) {
+		if (this.identity == null)
+			this.identity = new Hashtable();
+		this.identity.put(key, value);
+	}
 	
+	public String getIdentity(String key) {
+		String objFound = null;
+		if (this.identity != null)
+			objFound = (String) this.identity.get(key);
+			
+		return objFound;
+	}
 	
-	public void injectValue(String key, String value) throws AppKeyNotSetException{
+	public void injectValue(String key, String value) throws AppKeyNotSetException, IdentityNotSetException{
 		if (appKey != null){
-			addAllAvailableHeaders();
-			moClient.pushValue(key, value);
+			if (this.identity != null && (this.identity.size() > 0)){
+				addAllAvailableHeaders();
+				moClient.setIdentity(identity);
+				moClient.pushValue(key, value);
+			}
+			else
+				throw new IdentityNotSetException("Mofiler: user identity needs be set before you can send any values to the server");
 		} 
-		else {
-			throw new AppKeyNotSetException("mofiler api key needs be set before you can send any values to the server");
-		}
+		else
+			throw new AppKeyNotSetException("Mofiler: api key needs be set before you can send any values to the server");
 	}
 
-	public void injectValue(String key, String value, long expireAfterMs) throws AppKeyNotSetException{
+	public void injectValue(String key, String value, long expireAfterMs) throws AppKeyNotSetException, IdentityNotSetException{
 		if (appKey != null){
-			addAllAvailableHeaders();
-			moClient.pushValue(key, value, expireAfterMs);
+			if (this.identity != null && (this.identity.size() > 0)){
+				addAllAvailableHeaders();
+				moClient.setIdentity(identity);
+				moClient.pushValue(key, value, expireAfterMs);
+			}
+			else
+				throw new IdentityNotSetException("Mofiler: user identity needs be set before you can send any values to the server");
 		} 
-		else {
-			throw new AppKeyNotSetException("mofiler api key needs be set before you can send any values to the server");
-		}
+		else
+			throw new AppKeyNotSetException("Mofiler: api key needs be set before you can send any values to the server");
 	}
 	
 	

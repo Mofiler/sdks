@@ -13,6 +13,8 @@ public class Constants {
 	public static String K_MOFILER_API_HEADER_APPVERSION = "X-Mofiler-AppVersion";
 	public static String K_MOFILER_API_HEADER_COOKIE = "X-Mofiler-Cookie";
 
+	/* IDENTITY keys */
+	public static String K_MOFILER_API_IDENTITY = "identity";
 	
 	/* Device context keys */
 	public static String K_MOFILER_API_DEVICE_CONTEXT = "device_context";
