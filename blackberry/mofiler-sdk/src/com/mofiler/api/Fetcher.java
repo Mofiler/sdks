@@ -352,11 +352,19 @@ public class Fetcher
 //@//                         rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
 //@                    } /* end if */
 //#else
+                	JSONObject jsonPayloadToSend = new JSONObject();
+                	jsonPayloadToSend.put(Constants.K_MOFILER_API_USER_VALUES, jsonPayload);
+                	jsonPayloadToSend.put(Constants.K_MOFILER_API_IDENTITY, buildIdentityVector());
+                	jsonPayloadToSend.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, buildDeviceContextJSONObject());
+
+                	/*jsonPayload.put(Constants.K_MOFILER_API_USER_VALUES, buildIdentityVector());
                 	jsonPayload.put(Constants.K_MOFILER_API_IDENTITY, buildIdentityVector());
                 	jsonPayload.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, buildDeviceContextJSONObject());
-                	strPayload = jsonPayload.toString();
+                	strPayload = jsonPayload.toString();*/
+                	String strPayloadLocal = jsonPayloadToSend.toString();
                     //rc = conn.MO_Msg_Connect(a_strURL, "payload=" + strPayload, HttpConnection.POST);
-                    rc = conn.MO_Msg_Connect(a_strURL, strPayload, HttpConnection.POST);
+                    //rc = conn.MO_Msg_Connect(a_strURL, strPayload, HttpConnection.POST);
+                    rc = conn.MO_Msg_Connect(a_strURL, strPayloadLocal, HttpConnection.POST);
 //#endif
 
                 }

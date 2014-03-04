@@ -248,6 +248,9 @@ Request:
 
         Vector vectBO = new Vector();
         JSONObject json = null;
+        
+        System.err.println("DATA SENT: " + a_strOriginalSentPayload);
+        System.err.println("DATA RECEIVED: " + a_strPayload);
 
         boolean jsonNull = false;
 

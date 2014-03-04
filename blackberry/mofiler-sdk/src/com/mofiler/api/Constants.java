@@ -15,9 +15,12 @@ public class Constants {
 
 	/* IDENTITY keys */
 	public static String K_MOFILER_API_IDENTITY = "identity";
+
+	/* user_values keys */
+	public static String K_MOFILER_API_USER_VALUES = "user_values";
 	
 	/* Device context keys */
-	public static String K_MOFILER_API_DEVICE_CONTEXT = "device_context";
+	public static String K_MOFILER_API_DEVICE_CONTEXT = "mofiler_device_context";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_NETWORK = "network";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE = "display";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER = "manufacturer";
