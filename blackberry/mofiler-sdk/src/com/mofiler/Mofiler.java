@@ -18,7 +18,7 @@ public final class Mofiler{
 	private Hashtable identity;
 
 	private Mofiler() {
-		moClient = new MofilerClient();
+		moClient = new MofilerClient(false);
 	}
 	
 	static public Mofiler getInstance() {

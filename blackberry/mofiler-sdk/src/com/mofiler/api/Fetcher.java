@@ -54,7 +54,8 @@ public class Fetcher
     private Hashtable hashApplicationHeaders = null;
 
     private String strPayload = null;
-    private JSONObject jsonPayload = null;
+    //private JSONObject jsonPayload = null;
+    private JSONArray jsonPayload = null;
     
     private Hashtable identity = null;
 
@@ -82,10 +83,20 @@ public class Fetcher
         strPayload = a_strPayload;
         //clarify object
         JSONObject tmpObj = new JSONObject(strPayload);
-        jsonPayload = tmpObj;
+        JSONArray tmpArr = new JSONArray();
+        tmpArr.put(tmpObj);
+        jsonPayload = tmpArr;
     }
 
     public void setPayload(JSONObject a_jsonPayload) throws JSONException 
+    {
+    	strPayload = a_jsonPayload.toString();
+        JSONArray tmpArr = new JSONArray();
+        tmpArr.put(a_jsonPayload);
+        jsonPayload = tmpArr;
+    }
+
+    public void setPayload(JSONArray a_jsonPayload) throws JSONException 
     {
     	strPayload = a_jsonPayload.toString();
         jsonPayload = a_jsonPayload;

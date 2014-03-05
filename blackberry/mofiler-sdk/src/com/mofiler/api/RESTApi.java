@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
+import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
@@ -141,6 +142,11 @@ public class RESTApi implements FetcherListener
         connFetcher.setPayload(a_jsonPayload);
     }
 
+    private void setHTTPPOSTPayload(JSONArray a_jsonPayload) throws JSONException
+    {
+        connFetcher.setPayload(a_jsonPayload);
+    }
+    
     public void setIdentity(Hashtable hashIds)
     {
     	connFetcher.setIdentity(hashIds);
@@ -212,6 +218,17 @@ Request:
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
         setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
+
+        return retCode;
+    }
+    
+    
+    public int pushKeyValueArray(JSONArray jsonData) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
+        setHTTPPOSTPayload(jsonData);
         int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
 
         return retCode;
