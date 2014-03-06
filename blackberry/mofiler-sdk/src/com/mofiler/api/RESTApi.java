@@ -41,8 +41,11 @@ public class RESTApi implements FetcherListener
     private Fetcher connFetcher;
 
     //public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "www.mofiler.net/";
-    public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
-    public static final String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
+    //public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
+    //public String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
+    public String K_MOFILER_API_URL_BASE_POSTFIX                    = null;
+    //public static final String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
+    public String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
     public static final String K_MOFILER_API_URL_METHOD_inject           = "/api/values/";
     public static final String K_MOFILER_API_URL_METHOD_get           = "/api/values/";
 
@@ -277,6 +280,16 @@ Request:
         return retCode;
     }
     
+    
+    public void setServerURL(String a_strURL){
+    	K_MOFILER_API_URL_BASE_POSTFIX = a_strURL;
+        K_MOFILER_API_URL_BASE = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
+
+    }
+
+    public String getServerURL(){
+    	return K_MOFILER_API_URL_BASE_POSTFIX;
+    }
 
     public String getMethodForError(String a_strErrored_Method)
     {

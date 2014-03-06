@@ -42,6 +42,7 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         this.add(myrecvbutton);
         
         mof = Mofiler.getInstance();
+        mof.setURL("localhost:3000");
         mof.setAppKey("MY-APPKEY-HERE");
         mof.setAppName("MyTestApplication");
         mof.addIdentity("username", "johndoe");

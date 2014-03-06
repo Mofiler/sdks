@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Mario/blackberryjava-workspace/mofiler-sdk/deliverables/Web/5.0.0/mofilersdk.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Mario/blackberryjava-workspace/HelloMofiler/libs/mofilersdk.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/net.rim.ejde.BlackBerryVMInstallType/BlackBerry JRE 5.0.0"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

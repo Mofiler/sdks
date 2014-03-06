@@ -22,6 +22,7 @@ public class MofilerClient implements ApiListener {
 	private MofilerDeferredObject deferredObj;
 	private boolean bUseDeferredSend = false;
 	private ApiListener listener = null;
+	private String strURL;
 
 	public MofilerClient(boolean a_bUseDeferredSend) {
 		restApi = new RESTApi();
@@ -138,6 +139,16 @@ public class MofilerClient implements ApiListener {
 
 	public void setListener(ApiListener a_listener){
 		this.listener = a_listener;
+	}
+	
+	public String getURL() {
+		this.strURL = this.restApi.getServerURL();
+		return this.strURL;
+	}
+
+	public void setURL(String a_URL) {
+		this.strURL = a_URL;
+		this.restApi.setServerURL(a_URL);
 	}
 	
     private int methodResponded_ErrorHandler(String a_methodCalled, final JSONObject a_berr)

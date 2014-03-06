@@ -17,6 +17,7 @@ public final class Mofiler{
 	private String appVersion;
 	private String cookie;
 	private Hashtable identity;
+	private String strURL;
 
 	private Mofiler() {
 		moClient = new MofilerClient(false);
@@ -58,6 +59,16 @@ public final class Mofiler{
 
 	public void setCookie(String cookie) {
 		this.cookie = cookie;
+	}
+
+	public String getURL() {
+		this.strURL = moClient.getURL();
+		return strURL;
+	}
+
+	public void setURL(String a_URL) {
+		this.strURL = a_URL;
+		this.moClient.setURL(a_URL);
 	}
 
 	public void addIdentity(String key, String value) {
