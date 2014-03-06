@@ -2,6 +2,7 @@ package com.mofiler;
 
 import java.util.Hashtable;
 
+import com.mofiler.api.ApiListener;
 import com.mofiler.api.Constants;
 import com.mofiler.exception.AppKeyNotSetException;
 import com.mofiler.exception.IdentityNotSetException;
@@ -101,6 +102,25 @@ public final class Mofiler{
 			throw new AppKeyNotSetException("Mofiler: api key needs be set before you can send any values to the server");
 	}
 	
+
+	public void getValue(String key, String identityKey, String identityValue) throws AppKeyNotSetException, IdentityNotSetException{
+		if (appKey != null){
+			if (this.identity != null && (this.identity.size() > 0)){
+				addAllAvailableHeaders();
+				moClient.setIdentity(identity);
+				moClient.getValue(key, identityKey, identityValue);
+			}
+			else
+				throw new IdentityNotSetException("Mofiler: user identity needs be set before you can send any values to the server");
+		} 
+		else
+			throw new AppKeyNotSetException("Mofiler: api key needs be set before you can send any values to the server");
+	}
+	
+	
+	public void setListener(ApiListener a_apilistener){
+		moClient.setListener(a_apilistener);
+	}
 	
 	private void addAllAvailableHeaders(){
 		if (appKey != null)

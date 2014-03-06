@@ -107,6 +107,11 @@ public class Fetcher
     	identity = hashIds;
     }
     
+    public Hashtable getIdentity()
+    {
+    	return this.identity;
+    }
+    
     
     private void connPlainHitURL_UnThreaded()
     {

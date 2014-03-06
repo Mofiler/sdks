@@ -21,10 +21,12 @@ public class MofilerClient implements ApiListener {
 	private static int K_MOFILER_STACK_LENGTH = 10;
 	private MofilerDeferredObject deferredObj;
 	private boolean bUseDeferredSend = false;
+	private ApiListener listener = null;
 
 	public MofilerClient(boolean a_bUseDeferredSend) {
 		restApi = new RESTApi();
-		restApi.addMethodListener("", this);
+		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
+		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
 		this.bUseDeferredSend = a_bUseDeferredSend;
 	}
 	
@@ -60,7 +62,7 @@ public class MofilerClient implements ApiListener {
 			{
 				//send stack data and then push the new data into the stack
 				deferredObj = new MofilerDeferredObject(key, value);
-				restApi.pushKeyValueArray(jsonUserValues);
+				restApi.pushKeyValueStack(jsonUserValues);
 			}
 		}
 		catch(JSONException ex)
@@ -78,7 +80,7 @@ public class MofilerClient implements ApiListener {
 			{
 				//send stack data and then push the new data into the stack
 				deferredObj = new MofilerDeferredObject(key, value, expireAfterMs);
-				restApi.pushKeyValueArray(jsonUserValues);
+				restApi.pushKeyValueStack(jsonUserValues);
 			}
 		}
 		catch(JSONException ex)
@@ -118,11 +120,26 @@ public class MofilerClient implements ApiListener {
 			ex.printStackTrace();
 		}
 	}
+
+	public void getValue(String key, String identityKey, String identityValue){
+		
+		try{
+			restApi.getValue(key, identityKey, identityValue);
+		}
+		catch(JSONException ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 	
 	public void setIdentity(Hashtable hashIds){
 		restApi.setIdentity(hashIds);
 	}
 
+	public void setListener(ApiListener a_listener){
+		this.listener = a_listener;
+	}
+	
     private int methodResponded_ErrorHandler(String a_methodCalled, final JSONObject a_berr)
     {
         int retCode = 0;
@@ -137,7 +154,6 @@ public class MofilerClient implements ApiListener {
     
     public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject)
     {
-
         System.err.println("methodResponded " + a_methodCalled);
 
         if (a_vectBusinessObject.size() > 1)
@@ -148,12 +164,15 @@ public class MofilerClient implements ApiListener {
                 JSONObject jsonErr = (JSONObject)a_vectBusinessObject.elementAt(1);
 
                 String strOriginalMethod = restApi.getMethodForError(a_methodCalled);
-
-                if (
-                    (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_URL_METHOD_inject))
-                   )
+                
+                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
                 {
-                    //don't do nothing here
+                	//TODO: in case deferred sending is enabled, then if an error happened, try resending stack later
+                }
+                else
+                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
+                {
+                    //TODO: get the value we asked for, and also 
                 }
                 else
                 {
@@ -163,24 +182,21 @@ public class MofilerClient implements ApiListener {
 
             } /* end if */
             else
-            if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_URL_METHOD_inject))
+            if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
             {
-                try
-                {            
-                   JSONObject json = (JSONObject)(a_vectBusinessObject.elementAt(1));
+            	System.err.println("EN MOFILER CLIENT, A LLAMAR A LISTENER INJECT!");
+            	
+        		if (listener != null)
+        			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
 
-                   if (json.has("banners")) 
-                   {
-                       /* inicializar */
-
-                   } // end if
-
-                } catch ( Exception ex )                    
-                {
-                    System.out.println("err banner: "+ex);                    	
-                }
-
-            } /* end if */
+            }
+            else
+        	if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
+        	{
+            	System.err.println("EN MOFILER CLIENT, A LLAMAR A LISTENER GET!");
+        		if (listener != null)
+        			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
+        	} /* end if */
         } 
 
     }   

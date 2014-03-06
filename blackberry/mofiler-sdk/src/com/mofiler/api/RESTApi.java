@@ -31,6 +31,7 @@ import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import com.mofiler.device.MO_Device;
+import com.mofiler.exception.IdentityNotSetException;
 import com.mofiler.util.URLEncoder;
 
 
@@ -43,7 +44,11 @@ public class RESTApi implements FetcherListener
     public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
     public static final String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
     public static final String K_MOFILER_API_URL_METHOD_inject           = "/api/values/";
+    public static final String K_MOFILER_API_URL_METHOD_get           = "/api/values/";
 
+    public static final String K_MOFILER_API_METHOD_NAME_inject           = "POST_VALUES"; //arbitrary name
+    public static final String K_MOFILER_API_METHOD_NAME_get           = "GET_VALUES";
+    
     public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "X-Mofiler-SessionID";
 
     private String strCurrentMethodName = null;
@@ -93,8 +98,8 @@ public class RESTApi implements FetcherListener
 
     static public void unregisterAllMethodsListener(ApiListener listener)
     {
-
-        unregisterMethodListener(RESTApi.K_MOFILER_API_URL_METHOD_inject, listener);
+        unregisterMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, listener);
+        unregisterMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, listener);
     }
 
     static private void addMethodListener(String a_code, ApiListener listener, Hashtable msgListeners)
@@ -199,13 +204,13 @@ Request:
     public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-        strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
 
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
         json.put("expireAfter", expireAfter);
         setHTTPPOSTPayload(json);
-        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
         return retCode;
     }
@@ -213,23 +218,61 @@ Request:
     public int pushKeyValue(String a_strKey, String a_strValue) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-        strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
         
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
         setHTTPPOSTPayload(json);
-        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
+    public int pushKeyValue(String a_strKey, JSONObject a_jsonValue) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+        
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_jsonValue);
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
+    public int pushKeyArray(String a_strKey, JSONArray a_jsonArray) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+        
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_jsonArray);
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
         return retCode;
     }
     
     
-    public int pushKeyValueArray(JSONArray jsonData) throws JSONException
+    public int pushKeyValueStack(JSONArray jsonData) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-        strCurrentMethodName = K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
         setHTTPPOSTPayload(jsonData);
-        int retCode = connWrapper(K_MOFILER_API_URL_METHOD_inject, strURL, true);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
+    
+    public int getValue(String a_strKey, String a_identityKey, String a_identityValue) throws JSONException
+    {
+        //String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_get;
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_get + MO_Device.getDeviceManufacturer() + "/" + a_identityKey + "/" + a_identityValue + "/" + a_strKey + "/";
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_get;
+        
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_get, strURL, false);
 
         return retCode;
     }
@@ -268,6 +311,7 @@ Request:
         
         System.err.println("DATA SENT: " + a_strOriginalSentPayload);
         System.err.println("DATA RECEIVED: " + a_strPayload);
+        System.err.println("METHOD CALLED: " + a_methodCalled);
 
         boolean jsonNull = false;
 
@@ -308,12 +352,16 @@ Request:
         } /* end if*/
 
 
+    	System.err.println("LISTENER NULL?");
         if (listeners != null)
         {
+        	System.err.println("LISTENER NULL2?");
             if (!jsonNull)
             {
+            	System.err.println("LISTENER NULL3?");
                 for (int iter = 0; iter < listeners.size(); iter++)
                 {
+                	System.err.println("A LLAMAR A LISTENER!");
                     ((ApiListener) listeners.elementAt(iter)).methodResponded(a_methodCalled + "_" + strCurrentMethodName, vectBO);//a_strPayload);
                 } /* end for */
             } /* end if */
