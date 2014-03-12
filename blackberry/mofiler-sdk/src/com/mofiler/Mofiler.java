@@ -129,6 +129,14 @@ public final class Mofiler{
 	}
 	
 	
+	public void onDestroyApp(){
+		flushData();
+	}
+
+	public void flushData(){
+		moClient.doSaveDataToDisk();
+	}
+	
 	public void setListener(ApiListener a_apilistener){
 		moClient.setListener(a_apilistener);
 	}

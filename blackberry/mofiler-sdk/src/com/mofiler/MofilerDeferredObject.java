@@ -1,9 +1,17 @@
 package com.mofiler;
 
-public class MofilerDeferredObject {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import com.sun.lwuit.io.Externalizable;
+import com.sun.lwuit.io.util.Util;
+
+public class MofilerDeferredObject extends Object implements Externalizable{
 	private String deferredKey, deferredValue;
 	private long deferredMs;
 	private boolean bDeferredMsSet;
+	
 	public MofilerDeferredObject(String deferredKey, String deferredValue,
 			long deferredMs) {
 		super();
@@ -42,6 +50,31 @@ public class MofilerDeferredObject {
 	}
 	public void setbDeferredMsSet(boolean bDeferredMsSet) {
 		this.bDeferredMsSet = bDeferredMsSet;
+	}
+	
+	public void externalize(DataOutputStream stream) throws IOException {
+		// TODO Auto-generated method stub
+        Util.writeUTF(deferredKey, stream);
+        Util.writeUTF(deferredValue, stream);
+        stream.writeLong(deferredMs);
+        stream.writeBoolean(bDeferredMsSet);
+		
+	}
+	public String getObjectId() {
+		// TODO Auto-generated method stub
+		return "MofilerDeferredObject";
+	}
+	public int getVersion() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+	public void internalize(int i, DataInputStream stream) throws IOException {
+		// TODO Auto-generated method stub
+        this.deferredKey = Util.readUTF(stream);
+        this.deferredValue = Util.readUTF(stream);
+		this.bDeferredMsSet = stream.readBoolean();
+        this.deferredMs = stream.readLong();
+
 	}
 
 	

@@ -45,9 +45,7 @@ public class Fetcher
     private boolean bCurrMethodIsPOST = false;
     private FetcherListener fetchListener = null;
     public int iLastretCode = 0;
-    String strImageName = null;
     boolean bActionFinished = false;
-    private boolean bDoBlockThread = false;
 
     private String strSessionIDValue = null;
     private Hashtable hashSessionHeaders = null;
@@ -208,11 +206,12 @@ public class Fetcher
 
             if (a_bBlock == true)
             {
-                while (bActionFinished == false)
-                {
-                    //iLoopFaker++;
-                    //sleep(10);
-                } /* end while */
+            	//TODO: some kind of yelding here
+//                while (bActionFinished == false)
+//                {
+//                    //iLoopFaker++;
+//                    //sleep(10);
+//                } /* end while */
             } /* end if */
 
         } /* end block */

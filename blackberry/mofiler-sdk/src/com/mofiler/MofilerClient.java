@@ -3,14 +3,13 @@ package com.mofiler;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.microedition.media.control.MetaDataControl;
-
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.RESTApi;
+import com.sun.lwuit.io.util.Util;
 
 //this class will hold the actual client / server logic, at the uppermost level, and will hold
 //data in persistence until it deserves to be pushed to the server, in chunks, in a single push.
@@ -18,6 +17,7 @@ public class MofilerClient implements ApiListener {
 
 	private RESTApi restApi;
 	private JSONArray jsonUserValues;
+	private MofilerValueStack mofilerValues;
 	private static int K_MOFILER_STACK_LENGTH = 10;
 	private MofilerDeferredObject deferredObj;
 	private boolean bUseDeferredSend = false;
@@ -29,7 +29,14 @@ public class MofilerClient implements ApiListener {
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
 		this.bUseDeferredSend = a_bUseDeferredSend;
+	
+		//initialization for LWUIT IO
+        com.sun.lwuit.io.Storage.init("mofiler");
+        Util.register("MofilerDeferredObject", MofilerDeferredObject.class);
+        
+        loadDataFromStorage();        
 	}
+	
 	
 	public void addHeaderKeyValue(String header, String value)
 	{
@@ -176,20 +183,27 @@ public class MofilerClient implements ApiListener {
 
                 String strOriginalMethod = restApi.getMethodForError(a_methodCalled);
                 
-                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
-                {
-                	//TODO: in case deferred sending is enabled, then if an error happened, try resending stack later
-                }
-                else
-                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
-                {
-                    //TODO: get the value we asked for, and also 
-                }
-                else
-                {
-                    methodResponded_ErrorHandler(strOriginalMethod, jsonErr);
-
-                } /* end if */
+        		if (listener != null)
+        			listener.methodResponded(strOriginalMethod, a_vectBusinessObject);
+        		
+//                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
+//                {
+//                	//TODO: in case deferred sending is enabled, then if an error happened, try resending stack later
+//            		if (listener != null)
+//            			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
+//                }
+//                else
+//                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
+//                {
+//                    //TODO: get the value we asked for, and also 
+//            		if (listener != null)
+//            			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
+//                }
+//                else
+//                {
+//                    methodResponded_ErrorHandler(strOriginalMethod, jsonErr);
+//
+//                } /* end if */
 
             } /* end if */
             else
@@ -210,5 +224,32 @@ public class MofilerClient implements ApiListener {
         	} /* end if */
         } 
 
-    }   
+    }
+    
+    
+    
+    synchronized public void loadDataFromStorage()
+    {
+        System.err.println("pillreminder Loading from storage");
+        try
+        {
+        	mofilerValues = (MofilerValueStack) com.sun.lwuit.io.Storage.getInstance().readObject("vectvaluestack");
+        } catch (Exception ex)
+        {
+            System.err.println("EXCEPCION reading DB: " + ex.getMessage());
+        }
+
+        if (mofilerValues == null){
+        	jsonUserValues = new JSONArray();
+        	mofilerValues = new MofilerValueStack(null);
+        }
+    }
+
+    synchronized public void doSaveDataToDisk()
+    {
+    	mofilerValues.setJsonStack(jsonUserValues);
+        com.sun.lwuit.io.Storage.getInstance().writeObject("vectvaluestack", mofilerValues);
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
+    }
+    
 }

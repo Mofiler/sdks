@@ -318,13 +318,20 @@ public final class MO_Connection
 
             url = a_url;
 
-        } catch (Exception e)
+        } catch (IOException e)
         {
             url = null;
             iExceptionCounter++;
             System.err.println("EXCEPTION: " + e.getMessage());
 
-            throw new IllegalArgumentException("Not an HTTP URL");
+            //iExceptionCounter++;
+            rc = -1;
+            lastRC = -1;
+            lastException = e.toString();
+            e.printStackTrace();
+            
+            //throw new IllegalArgumentException("Not an HTTP URL");
+            throw e;
 
         }
 
@@ -458,6 +465,11 @@ public final class MO_Connection
             catch (Exception e)
             {
                 iExceptionCounter++;
+                rc = -1;
+                lastRC = -1;
+                lastException = e.toString();
+                e.printStackTrace();
+                
             } finally
             {
                 MO_Int_Msg_Disconnect();

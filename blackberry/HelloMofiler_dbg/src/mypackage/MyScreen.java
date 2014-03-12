@@ -24,6 +24,7 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
 {
 	private ButtonField mybutton;
 	private ButtonField myrecvbutton;
+	private ButtonField myflushbutton;
 	private Mofiler mof;
     /**
      * Creates a new MyScreen object
@@ -33,15 +34,20 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         // Set the displayed title of the screen       
         setTitle("MyTitle");
         
-        mybutton = new ButtonField("Send Data to Mofiler!");
+        mybutton = new ButtonField("Send Data to Mofiler value stack");
         mybutton.setChangeListener(this);
         this.add(mybutton);
         
         myrecvbutton = new ButtonField("Receive Data from Mofiler!");
         myrecvbutton.setChangeListener(this);
         this.add(myrecvbutton);
+
+        myflushbutton = new ButtonField("Flush unsent data to Mofiler!");
+        myflushbutton.setChangeListener(this);
+        this.add(myflushbutton);
         
         mof = Mofiler.getInstance();
+        mof.setURL("mofiler.com:8081");
         mof.setAppKey("MY-APPKEY-HERE");
         mof.setAppName("MyTestApplication");
         mof.addIdentity("username", "johndoe");
@@ -77,6 +83,19 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         		ex.printStackTrace();
         	}
         }
+        else
+        if(field == myflushbutton)
+        {
+        	try
+        	{
+                mof.flushData();
+        	}
+        	catch(Exception ex)
+        	{
+        		System.err.println(ex.getMessage());
+        		ex.printStackTrace();
+        	}
+        }
     }
     
     
@@ -94,16 +113,38 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
 
     			try {
     				
+    				System.out.println("HELLOMOFILER: resulting JSON object is: " + jsonResult.toString());
+    				
 	                if (jsonResult.has("result")){
 	                	String strResult = (String) jsonResult.getString("result");
 	                	if (strResult.equals("ok")){
+	                		
+	                		//TODO HANDLE YOUR DATA HERE
+	                		//TODO HANDLE YOUR DATA HERE
+	                		//TODO HANDLE YOUR DATA HERE
+	                		//TODO HANDLE YOUR DATA HERE
+	                		
 	    	        		System.err.println("HelloMofiler: This is the result of the get");
 	    	        		//JSONObject jsonValue = jsonResult.getJSONObject("value");
 	    	        		String jsonValue = jsonResult.getString("value");
-	    	        		System.err.println(jsonValue);
-	    	        		System.err.println("READYYYY");
+	    	        		System.out.println(jsonValue);
+	    	        		System.out.println("HELLOMOFILER READY");
+	    	        		//TODO: do your work here, as in process the result, etc.
+	    	        		//TODO: do your work here, as in process the result, etc.
+	    	        		//TODO: do your work here, as in process the result, etc.
 	                	}
+	                } else if (jsonResult.has("error")){
+	                	
+	                	//TODO: HANDLE YOUR ERROR HERE
+	                	//TODO: HANDLE YOUR ERROR HERE
+	                	//TODO: HANDLE YOUR ERROR HERE
+	                	//TODO: HANDLE YOUR ERROR HERE
+
+	                	String strError = (String) jsonResult.getString("error");
+    	        		System.err.println(strError);
+    	        		System.err.println("HELLOMOFILER ERROR HANDLER");
 	                }
+	                	
     			}
     			catch(JSONException ex)
     			{
