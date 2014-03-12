@@ -47,7 +47,8 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         this.add(myflushbutton);
         
         mof = Mofiler.getInstance();
-        mof.setURL("mofiler.com:8081");
+        //mof.setURL("mofiler.com:8081");
+        mof.setURL("localhost:3000");
         mof.setAppKey("MY-APPKEY-HERE");
         mof.setAppName("MyTestApplication");
         mof.addIdentity("username", "johndoe");

@@ -53,7 +53,8 @@ public class RESTApi implements FetcherListener
     public static final String K_MOFILER_API_METHOD_NAME_get           = "GET_VALUES";
     
     public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "X-Mofiler-SessionID";
-
+    public static final String K_MOFILER_API_TIMESTAMP_KEY          = "tstamp";
+    
     private String strCurrentMethodName = null;
     
     static private Hashtable msgListeners;
@@ -212,6 +213,7 @@ Request:
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
         json.put("expireAfter", expireAfter);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
@@ -225,6 +227,7 @@ Request:
         
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_strValue);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
@@ -238,6 +241,7 @@ Request:
         
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_jsonValue);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
@@ -251,6 +255,7 @@ Request:
         
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_jsonArray);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 
