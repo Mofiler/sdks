@@ -19,7 +19,7 @@ public class MofilerClient implements ApiListener {
 	private JSONArray jsonUserValues;
 	private MofilerValueStack mofilerValues;
 	private static int K_MOFILER_STACK_LENGTH = 10;
-	private static int K_MOFILER_MAX_STACK_LENGTH = 25;// 1000; //if we reach this, just eliminate all data to avoid bloat
+	private static int K_MOFILER_MAX_STACK_LENGTH = 1000; //if we reach this, just eliminate all data to avoid bloat
 	//private MofilerDeferredObject deferredObj;
 	private boolean bUseDeferredSend = false;
 	private ApiListener listener = null;
