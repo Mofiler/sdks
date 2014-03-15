@@ -5,6 +5,7 @@ import java.util.Vector;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import net.rim.blackberry.api.mail.Message.Icons;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.component.ButtonField;
@@ -26,6 +27,7 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
 	private ButtonField myrecvbutton;
 	private ButtonField myflushbutton;
 	private Mofiler mof;
+	private int iTestCounter;
     /**
      * Creates a new MyScreen object
      */
@@ -61,8 +63,10 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         {
         	try
         	{
-                mof.injectValue("mykey", "myvalue");
-                mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
+                mof.injectValue("mykey" + iTestCounter, "myvalue");
+                //mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
+                iTestCounter++;
+                mybutton.setLabel("Send Data to Mofiler - "+ iTestCounter);
                 //mof.getValue("mykey");
         	}
         	catch(Exception ex)

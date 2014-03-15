@@ -358,6 +358,7 @@ Request:
 
         vectBO.addElement(a_methodCalled);
         vectBO.addElement(json);
+        vectBO.addElement(a_strOriginalSentPayload);
 
         Vector listeners = null;
 
@@ -370,16 +371,12 @@ Request:
         } /* end if*/
 
 
-    	System.err.println("LISTENER NULL?");
         if (listeners != null)
         {
-        	System.err.println("LISTENER NULL2?");
             if (!jsonNull)
             {
-            	System.err.println("LISTENER NULL3?");
                 for (int iter = 0; iter < listeners.size(); iter++)
                 {
-                	System.err.println("A LLAMAR A LISTENER!");
                     ((ApiListener) listeners.elementAt(iter)).methodResponded(a_methodCalled + "_" + strCurrentMethodName, vectBO);//a_strPayload);
                 } /* end for */
             } /* end if */

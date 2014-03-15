@@ -20,7 +20,8 @@ public final class Mofiler{
 	private String strURL;
 
 	private Mofiler() {
-		moClient = new MofilerClient(false);
+		//moClient = new MofilerClient(false);
+		moClient = new MofilerClient(true);
 	}
 	
 	static public Mofiler getInstance() {
@@ -130,11 +131,15 @@ public final class Mofiler{
 	
 	
 	public void onDestroyApp(){
-		flushData();
+		flushDataToDisk();
 	}
 
-	public void flushData(){
+	public void flushDataToDisk(){
 		moClient.doSaveDataToDisk();
+	}
+	
+	public void flushDataToMofiler(){
+		moClient.flushData();
 	}
 	
 	public void setListener(ApiListener a_apilistener){

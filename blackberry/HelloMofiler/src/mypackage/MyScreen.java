@@ -5,6 +5,7 @@ import java.util.Vector;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import net.rim.blackberry.api.mail.Message.Icons;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.component.ButtonField;
@@ -24,7 +25,9 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
 {
 	private ButtonField mybutton;
 	private ButtonField myrecvbutton;
+	private ButtonField myflushbutton;
 	private Mofiler mof;
+	private int iTestCounter;
     /**
      * Creates a new MyScreen object
      */
@@ -33,16 +36,21 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         // Set the displayed title of the screen       
         setTitle("MyTitle");
         
-        mybutton = new ButtonField("Send Data to Mofiler!");
+        mybutton = new ButtonField("Send Data to Mofiler value stack");
         mybutton.setChangeListener(this);
         this.add(mybutton);
         
         myrecvbutton = new ButtonField("Receive Data from Mofiler!");
         myrecvbutton.setChangeListener(this);
         this.add(myrecvbutton);
+
+        myflushbutton = new ButtonField("Flush unsent data to Mofiler!");
+        myflushbutton.setChangeListener(this);
+        this.add(myflushbutton);
         
         mof = Mofiler.getInstance();
-        mof.setURL("mofiler.com:8081");
+        //mof.setURL("mofiler.com:8081");
+        mof.setURL("localhost:3000");
         mof.setAppKey("MY-APPKEY-HERE");
         mof.setAppName("MyTestApplication");
         mof.addIdentity("username", "johndoe");
@@ -55,8 +63,11 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         {
         	try
         	{
-                mof.injectValue("mykey", "myvalue");
-                mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
+                mof.injectValue("mykey" + iTestCounter, "myvalue");
+                //mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
+                iTestCounter++;
+                mybutton.setLabel("Send Data to Mofiler - "+ iTestCounter);
+                //mof.getValue("mykey");
         	}
         	catch(Exception ex)
         	{
@@ -70,6 +81,19 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         	try
         	{
                 mof.getValue("mykey", "username", "johndoe");
+        	}
+        	catch(Exception ex)
+        	{
+        		System.err.println(ex.getMessage());
+        		ex.printStackTrace();
+        	}
+        }
+        else
+        if(field == myflushbutton)
+        {
+        	try
+        	{
+                mof.flushDataToMofiler();
         	}
         	catch(Exception ex)
         	{

@@ -19,20 +19,22 @@ public class MofilerClient implements ApiListener {
 	private JSONArray jsonUserValues;
 	private MofilerValueStack mofilerValues;
 	private static int K_MOFILER_STACK_LENGTH = 10;
-	private MofilerDeferredObject deferredObj;
+	private static int K_MOFILER_MAX_STACK_LENGTH = 25;// 1000; //if we reach this, just eliminate all data to avoid bloat
+	//private MofilerDeferredObject deferredObj;
 	private boolean bUseDeferredSend = false;
 	private ApiListener listener = null;
 	private String strURL;
 
 	public MofilerClient(boolean a_bUseDeferredSend) {
 		restApi = new RESTApi();
+		restApi.useThreadedConnections(true, false);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
 		this.bUseDeferredSend = a_bUseDeferredSend;
 	
 		//initialization for LWUIT IO
         com.sun.lwuit.io.Storage.init("mofiler");
-        Util.register("MofilerDeferredObject", MofilerDeferredObject.class);
+        Util.register("MofilerValueStack", MofilerValueStack.class);
         
         loadDataFromStorage();        
 	}
@@ -43,10 +45,43 @@ public class MofilerClient implements ApiListener {
 		restApi.addPropertyKeyValuePair(header, value);		
 	}
 	
+	private JSONArray discardKeyValueIfExistsInArray(JSONArray a_jsonArrToLookIn, String key, String value)
+	{
+		JSONArray newJsonArray = new JSONArray();
+		
+		try {
+			for (int i=0; i < a_jsonArrToLookIn.length(); i++){
+				JSONObject tmpObj = a_jsonArrToLookIn.getJSONObject(i);
+				if (tmpObj.has(key)){
+					//discard this object from array and put the new key value instead
+				} else {
+					newJsonArray.put(tmpObj);
+				}
+			}
+		} catch (JSONException ex){
+			ex.printStackTrace();
+		}
+		
+		
+		return newJsonArray;
+	}
+	
 	private void internal_populateVector(String key, String value) throws JSONException
 	{
+		jsonUserValues = discardKeyValueIfExistsInArray(jsonUserValues, key, value);
 		JSONObject tmpObj = new JSONObject();
 		tmpObj.put(key, value);
+		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+		jsonUserValues.put(tmpObj);
+	}
+
+	private void internal_populateVector(String key, String value, long expireAfterMs) throws JSONException
+	{
+		jsonUserValues = discardKeyValueIfExistsInArray(jsonUserValues, key, value);
+		JSONObject tmpObj = new JSONObject();
+		tmpObj.put(key, value);
+		tmpObj.put("expireAfter", expireAfterMs);
+		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 		jsonUserValues.put(tmpObj);
 	}
 	
@@ -63,14 +98,25 @@ public class MofilerClient implements ApiListener {
 
 	private void pushValue_array(String key, String value) {
 		try{
-			if (jsonUserValues.length() < K_MOFILER_STACK_LENGTH){
+			if (((jsonUserValues.length() % K_MOFILER_STACK_LENGTH) != 0) || (jsonUserValues.length() == 0)){
 				internal_populateVector(key, value);
+			}
+			else if(jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH){
+				//send this and clean all
+				restApi.pushKeyValueStack(jsonUserValues);
+				jsonUserValues = new JSONArray();
+				mofilerValues.setJsonStack(jsonUserValues);
+				internal_populateVector(key, value);
+				doSaveDataToDisk();
 			}
 			else
 			{
 				//send stack data and then push the new data into the stack
-				deferredObj = new MofilerDeferredObject(key, value);
+				//deferredObj = new MofilerDeferredObject(key, value);
 				restApi.pushKeyValueStack(jsonUserValues);
+				doSaveDataToDisk();
+				jsonUserValues = new JSONArray();
+				internal_populateVector(key, value);
 			}
 		}
 		catch(JSONException ex)
@@ -81,14 +127,25 @@ public class MofilerClient implements ApiListener {
 	
 	private void pushValue_array(String key, String value, long expireAfterMs) {
 		try{
-			if (jsonUserValues.length() < K_MOFILER_STACK_LENGTH){
-				internal_populateVector(key, value);
+			if (((jsonUserValues.length() % K_MOFILER_STACK_LENGTH) != 0) || (jsonUserValues.length() == 0)){
+				internal_populateVector(key, value, expireAfterMs);
+			}
+			else if(jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH){
+				//clean all
+				restApi.pushKeyValueStack(jsonUserValues);
+				jsonUserValues = new JSONArray();
+				mofilerValues.setJsonStack(jsonUserValues);
+				internal_populateVector(key, value, expireAfterMs);
+				doSaveDataToDisk();
 			}
 			else
 			{
 				//send stack data and then push the new data into the stack
-				deferredObj = new MofilerDeferredObject(key, value, expireAfterMs);
+				//deferredObj = new MofilerDeferredObject(key, value, expireAfterMs);
 				restApi.pushKeyValueStack(jsonUserValues);
+				doSaveDataToDisk();
+				jsonUserValues = new JSONArray();
+				internal_populateVector(key, value, expireAfterMs);
 			}
 		}
 		catch(JSONException ex)
@@ -158,6 +215,14 @@ public class MofilerClient implements ApiListener {
 		this.restApi.setServerURL(a_URL);
 	}
 	
+	public void flushData(){
+		try {
+			restApi.pushKeyValueStack(jsonUserValues);
+		} catch (JSONException ex){
+			ex.printStackTrace();
+		}
+	}
+	
     private int methodResponded_ErrorHandler(String a_methodCalled, final JSONObject a_berr)
     {
         int retCode = 0;
@@ -172,8 +237,6 @@ public class MofilerClient implements ApiListener {
     
     public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject)
     {
-        System.err.println("methodResponded " + a_methodCalled);
-
         if (a_vectBusinessObject.size() > 1)
         {
             String methodname = (String)a_vectBusinessObject.elementAt(0);
@@ -183,8 +246,26 @@ public class MofilerClient implements ApiListener {
 
                 String strOriginalMethod = restApi.getMethodForError(a_methodCalled);
                 
-        		if (listener != null)
+                if (listener != null)
         			listener.methodResponded(strOriginalMethod, a_vectBusinessObject);
+        		
+        		if (bUseDeferredSend){
+                	//TODO: in case deferred sending is enabled, then if an error happened, try resending stack later
+        			try {
+        				JSONArray jsonTmpArray = (JSONArray) new JSONArray((String)(a_vectBusinessObject.elementAt(2)));
+        				if (jsonTmpArray.length() > K_MOFILER_MAX_STACK_LENGTH){
+        						//clean all
+        						jsonUserValues = new JSONArray();
+        						mofilerValues.setJsonStack(jsonUserValues);
+        						doSaveDataToDisk();
+        				} else {
+            				jsonUserValues = concatArray(jsonUserValues, jsonTmpArray);
+        				}
+            			
+        			} catch(Exception ex){
+        				ex.printStackTrace();
+        			}
+        		}
         		
 //                if (strOriginalMethod.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
 //                {
@@ -209,7 +290,12 @@ public class MofilerClient implements ApiListener {
             else
             if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject))
             {
-            	System.err.println("EN MOFILER CLIENT, A LLAMAR A LISTENER INJECT!");
+        		if (bUseDeferredSend){
+        			//all went good, so erase current value stack
+					jsonUserValues = new JSONArray();
+					mofilerValues.setJsonStack(jsonUserValues);
+					doSaveDataToDisk();
+        		}
             	
         		if (listener != null)
         			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
@@ -218,7 +304,6 @@ public class MofilerClient implements ApiListener {
             else
         	if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
         	{
-            	System.err.println("EN MOFILER CLIENT, A LLAMAR A LISTENER GET!");
         		if (listener != null)
         			listener.methodResponded(a_methodCalled, a_vectBusinessObject);
         	} /* end if */
@@ -230,7 +315,6 @@ public class MofilerClient implements ApiListener {
     
     synchronized public void loadDataFromStorage()
     {
-        System.err.println("pillreminder Loading from storage");
         try
         {
         	mofilerValues = (MofilerValueStack) com.sun.lwuit.io.Storage.getInstance().readObject("vectvaluestack");
@@ -242,7 +326,16 @@ public class MofilerClient implements ApiListener {
         if (mofilerValues == null){
         	jsonUserValues = new JSONArray();
         	mofilerValues = new MofilerValueStack(null);
+        } else {
+        	try {
+            	jsonUserValues = mofilerValues.getJsonStack();
+        	} catch(Exception ex){
+        		ex.printStackTrace();
+            	jsonUserValues = new JSONArray();
+            	mofilerValues = new MofilerValueStack(null);
+        	}
         }
+        
     }
 
     synchronized public void doSaveDataToDisk()
@@ -252,4 +345,16 @@ public class MofilerClient implements ApiListener {
         com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
     }
     
+    
+    private JSONArray concatArray(JSONArray arr1, JSONArray arr2)
+            throws JSONException {
+        JSONArray result = new JSONArray();
+        for (int i = 0; i < arr1.length(); i++) {
+            result.put(arr1.get(i));
+        }
+        for (int i = 0; i < arr2.length(); i++) {
+            result.put(arr2.get(i));
+        }
+        return result;
+    }    
 }
