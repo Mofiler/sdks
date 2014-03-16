@@ -96,17 +96,23 @@ public class MofilerClient implements ApiListener {
 		}
 	}
 
-	private void pushValue_array(String key, String value) {
+	private void pushValue_array_internal(String key, String value, long expireAfterMs, boolean bUseExpireAfter){
 		try{
 			if (((jsonUserValues.length() % K_MOFILER_STACK_LENGTH) != 0) || (jsonUserValues.length() == 0)){
-				internal_populateVector(key, value);
+				if (bUseExpireAfter)
+					internal_populateVector(key, value, expireAfterMs);
+				else
+					internal_populateVector(key, value);
 			}
 			else if(jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH){
 				//send this and clean all
 				restApi.pushKeyValueStack(jsonUserValues);
 				jsonUserValues = new JSONArray();
 				mofilerValues.setJsonStack(jsonUserValues);
-				internal_populateVector(key, value);
+				if (bUseExpireAfter)
+					internal_populateVector(key, value, expireAfterMs);
+				else
+					internal_populateVector(key, value);
 				doSaveDataToDisk();
 			}
 			else
@@ -116,7 +122,10 @@ public class MofilerClient implements ApiListener {
 				restApi.pushKeyValueStack(jsonUserValues);
 				doSaveDataToDisk();
 				jsonUserValues = new JSONArray();
-				internal_populateVector(key, value);
+				if (bUseExpireAfter)
+					internal_populateVector(key, value, expireAfterMs);
+				else
+					internal_populateVector(key, value);
 			}
 		}
 		catch(JSONException ex)
@@ -125,33 +134,12 @@ public class MofilerClient implements ApiListener {
 		}
 	}
 	
+	private void pushValue_array(String key, String value) {
+		pushValue_array_internal(key, value, -1, false);
+	}
+	
 	private void pushValue_array(String key, String value, long expireAfterMs) {
-		try{
-			if (((jsonUserValues.length() % K_MOFILER_STACK_LENGTH) != 0) || (jsonUserValues.length() == 0)){
-				internal_populateVector(key, value, expireAfterMs);
-			}
-			else if(jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH){
-				//clean all
-				restApi.pushKeyValueStack(jsonUserValues);
-				jsonUserValues = new JSONArray();
-				mofilerValues.setJsonStack(jsonUserValues);
-				internal_populateVector(key, value, expireAfterMs);
-				doSaveDataToDisk();
-			}
-			else
-			{
-				//send stack data and then push the new data into the stack
-				//deferredObj = new MofilerDeferredObject(key, value, expireAfterMs);
-				restApi.pushKeyValueStack(jsonUserValues);
-				doSaveDataToDisk();
-				jsonUserValues = new JSONArray();
-				internal_populateVector(key, value, expireAfterMs);
-			}
-		}
-		catch(JSONException ex)
-		{
-			ex.printStackTrace();
-		}
+		pushValue_array_internal(key, value, expireAfterMs, true);
 	}
 	
 	
