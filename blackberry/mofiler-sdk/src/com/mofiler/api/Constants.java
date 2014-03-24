@@ -5,6 +5,7 @@ public class Constants {
 	public static String K_MOFILER_API_VERSION = "0.1";
 	public static String K_MOFILER_API_HEADER_NOISELEVEL = "X-Mofiler-NoiseLevel";
 	public static String K_MOFILER_API_HEADER_SESSIONID = "X-Mofiler-SessionID";
+	public static String K_MOFILER_API_HEADER_INSTALLID = "X-Mofiler-InstallID";
 	public static String K_MOFILER_API_HEADER_API_VERSION = "X-Mofiler-ApiVersion";
 	public static String K_MOFILER_API_HEADER_APPKEY = "X-Mofiler-AppKey";
 
@@ -25,5 +26,6 @@ public class Constants {
 	public static String K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE = "display";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER = "manufacturer";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_MODELNAME = "model";
+	public static String K_MOFILER_API_DEVICE_CONTEXT_LOCALE = "locale";
 	
 }

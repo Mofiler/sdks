@@ -48,6 +48,7 @@ public class Fetcher
     boolean bActionFinished = false;
 
     private String strSessionIDValue = null;
+    private String strInstallIDValue = null;
     private Hashtable hashSessionHeaders = null;
     private Hashtable hashApplicationHeaders = null;
 
@@ -181,7 +182,13 @@ public class Fetcher
         strSessionIDValue = a_lValue + "";
     }
 
+    public void setInstallID(String a_strValue)
+    {
+    	System.err.println("EN FETCHER: installid: " + a_strValue);
+    	strInstallIDValue = a_strValue;
+    }
 
+    
     public void connPlainHitURL_Threaded(String a_strAPIName, String a_strURL, FetcherListener a_fetchListener, boolean a_bBlock, boolean a_bHTTPMethodIsPost, String a_strThreadID)
     {
         /* we need this in order to avoid 2 or more UI threads calling the fetcher at the same time */
@@ -262,8 +269,9 @@ public class Fetcher
     		if (strSessionIDValue == null)
     		{
     			Random rndNbr = new Random();
-    			strSessionIDValue = rndNbr + "";
+    			strSessionIDValue = rndNbr.nextLong() + "";
     		}
+    		hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_INSTALLID, strInstallIDValue);
 			hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_SESSIONID, strSessionIDValue);
 			hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_API_VERSION, Constants.K_MOFILER_API_VERSION);
 			
@@ -285,7 +293,13 @@ public class Fetcher
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER, MO_Device.getDeviceManufacturer());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MODELNAME, MO_Device.getDeviceModelName());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE, MO_Device.getDisplaySize());
+        	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_LOCALE, MO_Device.getLocale());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_NETWORK, MO_Device.getConnectionString());
+
+        	/* 2014-03-24 added into the body */
+        	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_SESSIONID, strSessionIDValue);
+        	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_INSTALLID, strInstallIDValue);
+        	
         	//jsonobj.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, jsonobjInner);
     	}
     	catch (JSONException ex)

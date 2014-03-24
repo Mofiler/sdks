@@ -32,9 +32,18 @@ This is all the code you need:
 
 ### Deinitialization
 
-Before exiting your application (i.e., calling System.exit()), you need to place a call to onDestroyApp(), like this:
+Before exiting your application (i.e., before calling System.exit()), you need to place a call to onDestroyApp(), like this:
 
 	mof.onDestroyApp();
+
+For example, on your application MainScreen (net.rim.device.api.ui.container.MainScreen) you could do this:
+
+    public boolean onClose() {
+        // TODO Auto-generated method stub
+        //Call Mofiler.onDestroyApp() when you know your main screen is going off and your app is going to be finished
+        mof.onDestroyApp();
+        return super.onClose();
+    }
 
 
 ### Listeners

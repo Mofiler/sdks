@@ -1,5 +1,6 @@
 package com.mofiler.device;
 
+import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.CoverageInfo;
@@ -42,6 +43,18 @@ public class MO_Device {
 	{
         String strDeviceName = DeviceInfo.getDeviceName();
         return strDeviceName;
+	}
+	
+	public static String getLocale()
+	{
+        Locale objlocale = Locale.getDefaultForSystem();
+        String strCurrlocale = null;
+        if (objlocale != null)
+        {
+            strCurrlocale = objlocale.getLanguage();
+        } /* end if */
+
+        return strCurrlocale;
 	}
 	
     /**

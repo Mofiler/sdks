@@ -18,6 +18,7 @@ public class MofilerClient implements ApiListener {
 	private RESTApi restApi;
 	private JSONArray jsonUserValues;
 	private MofilerValueStack mofilerValues;
+	private MofilerInstallationInfo mofilerInstallation;
 	private static int K_MOFILER_STACK_LENGTH = 10;
 	private static int K_MOFILER_MAX_STACK_LENGTH = 1000; //if we reach this, just eliminate all data to avoid bloat
 	//private MofilerDeferredObject deferredObj;
@@ -26,17 +27,18 @@ public class MofilerClient implements ApiListener {
 	private String strURL;
 
 	public MofilerClient(boolean a_bUseDeferredSend) {
-		restApi = new RESTApi();
+		//initialization for LWUIT IO
+        com.sun.lwuit.io.Storage.init("mofiler");
+        Util.register("MofilerValueStack", MofilerValueStack.class);
+        Util.register("MofilerInstallationInfo", MofilerInstallationInfo.class);
+        
+        loadDataFromStorage();
+        
+		restApi = new RESTApi(mofilerInstallation.getInstallationId());
 		restApi.useThreadedConnections(true, false);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
 		this.bUseDeferredSend = a_bUseDeferredSend;
-	
-		//initialization for LWUIT IO
-        com.sun.lwuit.io.Storage.init("mofiler");
-        Util.register("MofilerValueStack", MofilerValueStack.class);
-        
-        loadDataFromStorage();        
 	}
 	
 	
@@ -306,11 +308,14 @@ public class MofilerClient implements ApiListener {
         try
         {
         	mofilerValues = (MofilerValueStack) com.sun.lwuit.io.Storage.getInstance().readObject("vectvaluestack");
+        	mofilerInstallation = (MofilerInstallationInfo) com.sun.lwuit.io.Storage.getInstance().readObject("mofilerInstall");
+        	//generateId
         } catch (Exception ex)
         {
             System.err.println("EXCEPCION reading DB: " + ex.getMessage());
         }
 
+        /* instantiate mofiler stack */
         if (mofilerValues == null){
         	jsonUserValues = new JSONArray();
         	mofilerValues = new MofilerValueStack(null);
@@ -324,15 +329,62 @@ public class MofilerClient implements ApiListener {
         	}
         }
         
+
+        /* instantiate mofiler installation id */
+        if (mofilerInstallation == null){
+        	/* if it did not exist, generate a new installation ID */
+        	mofilerInstallation = new MofilerInstallationInfo();
+        	mofilerInstallation.generateId(true);
+        	//save it immediately
+            com.sun.lwuit.io.Storage.getInstance().writeObject("mofilerInstall", mofilerInstallation);
+            com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
+        }
+        
     }
 
     synchronized public void doSaveDataToDisk()
     {
     	mofilerValues.setJsonStack(jsonUserValues);
         com.sun.lwuit.io.Storage.getInstance().writeObject("vectvaluestack", mofilerValues);
+        com.sun.lwuit.io.Storage.getInstance().writeObject("mofilerInstall", mofilerInstallation);
         com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
     }
     
+    
+    private boolean compareJSONObjects(JSONObject obj1, JSONObject obj2)
+            throws JSONException {
+    
+    	boolean bEqual = false;
+    	
+    	//check if all keys exist in the other object
+    	if (obj1 != null && obj2 != null){
+    		
+    		java.util.Enumeration en = obj1.keys();
+    		String oneKey;
+    		while ((oneKey = (String)en.nextElement()) != null){
+    			if (obj2.has(oneKey)){
+    				if (oneKey.compareTo("tstamp") != 0)
+    				{
+	    				//now compare its content
+	    				Object strContent1 = obj1.get(oneKey);
+	    				Object strContent2 = obj2.get(oneKey);
+	    				if (
+							(strContent1 instanceof String)
+							&&
+							(strContent2 instanceof String)
+	    				   )
+	    				{
+	    					if (strContent1.equals(strContent2))
+	    						//if (obj1.getLong("tstamp") == obj2.getLong("tstamp"))
+	    							bEqual = true;
+	    				}
+    				}
+    			}
+    		}
+    	}
+    	
+    	return bEqual;
+    }
     
     private JSONArray concatArray(JSONArray arr1, JSONArray arr2)
             throws JSONException {
@@ -343,6 +395,20 @@ public class MofilerClient implements ApiListener {
         for (int i = 0; i < arr2.length(); i++) {
             result.put(arr2.get(i));
         }
+        
+        
+        /*for (int j=0; j < arr2.length(); j++){
+        	boolean bFound = false;
+	        for (int i=0; i < arr1.length() && !bFound; i++){
+	        	if (compareJSONObjects((JSONObject)arr1.get(i), (JSONObject)arr2.get(j))){
+	        		bFound = true; 
+	        	}
+	        }
+	        
+	        if (!bFound)
+	            result.put(arr2.get(j));
+	        	
+        }*/
         return result;
     }    
 }

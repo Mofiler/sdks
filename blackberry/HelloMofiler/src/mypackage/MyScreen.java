@@ -57,6 +57,14 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         mof.setListener(this);
     }
     
+    public boolean onClose() {
+    	// TODO Auto-generated method stub
+    	//Call Mofiler.onDestroyApp() when you know your main screen is going off and your app is going to be finished
+    	System.err.println("CLOSING SCREEN 2 ");
+    	mof.onDestroyApp();
+    	return super.onClose();
+    }
+    
     public void fieldChanged(Field field, int context) {
         // TODO Auto-generated method stub
         if(field == mybutton)

@@ -65,13 +65,14 @@ public class RESTApi implements FetcherListener
     private Hashtable hashApplicationHeaders = null;
 
 
-    public RESTApi()
+    public RESTApi(String a_strInstallationId)
     {
         //generic constructor
         connFetcher = new Fetcher();
         
 		Random rndNbr = new Random();
 		connFetcher.setSessionID(rndNbr.nextLong());
+		connFetcher.setInstallID(a_strInstallationId);
         strCurrentMethodName = null;
     }
 
