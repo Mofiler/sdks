@@ -24,6 +24,13 @@ This is all the code you need:
   		mof.injectValue("mykey", "myvalue");
         mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
 
+Mofiler uses an internal stack and persistence in order to collect data from your application before attempting to send it over to the server, thus
+ensuring internet usage and user experience is taken care of.
+Should you want to send data over to Mofiler server right away, you just need to perform the following call:
+
+        mof.flushDataToMofiler();
+
+
 ### Get values from Mofiler:
 
         mof.getValue("mykey", "username", "johndoe");
