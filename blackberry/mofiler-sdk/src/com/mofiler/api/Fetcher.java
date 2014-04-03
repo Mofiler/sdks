@@ -184,7 +184,7 @@ public class Fetcher
 
     public void setInstallID(String a_strValue)
     {
-    	System.err.println("EN FETCHER: installid: " + a_strValue);
+    	//System.err.println("EN FETCHER: installid: " + a_strValue);
     	strInstallIDValue = a_strValue;
     }
 
@@ -304,11 +304,11 @@ public class Fetcher
     	}
     	catch (JSONException ex)
     	{
-    		System.err.println("FECK, something went wrong");
+    		//System.err.println("FECK, something went wrong");
     		ex.printStackTrace();
     	}
     	
-    	System.err.println("BUILD CONTEXT cadena es esto: " + jsonobjInner.toString());
+    	//System.err.println("BUILD CONTEXT cadena es esto: " + jsonobjInner.toString());
 		//return jsonobj; //jsonobj.toString();
 		return jsonobjInner;
     }
@@ -328,7 +328,7 @@ public class Fetcher
     	}
     	catch(JSONException ex)
     	{
-    		System.err.println("FECK, something went wrong with identity vector building");
+    		//System.err.println("FECK, something went wrong with identity vector building");
     		ex.printStackTrace();
     	}
     	

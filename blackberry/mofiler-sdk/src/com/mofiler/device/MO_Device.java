@@ -78,7 +78,7 @@ public class MO_Device {
 //              }
 //              else
             {
-                System.err.println("Device is a simulator and USE_MDS_IN_SIMULATOR is false");
+                //System.err.println("Device is a simulator and USE_MDS_IN_SIMULATOR is false");
                 connectionString = ";deviceside=true";
             }
         }
@@ -86,25 +86,25 @@ public class MO_Device {
         // Wifi is the preferred transmission method
         else if (WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED)
         {
-            System.err.println("Device is connected via Wifi.");
+            //System.err.println("Device is connected via Wifi.");
             connectionString = ";interface=wifi";
         }
 
         // Is the carrier network the only way to connect?
         else if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_DIRECT) == CoverageInfo.COVERAGE_DIRECT)
         {
-            System.err.println("Carrier coverage.");
+            //System.err.println("Carrier coverage.");
 
             String carrierUid = getCarrierBIBSUid();
             if (carrierUid == null)
             {
                 // Has carrier coverage, but not BIBS.  So use the carrier's TCP network
-                System.err.println("No Uid");
+                //System.err.println("No Uid");
                 connectionString = ";deviceside=true";
             } else
             {
                 // otherwise, use the Uid to construct a valid carrier BIBS request
-                System.err.println("uid is: " + carrierUid);
+                //System.err.println("uid is: " + carrierUid);
                 connectionString = ";deviceside=false;connectionUID="+carrierUid + ";ConnectionType=mds-public";
             }
         }
@@ -112,20 +112,20 @@ public class MO_Device {
         // Check for an MDS connection instead (BlackBerry Enterprise Server)
         else if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS)
         {
-            System.err.println("MDS coverage found");
+            //System.err.println("MDS coverage found");
             connectionString = ";deviceside=false";
         }
 
         // If there is no connection available abort to avoid bugging the user unnecssarily.
         else if (CoverageInfo.getCoverageStatus() == CoverageInfo.COVERAGE_NONE)
         {
-            System.err.println("There is no available connection.");
+            //System.err.println("There is no available connection.");
         }
 
         // In theory, all bases are covered so this shouldn't be reachable.
         else
         {
-            System.err.println("no other options found, assuming device.");
+            //System.err.println("no other options found, assuming device.");
             connectionString = ";deviceside=true";
         }
 

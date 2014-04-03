@@ -322,7 +322,7 @@ public final class MO_Connection
         {
             url = null;
             iExceptionCounter++;
-            System.err.println("EXCEPTION: " + e.getMessage());
+            //System.err.println("EXCEPTION: " + e.getMessage());
 
             //iExceptionCounter++;
             rc = -1;
@@ -635,7 +635,7 @@ public final class MO_Connection
 
                 } catch ( java.io.UnsupportedEncodingException ex)
                 {
-                    System.err.println("Excepcion: " + ex);
+                    //System.err.println("Excepcion: " + ex);
                     strToReturn = new String(rcvdUncompressedData);
                 }
                 return strToReturn;
@@ -656,7 +656,7 @@ public final class MO_Connection
 
             } catch ( java.io.UnsupportedEncodingException ex )
             {
-                System.err.println("Excepcion: " + ex);
+                //System.err.println("Excepcion: " + ex);
                 strToReturn = new String(rcvdData);
             }
             return strToReturn;
@@ -705,8 +705,9 @@ public final class MO_Connection
         } catch (Exception ex)
         {
             //no pude leer la data!
-            System.err.println("Exception at decompressing: " + ex.getMessage());
-            System.err.println("Exception at decompressing: " + ex);
+        	int i=0;
+            //System.err.println("Exception at decompressing: " + ex.getMessage());
+            //System.err.println("Exception at decompressing: " + ex);
         }
         return rcvdUncompressedData;
         //return strToReturn;

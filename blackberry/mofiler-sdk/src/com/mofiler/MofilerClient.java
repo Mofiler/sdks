@@ -312,7 +312,7 @@ public class MofilerClient implements ApiListener {
         	//generateId
         } catch (Exception ex)
         {
-            System.err.println("EXCEPCION reading DB: " + ex.getMessage());
+            //System.err.println("EXCEPCION reading DB: " + ex.getMessage());
         }
 
         /* instantiate mofiler stack */
