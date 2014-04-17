@@ -78,7 +78,8 @@ namespace MofilerSDK
 		QString m_appName;
 		QString m_appVersion;
 		QString m_cookie;
-		QMap<QString, QString> 	m_identity;
+		//QMap<QString, QString> 	m_identity;
+		QVariantList m_identity;
 		QUrl	m_url;
 
 		//QMap<QString, MofilerValue*> m_values;
@@ -92,6 +93,7 @@ namespace MofilerSDK
 
 		void internal_injectValue(QString key, MofilerValue* value);
 		QVariantMap internal_convertMofileValToVariant(MofilerValue * mofvalue);
+		QVariantMap internal_buildPackageToSend(QVariantList a_user_values, QVariantMap a_dev_context, QVariantList a_identities);
 		void doSaveDataToDisk();
 	};
 }

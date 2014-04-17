@@ -23,26 +23,33 @@ Fetcher::Fetcher() : QObject()
 
 }
 
+void Fetcher::addHeader(QString key, QString value){
+	m_headers.insert(key, value);
+}
+
 void Fetcher::initiateRequest(QUrl a_Url, QString data)
 {
 	qDebug() << "initiating request";
+	qDebug() << "URL to hit is: " << a_Url;
 
     // Create and send the network request.
     QNetworkRequest request = QNetworkRequest();
-    //request.setUrl(QUrl("http://developer.blackberry.com/cascades/files/documentation/images/model.xml"));
-    //request.setUrl(QUrl("http://techslides.com/demos/sample-videos/small.mp4"));
-    request.setUrl(a_Url);
-    //http://techslides.com/demos/sample-videos/small.mp4
+    request.setUrl(a_Url.toString() +  "/api/values/");
+
+    QByteArray postDataSize = QByteArray::number(data.size());
 
 	request.setHeader(QNetworkRequest::ContentTypeHeader,
     				"application/json");
+	request.setHeader( QNetworkRequest::ContentLengthHeader,QString(postDataSize).toUtf8());
 	request.setRawHeader("Accept-Encoding", "application/gzipped");
 	request.setRawHeader("Pragma", "no-cache");
-	request.setRawHeader("X-Mofiler-NoiseLevel", "0");
+	/*request.setRawHeader("X-Mofiler-NoiseLevel", "0");
 	request.setRawHeader("X-Mofiler-SessionID", "0");
 	request.setRawHeader("X-Mofiler-InstallID", "0");
 	request.setRawHeader("X-Mofiler-ApiVersion", "0.1");
-	request.setRawHeader("X-Mofiler-AppKey", "MYAPP_KEY_HERE");
+	request.setRawHeader("X-Mofiler-AppKey", "MYAPP_KEY_HERE");*/
+	foreach( QString key, m_headers.keys() )
+		request.setRawHeader(key.toAscii(), QString(m_headers.value(key)).toAscii());
 
 	if (data != NULL && data.size() > 0){
 	    myNetworkAccessManager->post(request, data.toUtf8());

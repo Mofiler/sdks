@@ -19,6 +19,7 @@ namespace MofilerSDK
 		Fetcher();
 		virtual ~Fetcher(){}
 
+		Q_INVOKABLE void addHeader(QString key, QString value);
 		Q_INVOKABLE void initiateRequest(QUrl a_Url, QString data);
 		Q_INVOKABLE QUrl myHomeDir(QString);
 
@@ -31,6 +32,7 @@ namespace MofilerSDK
 
 	private:
 		QNetworkAccessManager *myNetworkAccessManager;
+		QMap<QString, QString> 	m_headers;
 		//StatusEvent *statusEvent;
 	};
 }

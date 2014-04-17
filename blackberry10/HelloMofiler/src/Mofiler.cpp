@@ -7,6 +7,7 @@
 
 #include "Mofiler.h"
 #include "MofilerConstants.h"
+#include "MODevice.h"
 
 
 using namespace MofilerSDK;
@@ -71,14 +72,28 @@ void Mofiler::setUrl(QUrl a_url){
 
 /* IDENTiTY */
 void Mofiler::addIdentity(QString key, QString value){
-	m_identity.insert(key, value);
+	//m_identity.insert(key, value);
+	QVariantMap valret;// = new QVariant();
+	valret[key] = value;
+
+	m_identity << valret;
+
 }
 
 QString Mofiler::getIdentity(QString key){
-	if (m_identity.contains(key))
-		return m_identity.value(key);
-	else
-		return NULL;
+
+	/*for (int i=0; i < m_identity.size(); i++){
+		QVariantMap elem = (QVariantMap) (m_identity[i]);
+		if (elem.contains(key))
+			return elem.value(key).toString();
+	}*/
+
+	/*QVariantList membersList;
+	foreach(QVariantMap s, m_identity){
+		membersList << s;
+	}*/
+
+	return NULL;
 }
 
 /* VALUE INJECTOR */
@@ -123,9 +138,54 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 	}
 	else if(m_values.size() > istackmaxlength){
 
+		//here build the JSON body to be sent
+
+		/*
+		 * EXAMPLE:
+{ mofiler_device_context:
+   { display: '320x240',
+     'X-Mofiler-SessionID': '7672286413323581556',
+     manufacturer: 'Blackberry',
+     network: ';deviceside=true',
+     model: '8300',
+     'X-Mofiler-InstallID': '-6994742345649929124',
+     locale: 'en' },
+  user_values:
+   [ { mykey0: 'myvalue', tstamp: 1396613815758 },
+     { mykey1: 'myvalue', tstamp: 1396613816091 },
+     { mykey2: 'myvalue', tstamp: 1396613816451 },
+     { mykey3: 'myvalue', tstamp: 1396613816655 },
+     { mykey4: 'myvalue', tstamp: 1396613816813 },
+     { mykey5: 'myvalue', tstamp: 1396613816957 },
+     { mykey6: 'myvalue', tstamp: 1396613817282 },
+     { mykey7: 'myvalue', tstamp: 1396613817688 },
+     { mykey8: 'myvalue', tstamp: 1396613818757 },
+     { mykey9: 'myvalue', tstamp: 1396613819140 } ],
+  identity: [ { username: 'johndoe' } ] }
+		 *
+		 */
+		MODevice* moDev = new MODevice();
+		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
+
 		JsonDataAccess jda;
 		QString jsondata;
-		jda.saveToBuffer(m_values, &jsondata);
+		//jda.saveToBuffer(m_values, &jsondata);
+		jda.saveToBuffer(vPackage, &jsondata);
+
+		if (jda.hasError()) {
+			const DataAccessError err = jda.error();
+			const QString errorMsg = tr("Error converting Qt data to JSON: %1").arg(err.errorMessage());
+			//setResultAndState(errorMsg, QtDisplayed);
+			qDebug() << errorMsg;
+		} else {
+			/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
+			setResultAndState(result + tr("Success"), ReadyToWrite);*/
+			qDebug() << jsondata;
+		}
+
+		m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
+		//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
+		m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
 
 		//now send to server
 		m_fetcher->initiateRequest(m_url, jsondata);
@@ -144,9 +204,29 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 	}
 	else
 	{
+
+		MODevice* moDev = new MODevice();
+		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
+
 		JsonDataAccess jda;
 		QString jsondata;
-		jda.saveToBuffer(m_values, &jsondata);
+		//jda.saveToBuffer(m_values, &jsondata);
+		jda.saveToBuffer(vPackage, &jsondata);
+
+		if (jda.hasError()) {
+			const DataAccessError err = jda.error();
+			const QString errorMsg = tr("Error converting Qt data to JSON: %1").arg(err.errorMessage());
+			//setResultAndState(errorMsg, QtDisplayed);
+			qDebug() << errorMsg;
+		} else {
+			/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
+			setResultAndState(result + tr("Success"), ReadyToWrite);*/
+			qDebug() << jsondata;
+		}
+
+		m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
+		//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
+		m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
 
 		//now send to server
 		m_fetcher->initiateRequest(m_url, jsondata);
@@ -169,6 +249,19 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 		*/
 	}
 }
+
+QVariantMap Mofiler::internal_buildPackageToSend(QVariantList a_user_values, QVariantMap a_dev_context, QVariantList a_identities){
+
+	QVariantMap mapBody;
+
+	mapBody.insert("mofiler_device_context", a_dev_context);
+	mapBody.insert("user_values", a_user_values);
+	mapBody.insert("identity", a_identities);
+
+
+	return mapBody;
+}
+
 
 void Mofiler::doSaveDataToDisk(){
 

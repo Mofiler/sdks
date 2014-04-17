@@ -23,7 +23,8 @@ Page {
                 //mofiler.setAppVersion("1.0");
                 mofiler.appVersion = "1.0";
                 //mofiler.setUrl("http://localhost:3000");
-                mofiler.url = "http://localhost:3000";
+                //mofiler.url = "http://localhost:3000";
+                mofiler.url = "http://192.168.0.26:3000";
                 mofiler.addIdentity("username", "johndoe");
             }
             
