@@ -166,6 +166,7 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 		 */
 		MODevice* moDev = new MODevice();
 		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
+		delete moDev;
 
 		JsonDataAccess jda;
 		QString jsondata;
@@ -207,6 +208,7 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 
 		MODevice* moDev = new MODevice();
 		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
+		delete moDev;
 
 		JsonDataAccess jda;
 		QString jsondata;

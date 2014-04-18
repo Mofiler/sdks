@@ -24,7 +24,7 @@ MODevice::~MODevice() {
 
 QString MODevice::getDisplaySize(){
 	bb::device::DisplayInfo display;
-	return QString(display.pixelSize().width()) + "x" + QString(display.pixelSize().height());
+	return QString::number(display.pixelSize().width()) + "x" + QString::number(display.pixelSize().height());
 }
 
 QString MODevice::getDeviceManufacturer(){
@@ -42,8 +42,10 @@ bool MODevice::isPhysicalKeyboardDevice(){
 }
 
 QString MODevice::getLocale(){
-	bb::system::LocaleHandler * region;
-	QLocale localecurr = region->locale();
+	//bb::system::LocaleHandler * region;
+	bb::system::LocaleHandler * myLocaleHandler;
+	myLocaleHandler = new bb::system::LocaleHandler(bb::system::LocaleType::Region, this);
+	QLocale localecurr = myLocaleHandler->locale();
 	return localecurr.languageToString(localecurr.language());
 }
 
@@ -53,7 +55,7 @@ QVariantMap MODevice::getDeviceInfo(){
 	allinfo.insert("manufacturer", getDeviceManufacturer());
 	allinfo.insert("model", getDeviceModelName());
 	allinfo.insert("display", getDisplaySize());
-	allinfo.insert("is_physical_keyboard", isPhysicalKeyboardDevice() + "");
+	allinfo.insert("is_physical_keyboard", isPhysicalKeyboardDevice() ? "true" : "false");
 	allinfo.insert("locale", getLocale());
 
 	return allinfo;
