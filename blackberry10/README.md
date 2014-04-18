@@ -74,6 +74,7 @@ All properties in Mofiler have setters/getters. These are the current prototypes
 		void setUrl(QUrl a_url);
 
 For example:
+
                 mofObject.setAppKey("HELLOMOFILERCASCADESKEY");
                 mofObject.setAppName("HelloMofiler");
                 mofObject.setAppVersion("1.0");
@@ -85,12 +86,15 @@ For example:
 Injecting values to Mofiler is easy. Just call the method injectValues().
 
 From javascript:
+
                     mofiler.injectValue("mykey", "myvalue");
 
 Or from C++:
+
 					mofObject.injectValue("mykey", "myvalue");
 
 Whose prototype is:
+
 					void Mofiler::injectValue(QString key, QString value);
 
 In this latter case, both arguments to this method are of typ QString. You should also know there's an optional third argument called "expireAfterMs", which is set in milliseconds since EPOCH, with which you tell Mofiler that this particular value has an expiration time/date (this must be understood as in, this value
@@ -103,15 +107,17 @@ The prototype for this latter function is:
 
 
 ## Application Permissions:
-The application must have the access_device_model_name permission to access hardware info so Mofiler can get such info as the model name of the device.
+The application must have the *access_device_model_name* permission to access hardware info so Mofiler can get such info as the model name of the device.
 Read more: https://developer.blackberry.com/native/reference/cascades/bb__device__hardwareinfo.html#function-modelname
 
-In order for Mofiler to be able to connect to the server (and thus be of any use), the application must have access_internet enabled also.
+In order for Mofiler to be able to connect to the server (and thus be of any use), the application must have *access_internet* enabled also.
+
 
 ## Libs
 
-To link against this class, add the following line to your .pro file: 
-LIBS += -lbbdata -lbbdevice -lbbsystem
+You need to add the following line to your .pro file: 
+    
+    LIBS += -lbbdata -lbbdevice -lbbsystem
 
 
 ## LICENSING NOTICE
