@@ -30,6 +30,7 @@ private:
 	//QUuid   m_uiid;
 	QString m_uiid;
 	QFile   *m_file;
+	QFile   *m_fileSessId;
 	QString m_sessionid;
 
 };
