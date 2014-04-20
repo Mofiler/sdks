@@ -96,6 +96,8 @@ void Fetcher::requestFinished(QNetworkReply* reply)
         qDebug() << "\n" << reply->errorString();
     }
 
+    emit methodResponded(reply);
+
     reply->deleteLater();
 }
 

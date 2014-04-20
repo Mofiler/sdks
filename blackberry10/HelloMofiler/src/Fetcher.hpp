@@ -25,6 +25,7 @@ namespace MofilerSDK
 
 	signals:
 		void networkStatusUpdated(bool status, QString type);
+		void methodResponded(QNetworkReply* reply);
 
 	private slots:
 		void requestFinished(QNetworkReply* reply);

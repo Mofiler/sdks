@@ -15,8 +15,13 @@ using namespace bb::data;
 
 Mofiler::Mofiler() : QObject(){
 	// TODO Auto-generated constructor stub
-	myFile = new QFile("data/mofilerstack.json");
 	m_fetcher = new Fetcher();
+	m_fetcher->setParent(this);
+
+    bool result = connect(m_fetcher, SIGNAL(methodResponded(QNetworkReply*)),
+            this, SLOT(methodResponded(QNetworkReply*)));
+
+    loadDataFromStorage();
 }
 
 /* APP KEY */
@@ -126,6 +131,10 @@ QVariantMap Mofiler::internal_convertMofileValToVariant(MofilerValue * mofvalue)
 	return valret;
 }
 
+void Mofiler::flushData(){
+	internal_sendData();
+}
+
 void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 	int istacklength = K_MOFILER_STACK_LENGTH;
 	int istackmaxlength = K_MOFILER_MAX_STACK_LENGTH;
@@ -135,6 +144,7 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 		//m_values.insert(key, mofvalue);
 		//m_values.insert(key, internal_convertMofileValToVariant(mofvalue));
 		m_values << internal_convertMofileValToVariant(mofvalue);
+		doSaveDataToDisk();
 	}
 	else if(m_values.size() > istackmaxlength){
 
@@ -164,32 +174,11 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
   identity: [ { username: 'johndoe' } ] }
 		 *
 		 */
-		MODevice* moDev = new MODevice();
-		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
-		delete moDev;
+		internal_sendData();
 
-		JsonDataAccess jda;
-		QString jsondata;
-		//jda.saveToBuffer(m_values, &jsondata);
-		jda.saveToBuffer(vPackage, &jsondata);
-
-		if (jda.hasError()) {
-			const DataAccessError err = jda.error();
-			const QString errorMsg = tr("Error converting Qt data to JSON: %1").arg(err.errorMessage());
-			//setResultAndState(errorMsg, QtDisplayed);
-			qDebug() << errorMsg;
-		} else {
-			/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
-			setResultAndState(result + tr("Success"), ReadyToWrite);*/
-			qDebug() << jsondata;
-		}
-
-		m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
-		//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
-		m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
-
-		//now send to server
-		m_fetcher->initiateRequest(m_url, jsondata);
+		m_values.clear();
+		m_values << internal_convertMofileValToVariant(mofvalue);
+		doSaveDataToDisk();
 
 		/*
 		//send this and clean all
@@ -206,36 +195,11 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 	else
 	{
 
-		MODevice* moDev = new MODevice();
-		QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
-		delete moDev;
-
-		JsonDataAccess jda;
-		QString jsondata;
-		//jda.saveToBuffer(m_values, &jsondata);
-		jda.saveToBuffer(vPackage, &jsondata);
-
-		if (jda.hasError()) {
-			const DataAccessError err = jda.error();
-			const QString errorMsg = tr("Error converting Qt data to JSON: %1").arg(err.errorMessage());
-			//setResultAndState(errorMsg, QtDisplayed);
-			qDebug() << errorMsg;
-		} else {
-			/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
-			setResultAndState(result + tr("Success"), ReadyToWrite);*/
-			qDebug() << jsondata;
-		}
-
-		m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
-		//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
-		m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
-
-		//now send to server
-		m_fetcher->initiateRequest(m_url, jsondata);
+		internal_sendData();
 
 		m_values.clear();
-
 		m_values << internal_convertMofileValToVariant(mofvalue);
+		doSaveDataToDisk();
 
 
 		/*
@@ -252,6 +216,65 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 	}
 }
 
+void Mofiler::internal_sendData()
+{
+	MODevice* moDev = new MODevice();
+	QVariant vPackage = internal_buildPackageToSend(m_values, moDev->getDeviceInfo(), m_identity);
+	delete moDev;
+
+	m_valuesSent = internal_copyValueStack(m_values);
+
+	JsonDataAccess jda;
+	QString jsondata;
+	//jda.saveToBuffer(m_values, &jsondata);
+	jda.saveToBuffer(vPackage, &jsondata);
+
+	if (jda.hasError()) {
+		const DataAccessError err = jda.error();
+		const QString errorMsg = tr("Error converting Qt data to JSON: %1").arg(err.errorMessage());
+		//setResultAndState(errorMsg, QtDisplayed);
+		qDebug() << errorMsg;
+	} else {
+		/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
+		setResultAndState(result + tr("Success"), ReadyToWrite);*/
+		qDebug() << jsondata;
+	}
+
+	m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
+	//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
+	m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
+
+	//now send to server
+	m_fetcher->initiateRequest(m_url, jsondata);
+
+}
+
+QVariantList Mofiler::internal_copyValueStack(QVariantList a_list)
+{
+	QVariantList newlist;
+
+	foreach(QVariant s, a_list){
+		newlist << s;
+	}
+
+	return newlist;
+}
+
+QVariantList Mofiler::concatArray(QVariantList arr1, QVariantList arr2)
+{
+	QVariantList newlist;
+
+	foreach(QVariant s, arr1){
+		newlist << s;
+	}
+
+	foreach(QVariant s, arr2){
+		newlist << s;
+	}
+	return newlist;
+}
+
+
 QVariantMap Mofiler::internal_buildPackageToSend(QVariantList a_user_values, QVariantMap a_dev_context, QVariantList a_identities){
 
 	QVariantMap mapBody;
@@ -265,25 +288,125 @@ QVariantMap Mofiler::internal_buildPackageToSend(QVariantList a_user_values, QVa
 }
 
 
+void Mofiler::loadDataFromStorage()
+{
+	//now build the JSON stuff and save data
+	JsonDataAccess jda;
+	QVariant res = jda.load("data/mofilerstack.json");
+
+	if (jda.hasError()) {
+		const DataAccessError err = jda.error();
+		const QString errorMsg = tr("loadDataFromStorage - Error converting Qt data to JSON: %1").arg(err.errorMessage());
+		//setResultAndState(errorMsg, QtDisplayed);
+		qDebug() << errorMsg;
+	} else {
+		/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
+		setResultAndState(result + tr("Success"), ReadyToWrite);*/
+		m_values = res.value<QVariantList>();
+		//m_values << res;
+		qDebug() << m_values;
+	}
+
+}
+
 void Mofiler::doSaveDataToDisk(){
 
-	if (!myFile->open(QIODevice::ReadWrite))
+	/*if (!myFile->open(QIODevice::ReadWrite))
     {
         qDebug() << "\n Failed to open file";
         return;
-    }
+    }*/
 
 	//now build the JSON stuff and save data
-	QString myJSONData;
+	//QString myJSONData;
 	JsonDataAccess jda;
-	jda.saveToBuffer(m_values, &myJSONData);
+	//jda.saveToBuffer(m_values, &myJSONData);
 
-	jda.save(myJSONData, "data/mofilerstack.json");
+	//jda.save(myJSONData, "data/mofilerstack.json");
+	jda.save(m_values, "data/mofilerstack.json");
+
+	if (jda.hasError()) {
+		const DataAccessError err = jda.error();
+		const QString errorMsg = tr("doSaveDataToDisk -- Error converting Qt data to JSON: %1").arg(err.errorMessage());
+		//setResultAndState(errorMsg, QtDisplayed);
+		qDebug() << errorMsg;
+	} else {
+		/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
+		setResultAndState(result + tr("Success"), ReadyToWrite);*/
+		qDebug() << m_values;
+	}
 
 
+	/*
     //myFile->write(buff);
     myFile->flush();
-    myFile->close();
+    myFile->close();*/
 
 
 }
+
+
+void Mofiler::methodResponded(QNetworkReply* reply)
+{
+
+	qDebug() << "Estamos en el requestFinished en MOFILER";
+
+    // Check the network reply for errors.
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        // Open the file and print an error if the file cannot be opened.
+        /*if (!myFile->open(QIODevice::ReadWrite))
+        {
+            qDebug() << "\n Failed to open file";
+            return;
+        }
+
+        // Write to the file using the reply data and close the file.
+        QByteArray buff = reply->readAll();
+
+        qDebug() << "vamos a imprimir lo que vino de la red";
+        //qDebug() << buff;
+
+
+        //myFile->write(reply->readAll());
+        myFile->write(buff);
+        myFile->flush();
+        myFile->close();*/
+
+        qDebug() << "listo el archivo: " << QUrl("file://" + QDir::homePath() + "/model.xml");
+
+    }
+    else
+    {
+        qDebug() << "\n Problem with the network";
+        qDebug() << "\n" << reply->errorString();
+
+    	int istacklength = K_MOFILER_STACK_LENGTH;
+    	int istackmaxlength = K_MOFILER_MAX_STACK_LENGTH;
+    	qDebug() << "size es: " << m_valuesSent.size();
+    	int isizeofvalues = m_valuesSent.size();
+    	if(m_valuesSent.size() > istackmaxlength){
+			//clean all
+    		m_values.clear();
+			doSaveDataToDisk();
+    	} else {
+    		m_values = concatArray(m_values, m_valuesSent);
+    	}
+
+
+		/*JSONArray jsonTmpArray = (JSONArray) new JSONArray((String)(a_vectBusinessObject.elementAt(2)));
+		if (jsonTmpArray.length() > K_MOFILER_MAX_STACK_LENGTH){
+				//clean all
+				jsonUserValues = new JSONArray();
+				mofilerValues.setJsonStack(jsonUserValues);
+				doSaveDataToDisk();
+		} else {
+			jsonUserValues = concatArray(jsonUserValues, jsonTmpArray);
+		}*/
+
+
+    }
+
+    reply->deleteLater();
+}
+

@@ -43,6 +43,7 @@ namespace MofilerSDK
 		Q_INVOKABLE QString getIdentity(QString key);
 		Q_INVOKABLE void injectValue(QString key, QString value);
 		Q_INVOKABLE void injectValue(QString key, QString value, long expireAfterMs);
+		Q_INVOKABLE void flushData();
 
 
 		/* PROPERTY GETTERS/SETTERS */
@@ -73,6 +74,9 @@ namespace MofilerSDK
 		void cookieChanged(QString);
 		void urlChanged(QUrl);
 
+	private slots:
+		void methodResponded(QNetworkReply* reply);
+
 	private:
 		QString m_appKey;
 		QString m_appName;
@@ -85,16 +89,21 @@ namespace MofilerSDK
 		//QMap<QString, MofilerValue*> m_values;
 		//QVariantMap m_values;
 		QVariantList m_values;
+		QVariantList m_valuesSent; //copy to be kept in case of communication error
 		QVariantMap m_devicecontext;
-		QVariant m_wholeData;
-		QFile *myFile;
 
 		Fetcher *m_fetcher;
 
 		void internal_injectValue(QString key, MofilerValue* value);
+
+		void internal_sendData();
 		QVariantMap internal_convertMofileValToVariant(MofilerValue * mofvalue);
 		QVariantMap internal_buildPackageToSend(QVariantList a_user_values, QVariantMap a_dev_context, QVariantList a_identities);
+		QVariantList internal_copyValueStack(QVariantList a_list);
+		QVariantList concatArray(QVariantList arr1, QVariantList arr2);
+
 		void doSaveDataToDisk();
+		void loadDataFromStorage();
 	};
 }
 #endif /* MOFILER_H_ */

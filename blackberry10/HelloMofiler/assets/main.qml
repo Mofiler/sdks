@@ -3,6 +3,8 @@ import bb.cascades 1.0
 
 // creates one page with a label
 Page {
+    id: mypage
+    property int mycounter: 0
     Container {
         layout: StackLayout {}
         Label {
@@ -35,9 +37,12 @@ Page {
             text: "Send data to mofiler"
             onClicked: {
                 console.log("doing something");
-                for (var i=0; i < 12; i++){
+                var i = mypage.mycounter;
+                //for (var i=0; i < 12; i++){
                     mofiler.injectValue("mykey" + i, "myvalue");
-                }
+                    mypage.mycounter++;
+                    text = "Send data to mofiler " + mypage.mycounter;
+                //}
             }
 
         }

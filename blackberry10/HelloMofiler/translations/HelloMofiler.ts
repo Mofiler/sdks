@@ -7,6 +7,14 @@
         <source>Error converting Qt data to JSON: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>doSaveDataToDisk -- Error converting Qt data to JSON: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>loadDataFromStorage - Error converting Qt data to JSON: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>main</name>
