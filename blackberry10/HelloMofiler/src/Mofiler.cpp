@@ -8,6 +8,7 @@
 #include "Mofiler.h"
 #include "MofilerConstants.h"
 #include "MODevice.h"
+#include "MOInstallationInfo.h"
 
 
 using namespace MofilerSDK;
@@ -17,6 +18,8 @@ Mofiler::Mofiler() : QObject(){
 	// TODO Auto-generated constructor stub
 	m_fetcher = new Fetcher();
 	m_fetcher->setParent(this);
+	m_moinstall = new MOInstallationInfo();
+	m_moinstall->setParent(this);
 
     bool result = connect(m_fetcher, SIGNAL(methodResponded(QNetworkReply*)),
             this, SLOT(methodResponded(QNetworkReply*)));
@@ -243,6 +246,9 @@ void Mofiler::internal_sendData()
 	m_fetcher->addHeader("X-Mofiler-AppKey", m_appKey);
 	//m_fetcher->addHeader("X-Mofiler-NoiseLevel", "0");
 	m_fetcher->addHeader("X-Mofiler-ApiVersion", "0.1");
+	m_fetcher->addHeader("X-Mofiler-InstallID", m_moinstall->getInstallationId());
+	m_fetcher->addHeader("X-Mofiler-SessionID", m_moinstall->getSessionId());
+
 
 	//now send to server
 	m_fetcher->initiateRequest(m_url, jsondata);

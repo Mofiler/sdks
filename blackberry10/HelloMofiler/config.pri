@@ -11,6 +11,7 @@ device {
 
         SOURCES +=  $$quote($$BASEDIR/src/Fetcher.cpp) \
                  $$quote($$BASEDIR/src/MODevice.cpp) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.cpp) \
                  $$quote($$BASEDIR/src/Mofiler.cpp) \
                  $$quote($$BASEDIR/src/MofilerValue.cpp) \
                  $$quote($$BASEDIR/src/StatusEvent.cpp) \
@@ -19,6 +20,7 @@ device {
 
         HEADERS +=  $$quote($$BASEDIR/src/Fetcher.hpp) \
                  $$quote($$BASEDIR/src/MODevice.h) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.h) \
                  $$quote($$BASEDIR/src/Mofiler.h) \
                  $$quote($$BASEDIR/src/MofilerConstants.h) \
                  $$quote($$BASEDIR/src/MofilerValue.h) \
@@ -35,6 +37,7 @@ device {
 
         SOURCES +=  $$quote($$BASEDIR/src/Fetcher.cpp) \
                  $$quote($$BASEDIR/src/MODevice.cpp) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.cpp) \
                  $$quote($$BASEDIR/src/Mofiler.cpp) \
                  $$quote($$BASEDIR/src/MofilerValue.cpp) \
                  $$quote($$BASEDIR/src/StatusEvent.cpp) \
@@ -43,6 +46,7 @@ device {
 
         HEADERS +=  $$quote($$BASEDIR/src/Fetcher.hpp) \
                  $$quote($$BASEDIR/src/MODevice.h) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.h) \
                  $$quote($$BASEDIR/src/Mofiler.h) \
                  $$quote($$BASEDIR/src/MofilerConstants.h) \
                  $$quote($$BASEDIR/src/MofilerValue.h) \
@@ -61,6 +65,7 @@ simulator {
 
         SOURCES +=  $$quote($$BASEDIR/src/Fetcher.cpp) \
                  $$quote($$BASEDIR/src/MODevice.cpp) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.cpp) \
                  $$quote($$BASEDIR/src/Mofiler.cpp) \
                  $$quote($$BASEDIR/src/MofilerValue.cpp) \
                  $$quote($$BASEDIR/src/StatusEvent.cpp) \
@@ -69,6 +74,7 @@ simulator {
 
         HEADERS +=  $$quote($$BASEDIR/src/Fetcher.hpp) \
                  $$quote($$BASEDIR/src/MODevice.h) \
+                 $$quote($$BASEDIR/src/MOInstallationInfo.h) \
                  $$quote($$BASEDIR/src/Mofiler.h) \
                  $$quote($$BASEDIR/src/MofilerConstants.h) \
                  $$quote($$BASEDIR/src/MofilerValue.h) \

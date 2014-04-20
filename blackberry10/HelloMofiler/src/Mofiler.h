@@ -19,6 +19,7 @@
 #include "MofilerValue.h"
 #include "MofilerConstants.h"
 #include "Fetcher.hpp"
+#include "MOInstallationInfo.h"
 
 namespace MofilerSDK
 {
@@ -93,6 +94,7 @@ namespace MofilerSDK
 		QVariantMap m_devicecontext;
 
 		Fetcher *m_fetcher;
+		MOInstallationInfo *m_moinstall;
 
 		void internal_injectValue(QString key, MofilerValue* value);
 
