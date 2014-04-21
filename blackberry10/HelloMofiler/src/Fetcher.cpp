@@ -34,7 +34,9 @@ void Fetcher::initiateRequest(QUrl a_Url, QString data)
 
     // Create and send the network request.
     QNetworkRequest request = QNetworkRequest();
-    request.setUrl(a_Url.toString() +  "/api/values/");
+	//request.setUrl(a_Url.toString() +  "/api/values/");
+	request.setUrl(a_Url);
+
 
     QByteArray postDataSize = QByteArray::number(data.size());
 
@@ -63,32 +65,12 @@ void Fetcher::initiateRequest(QUrl a_Url, QString data)
 void Fetcher::requestFinished(QNetworkReply* reply)
 {
 
-	qDebug() << "Estamos en el requestFinished";
+	qDebug() << "Fetcher: requestFinished";
 
     // Check the network reply for errors.
     if (reply->error() == QNetworkReply::NoError)
     {
-        // Open the file and print an error if the file cannot be opened.
-        /*if (!myFile->open(QIODevice::ReadWrite))
-        {
-            qDebug() << "\n Failed to open file";
-            return;
-        }
-
-        // Write to the file using the reply data and close the file.
-        QByteArray buff = reply->readAll();
-
-        qDebug() << "vamos a imprimir lo que vino de la red";
-        //qDebug() << buff;
-
-
-        //myFile->write(reply->readAll());
-        myFile->write(buff);
-        myFile->flush();
-        myFile->close();*/
-
-        qDebug() << "listo el archivo: " << QUrl("file://" + QDir::homePath() + "/model.xml");
-
+        //qDebug() << "listo el archivo: " << QUrl("file://" + QDir::homePath() + "/model.xml");
     }
     else
     {

@@ -81,7 +81,7 @@ For example:
                 mofObject.setUrl("http://mofiler.com:8081");
 
 
-## Usage
+## Usage: injection
 
 Injecting values to Mofiler is easy. Just call the method injectValues().
 
@@ -97,13 +97,52 @@ Whose prototype is:
 
 					void Mofiler::injectValue(QString key, QString value);
 
-In this latter case, both arguments to this method are of typ QString. You should also know there's an optional third argument called "expireAfterMs", which is set in milliseconds since EPOCH, with which you tell Mofiler that this particular value has an expiration time/date (this must be understood as in, this value
-for this key makes sense if and only if current time has not exceeded the expiration value in milliseconds).
+In this latter case, both arguments to this method are of type QString. You should also know there's an optional third argument called "expireAfterMs", which is set in milliseconds since EPOCH, with which you tell Mofiler that this particular value has an expiration time/date (this must be understood as in, this value for this key makes sense if and only if current time has not exceeded the expiration value in milliseconds).
 
 The prototype for this latter function is:
 
-					void Mofiler::injectValue(QString key, QString value);
+					void Mofiler::injectValue(QString key, QString value, long expireAfterMs);
 
+
+## Usage: reading values from Mofiler
+
+The method Mofiler SDK exposes for this is called getValue().
+
+From javascript:
+
+                    mofiler.getValue("mykey", "myidentitykey", "myidentityvalue");
+
+                    For example:
+
+                    mofiler.getValue("mykey0", "username", "johndoe");
+
+Or from C++:
+
+                    mofObject.getValue("mykey0", "username", "johndoe");
+
+Both getValue() and injectValue() work asynchronously. When the operation finishes, a signal is emitted indicated this. The signal exposed is called "methodResponded" and carries a QVariant with whatever te server has thrown as a response to the request.
+
+To read the value corresponding to a key as intended by getValue(), you must watch the following property "value" within the mofiler object.
+In QML, you can meake use of property binding by setting the rightmost part of the equation to "mofiler.value" and bind it to a property of yours, like this:
+
+                    property variant myvar: mofiler.value
+                    
+                    onMyvarChanged: {
+                        console.log("Response gotten from Mofiler server: ");
+                        var varcont = JSON.stringify(myvar); //note that checking either "myvar" or "mofiler.value" would be the same
+                        console.log(varcont);
+                        if (mofiler.value != undefined){
+                            console.log("value gotten for requested key: " + JSON.stringify(mofiler.value));    
+                        }
+                    }
+
+Within mofiler.value, the server will always answer something along the lines of:
+
+´´´json
+                    {"result": "ok", "value": "thevalueyouwantedtoretrieve"}
+´´´json
+
+Should the value for this key not yet exist in the server, or has not yet been approved by the application administrator, then "value" is undefined or null.
 
 
 ## Application Permissions:
@@ -111,6 +150,9 @@ The application must have the *access_device_model_name* permission to access ha
 Read more: https://developer.blackberry.com/native/reference/cascades/bb__device__hardwareinfo.html#function-modelname
 
 In order for Mofiler to be able to connect to the server (and thus be of any use), the application must have *access_internet* enabled also.
+
+    * access_internet
+    * access_device_model_name
 
 
 ## Libs

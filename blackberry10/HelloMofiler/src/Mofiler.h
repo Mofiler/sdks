@@ -33,6 +33,7 @@ namespace MofilerSDK
 		Q_PROPERTY( QString appVersion READ getAppVersion WRITE setAppVersion NOTIFY appVersionChanged);
 		Q_PROPERTY( QString cookie READ getCookie WRITE setCookie NOTIFY cookieChanged);
 		Q_PROPERTY( QUrl url READ getUrl WRITE setUrl NOTIFY urlChanged);
+		Q_PROPERTY( QVariant value READ getValueVal NOTIFY valueChanged);
 
 	public:
 		Mofiler();
@@ -44,6 +45,7 @@ namespace MofilerSDK
 		Q_INVOKABLE QString getIdentity(QString key);
 		Q_INVOKABLE void injectValue(QString key, QString value);
 		Q_INVOKABLE void injectValue(QString key, QString value, long expireAfterMs);
+		Q_INVOKABLE void getValue(QString key, QString identityKey, QString identityValue);
 		Q_INVOKABLE void flushData();
 
 
@@ -68,12 +70,16 @@ namespace MofilerSDK
 		QUrl getUrl();
 		void setUrl(QUrl a_url);
 
+		/* Read current value of Value */
+		QVariant getValueVal();
+
 	signals:
 		void appKeyChanged(QString);
 		void appNameChanged(QString);
 		void appVersionChanged(QString);
 		void cookieChanged(QString);
 		void urlChanged(QUrl);
+		void valueChanged(QVariant);
 
 	private slots:
 		void methodResponded(QNetworkReply* reply);
@@ -92,6 +98,7 @@ namespace MofilerSDK
 		QVariantList m_values;
 		QVariantList m_valuesSent; //copy to be kept in case of communication error
 		QVariantMap m_devicecontext;
+		QVariant m_resultValue;
 
 		Fetcher *m_fetcher;
 		MOInstallationInfo *m_moinstall;

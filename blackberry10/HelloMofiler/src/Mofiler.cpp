@@ -104,6 +104,10 @@ QString Mofiler::getIdentity(QString key){
 	return NULL;
 }
 
+QVariant Mofiler::getValueVal(){
+	return m_resultValue;
+}
+
 /* VALUE INJECTOR */
 void Mofiler::injectValue(QString key, QString value){
 	MofilerValue *mofvalue = new MofilerValue();
@@ -119,6 +123,16 @@ void Mofiler::injectValue(QString key, QString value, long expireAfterMs){
 	mofvalue->value = value;
 	mofvalue->expireAfterMs = expireAfterMs;
 	internal_injectValue(key, mofvalue);
+}
+
+void Mofiler::getValue(QString key, QString identityKey, QString identityValue){
+
+	MODevice* moDev = new MODevice();
+	QUrl myurl = QUrl(m_url.toString() +  "/api/values/" + moDev->getDeviceManufacturer() + "/" + identityKey + "/" + identityValue + "/" + key + "/");
+	delete moDev;
+
+	m_fetcher->initiateRequest(myurl, NULL);
+
 }
 
 QVariantMap Mofiler::internal_convertMofileValToVariant(MofilerValue * mofvalue){
@@ -182,40 +196,14 @@ void Mofiler::internal_injectValue(QString key, MofilerValue* mofvalue){
 		m_values.clear();
 		m_values << internal_convertMofileValToVariant(mofvalue);
 		doSaveDataToDisk();
-
-		/*
-		//send this and clean all
-		restApi.pushKeyValueStack(jsonUserValues);
-		jsonUserValues = new JSONArray();
-		mofilerValues.setJsonStack(jsonUserValues);
-		if (bUseExpireAfter)
-			internal_populateVector(key, value, expireAfterMs);
-		else
-			internal_populateVector(key, value);
-		doSaveDataToDisk();
-		*/
 	}
 	else
 	{
-
 		internal_sendData();
 
 		m_values.clear();
 		m_values << internal_convertMofileValToVariant(mofvalue);
 		doSaveDataToDisk();
-
-
-		/*
-		//send stack data and then push the new data into the stack
-		//deferredObj = new MofilerDeferredObject(key, value);
-		restApi.pushKeyValueStack(jsonUserValues);
-		doSaveDataToDisk();
-		jsonUserValues = new JSONArray();
-		if (bUseExpireAfter)
-			internal_populateVector(key, value, expireAfterMs);
-		else
-			internal_populateVector(key, value);
-		*/
 	}
 }
 
@@ -251,7 +239,8 @@ void Mofiler::internal_sendData()
 
 
 	//now send to server
-	m_fetcher->initiateRequest(m_url, jsondata);
+	QUrl myurl = QUrl(m_url.toString() +  "/api/values/");
+	m_fetcher->initiateRequest(myurl, jsondata);
 
 }
 
@@ -285,6 +274,11 @@ QVariantMap Mofiler::internal_buildPackageToSend(QVariantList a_user_values, QVa
 
 	QVariantMap mapBody;
 
+	//add information for installation and sessionid inside the device context json object too
+	a_dev_context.insert("X-Mofiler-InstallID", m_moinstall->getInstallationId());
+	a_dev_context.insert("X-Mofiler-SessionID", m_moinstall->getSessionId());
+
+
 	mapBody.insert("mofiler_device_context", a_dev_context);
 	mapBody.insert("user_values", a_user_values);
 	mapBody.insert("identity", a_identities);
@@ -303,13 +297,9 @@ void Mofiler::loadDataFromStorage()
 	if (jda.hasError()) {
 		const DataAccessError err = jda.error();
 		const QString errorMsg = tr("loadDataFromStorage - Error converting Qt data to JSON: %1").arg(err.errorMessage());
-		//setResultAndState(errorMsg, QtDisplayed);
 		qDebug() << errorMsg;
 	} else {
-		/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
-		setResultAndState(result + tr("Success"), ReadyToWrite);*/
 		m_values = res.value<QVariantList>();
-		//m_values << res;
 		qDebug() << m_values;
 	}
 
@@ -317,36 +307,17 @@ void Mofiler::loadDataFromStorage()
 
 void Mofiler::doSaveDataToDisk(){
 
-	/*if (!myFile->open(QIODevice::ReadWrite))
-    {
-        qDebug() << "\n Failed to open file";
-        return;
-    }*/
-
 	//now build the JSON stuff and save data
-	//QString myJSONData;
 	JsonDataAccess jda;
-	//jda.saveToBuffer(m_values, &myJSONData);
-
-	//jda.save(myJSONData, "data/mofilerstack.json");
 	jda.save(m_values, "data/mofilerstack.json");
 
 	if (jda.hasError()) {
 		const DataAccessError err = jda.error();
 		const QString errorMsg = tr("doSaveDataToDisk -- Error converting Qt data to JSON: %1").arg(err.errorMessage());
-		//setResultAndState(errorMsg, QtDisplayed);
 		qDebug() << errorMsg;
 	} else {
-		/*setRhsTitleAndText(tr("JSON Data from Qt"), jsonBuffer);
-		setResultAndState(result + tr("Success"), ReadyToWrite);*/
 		qDebug() << m_values;
 	}
-
-
-	/*
-    //myFile->write(buff);
-    myFile->flush();
-    myFile->close();*/
 
 
 }
@@ -355,32 +326,31 @@ void Mofiler::doSaveDataToDisk(){
 void Mofiler::methodResponded(QNetworkReply* reply)
 {
 
-	qDebug() << "Estamos en el requestFinished en MOFILER";
-
     // Check the network reply for errors.
     if (reply->error() == QNetworkReply::NoError)
     {
-        // Open the file and print an error if the file cannot be opened.
-        /*if (!myFile->open(QIODevice::ReadWrite))
-        {
-            qDebug() << "\n Failed to open file";
-            return;
-        }
+    	//if any data is retrieved, set the new "value" property that is exposed to QML as well
+    	//reply->bytesAvailable()
+    	if (reply->bytesAvailable()){
+            QByteArray buff = reply->readAll();
+            bb::data::JsonDataAccess ja;
+			QVariant jsonva = ja.loadFromBuffer(buff);
+			//m_resultValue = jsonva;
 
-        // Write to the file using the reply data and close the file.
-        QByteArray buff = reply->readAll();
-
-        qDebug() << "vamos a imprimir lo que vino de la red";
-        //qDebug() << buff;
-
-
-        //myFile->write(reply->readAll());
-        myFile->write(buff);
-        myFile->flush();
-        myFile->close();*/
-
-        qDebug() << "listo el archivo: " << QUrl("file://" + QDir::homePath() + "/model.xml");
-
+			/* START see if we can just return the "value" part of the server response */
+			const QVariantMap jsonreply = jsonva.toMap();
+			qDebug() << "sadaddasda ";
+			qDebug() << jsonreply["result"];
+			qDebug() << jsonreply["value"];
+			if (jsonreply["value"] != NULL && jsonreply["value"].toString().size() > 0){
+				m_resultValue = jsonreply["value"];
+			} else {
+				m_resultValue = QVariant();
+			}
+			emit valueChanged(m_resultValue);
+			/* END see if we can just return the "value" part of the server response */
+    	}
+    	return;
     }
     else
     {
@@ -389,7 +359,6 @@ void Mofiler::methodResponded(QNetworkReply* reply)
 
     	int istacklength = K_MOFILER_STACK_LENGTH;
     	int istackmaxlength = K_MOFILER_MAX_STACK_LENGTH;
-    	qDebug() << "size es: " << m_valuesSent.size();
     	int isizeofvalues = m_valuesSent.size();
     	if(m_valuesSent.size() > istackmaxlength){
 			//clean all
@@ -398,19 +367,6 @@ void Mofiler::methodResponded(QNetworkReply* reply)
     	} else {
     		m_values = concatArray(m_values, m_valuesSent);
     	}
-
-
-		/*JSONArray jsonTmpArray = (JSONArray) new JSONArray((String)(a_vectBusinessObject.elementAt(2)));
-		if (jsonTmpArray.length() > K_MOFILER_MAX_STACK_LENGTH){
-				//clean all
-				jsonUserValues = new JSONArray();
-				mofilerValues.setJsonStack(jsonUserValues);
-				doSaveDataToDisk();
-		} else {
-			jsonUserValues = concatArray(jsonUserValues, jsonTmpArray);
-		}*/
-
-
     }
 
     reply->deleteLater();
