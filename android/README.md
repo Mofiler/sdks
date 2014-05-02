@@ -18,12 +18,11 @@ This is all the code you need:
 
         Mofiler mof;
         mof = Mofiler.getInstance(getActivity());
-        mof.setAppKey("MY-APPKEY-HERE");
-        mof.setAppName("MyTestApplication");
+        mof.setAppKey("MY-APPKEY-HERE-ANDROID");
+        mof.setAppName("MyAndroidTestApplication");
         mof.setURL("mofiler.com:8081");
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
-        mof.addIdentity("bbPIN", "227BBA67");
         mof.setListener(this);
 
 ### Inject values to Mofiler:
