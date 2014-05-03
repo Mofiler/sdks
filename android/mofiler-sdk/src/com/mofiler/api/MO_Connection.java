@@ -341,11 +341,22 @@ public final class MO_Connection
 				
 				if (method.compareTo(K_MOFILER_METHOD_HTTP_GET) == 0){
 					HttpGet get = new HttpGet(a_url);
+					get.setHeader("Content-type", "application/json");
+					get.setHeader("Accept-Encoding", "application/gzipped");
+		            get.setHeader("Pragma", "no-cache");
+	                addNoiseLevelToHeaders();
+	                if (headerHashtable != null)
+	                {
+	                	for (Enumeration e = headerHashtable.keys(); e.hasMoreElements() ;) {
+	                		String oneKey = (String) e.nextElement();
+	                		String oneValue = (String) headerHashtable.get(oneKey);
+	                		get.setHeader(oneKey, oneValue);
+	                    }
+	                }
 		            httpResponse = httpClient.execute(get);
 				} else {
 		            HttpPost httpPost = new HttpPost(a_url);
 		            httpPost.setHeader("Content-type", "application/json");
-		            httpPost.setHeader("Content-Type", "application/json");
 		            httpPost.setHeader("Accept-Encoding", "application/gzipped");
 		            httpPost.setHeader("Pragma", "no-cache");
 	                addNoiseLevelToHeaders();
@@ -396,6 +407,7 @@ public final class MO_Connection
 	
 	            inputStream.close();
 	            result = sBuilder.toString();
+	            rcvdData = result.getBytes();
 	
 	        } catch (Exception e) {
 	            iExceptionCounter++;
