@@ -1,4 +1,4 @@
-# MOFILER SDK FOR BLACKBERRY OS 5.0:
+# MOFILER SDK FOR JavaME:
 
 Check the HelloMofiler project to see rapidly how to use the Mofiler SDK.
 
