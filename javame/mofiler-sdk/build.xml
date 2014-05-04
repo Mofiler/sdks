@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/*
+ * @(#)build.xml		v1.0 11-16-2008
+ *
+
+    Copyright (C) 2006-2008  Mario Zorz email me at marionetazorz at yahoo dot com
+    The Prosciutto Project website: http://www.prosciuttoproject.org
+    The Prosciutto Project blog:   http://prosciutto.boutiquestartups.com
+    ZA System Development website: http://www.zasysdev.com.ar
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
+-->
+
+<project name="mofiler-sdk" default="build_all">
+
+  <property file="build.properties"/>
+
+  <!-- ZA START: this is antenna-specific tags see http://antenna.sourceforge.net -->
+  <taskdef resource="antenna.properties"/>
+  <property name="wtk.home" value="${WTK-home}"/>
+
+
+  <!-- ZA END: this is antenna-specific tags see http://antenna.sourceforge.net -->
+
+  <target name="init">
+    <tstamp/>
+    <fail message="Please set 'WTK-home' in build.properties">
+      <condition>
+        <not>
+          <available file="${WTK-home}" type="dir"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please put proguard.jar in 'bin' under the WTK install directory">
+      <condition>
+        <not>
+          <available file="${WTK-home}/bin/proguard.jar" type="file"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please put antenna-bin-1.0.1.jar in 'lib' under the ANT install directory">
+      <condition>
+        <not>
+          <!-- <available file="${ant-home}/lib/antenna-bin-1.0.1.jar" type="file"/> -->
+          <available file="${ant-home}/lib/antenna-bin-1.2.1-beta.jar" type="file"/>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+
+
+  <!-- targets for midp20cldc10 FEATURES  -->
+  <!-- targets for midp20cldc10 FEATURES  -->
+  <!-- targets for midp20cldc10 FEATURES  -->
+  <target name="preprocess_midp20cldc11">
+      <property name="wtk.midp.version" value="2.0"/>
+      <property name="wtk.cldc.version" value="1.1"/>
+    <wtkpreprocess 
+        verbose="false"
+        srcdir="src" 
+        destdir="out" 
+        device="Generic/Java"
+        devicedbpath="D:\proyectos\devices"
+        printsymbols="true">
+
+        <!-- Load a.symbols -->
+        <symbols_file name="${basedir}/${symbol-file-name}"/>
+
+    </wtkpreprocess>
+  </target>
+
+  <target name="compile_midp20cldc11" depends="init">
+      <mkdir dir="classes_midp20cldc11"/>
+
+      <property name="wtk.midp.version" value="2.0"/>
+      <property name="wtk.cldc.version" value="1.1"/>
+      <property name="wtk.optionalpda.enabled" value="true"/>
+
+      <path id="wtk-build-path">
+        <fileset dir="${wtk.home}/lib">
+          <include name="cldcapi11.jar"/>
+          <include name="midpapi20.jar"/>
+          <include name="jsr75.jar"/>
+        </fileset>
+      </path>
+      <property name="libs-classpath" refid="wtk-build-path"/>
+
+      <wtkbuild srcdir="out"
+                destdir="classes_midp20cldc11"
+                bootclasspath="${libs-classpath}"
+                preverify="true"/>
+      <!-- bootclasspath="${wtk-build-path-test}" -->
+  </target>
+
+  <target name="package_midp20cldc11">
+
+      <property name="wtk.midp.version" value="2.0"/>
+      <property name="wtk.cldc.version" value="1.1"/>
+      <property name="wtk.optionalpda.enabled" value="true"/>
+
+      <wtkpreverify
+              srcdir="classes_midp20cldc11"
+              destdir="classes_midp20cldc11_preverified"
+          >
+      </wtkpreverify>
+
+      <jar jarfile="bin/${jar-name-midp20cldc11}.jar" basedir="classes_midp20cldc11_preverified" 
+           level="9"/>
+  </target>
+
+
+
+  <target name="build_basic" depends="clean">
+    <description>Builds the mofiler libray .jar file</description>
+    <property name="jar-name-basic" value="mofiler-basic"/>
+    <property name="symbol-file-name" value="mofiler_basic.symbols"/>
+    <antcall target="preprocess_midp10cldc10"/>
+      <delete dir="out/java"/>
+    <antcall target="compile_midp10cldc10"/>
+    <antcall target="package_midp10cldc10"/>
+  </target>
+
+
+  <target name="build_midp20cldc11" depends="clean">
+    <description>Builds the mofiler libray .jar file</description>
+    <property name="jar-name-midp20cldc11" value="mofiler-midp20cldc11"/>
+    <property name="symbol-file-name" value="mofiler_midp20cldc11.symbols"/>
+    <antcall target="preprocess_midp20cldc11"/>
+      <delete dir="out/java"/>
+    <antcall target="compile_midp20cldc11"/>
+    <antcall target="package_midp20cldc11"/>
+  </target>
+
+
+  <target name="build_all" depends="clean">
+    <description>Builds the mofiler libray .jar file</description>
+    <mkdir dir="bin"/>
+    <antcall target="build_midp20cldc11"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="out"/>
+    <delete dir="classes"/>
+    <delete dir="classes_all_features"/>
+    <delete dir="classes_basic"/>
+    <delete dir="classes_midp20cldc11"/>
+    <delete dir="classes_midp20cldc11_preverified"/>
+    <!-- <delete dir="bin" includes="*.jar"/> -->
+  </target>
+
+</project>

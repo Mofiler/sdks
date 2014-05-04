@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application steps="0">
+
+    <zajag url="http://zasysdev.com.ar/prosh/zajag.xml"/>
+<!--     <default_form uid="11000"/> -->
+    <!-- <default_form uid="40000"/> -->
+    <!--<config form_qty="10" buttons_form="60" tpl_qty="10" buttons_tpl="8" timer_qty="8" font_qty="8" imgarray_qty="8" images_per_array="8" msg_qty="100" colordef_qty="100"/> -->
+    <config form_qty="5" buttons_form="20" tpl_qty="5" buttons_tpl="8" timer_qty="4" font_qty="4" imgarray_qty="2" images_per_array="2" msg_qty="50" colordef_qty="11"  wrapper_buttons="5" wrapper_lines="100" lbs_timeout="60" debug_form="26000"/>
+
+    <default_form uid="11000"/>
+    <form uid="11000">
+        <appearance>
+            <color_id>69020</color_id>
+            <bkgimg_id>81001</bkgimg_id>
+             <visualfx_onhide>fadeout</visualfx_onhide>
+        </appearance>
+        <behavior>
+            <default_focus>11000</default_focus>
+<!--             <action_fire fire_param="12000">goto</action_fire> -->
+            <action_fire fire_param="13000">goto</action_fire>
+            <timer_id startat="onshow">71001</timer_id>
+        </behavior>
+        <buttons>
+            <button uid="11004">
+                <appearance>
+                    <focusable>no</focusable>
+                    <x_coord>10</x_coord>
+                    <y_coord>100</y_coord>
+                    <color_id>69001</color_id>
+                    <btn_alignment>absolute</btn_alignment>
+                    <font_unfocused>91001</font_unfocused>
+                    <rgb_text_unfocused>0000ff</rgb_text_unfocused>
+                    <text txt_alignment="left" txt_fx="scroll">Wait 3 sec or hit FIRE</text>
+                </appearance>
+            </button>
+        </buttons>
+    </form>
+
+
+    <!-- submenu!! dont delete this -->
+    <form uid="60000">
+        <appearance>
+            <template_id>12970</template_id>
+            <focusable>no</focusable>
+            <x_coord>140</x_coord>
+            <y_coord>209</y_coord>
+            <height>100</height>
+            <width>100</width>
+            <color_id>69004</color_id>
+        </appearance>
+        <behavior>
+            <default_focus>12970</default_focus>
+            <allows_delete>no</allows_delete>
+        </behavior>
+    </form>
+
+
+
+    <form uid="13000">
+        <appearance>
+            <color_id>69020</color_id>
+            <bkgimg_id>81001</bkgimg_id>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>13012</default_focus>
+            <save_session>yes</save_session>
+        </behavior>
+        <buttons>
+            <!-- BUTTON: fake button it only occupies space -->
+            <button uid="13003">
+                <appearance>
+                    <focusable>no</focusable>
+                    <color_id>69001</color_id>
+                    <height>40</height>
+                    <width>100</width>
+                    <btn_alignment>hcentered</btn_alignment>
+                </appearance>
+            </button>
+
+
+
+            <!-- BUTTON: MAIN menu option INITIALIZE MOFILER -->
+            <button uid="13012">
+                <appearance>
+                    <color_id>69006</color_id>
+<!--                     <width>100</width> -->
+                    <btn_alignment>hcentered</btn_alignment>
+                    <font_unfocused>91003</font_unfocused>
+                    <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                    <font_focused>91003</font_focused>
+                    <rgb_text_focused>ffffff</rgb_text_focused>
+                    <text txt_alignment="hcentered" txt_fx="scroll">Initialize Mofiler</text>
+                    <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="null">custom</action_fire>
+                </behavior>
+            </button>
+
+            <button uid="13013">
+                <appearance>
+                    <color_id>69006</color_id>
+<!--                     <width>100</width> -->
+                    <btn_alignment>hcentered</btn_alignment>
+                    <font_unfocused>91003</font_unfocused>
+                    <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                    <font_focused>91003</font_focused>
+                    <rgb_text_focused>ffffff</rgb_text_focused>
+                    <text txt_alignment="hcentered" txt_fx="scroll">Send data to Mofiler!</text>
+                    <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="null">custom</action_fire>
+                </behavior>
+            </button>
+
+            <button uid="13014">
+                <appearance>
+                    <color_id>69006</color_id>
+<!--                     <width>100</width> -->
+                    <btn_alignment>hcentered</btn_alignment>
+                    <font_unfocused>91003</font_unfocused>
+                    <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                    <font_focused>91003</font_focused>
+                    <rgb_text_focused>ffffff</rgb_text_focused>
+                    <text txt_alignment="hcentered" txt_fx="scroll">Receive data from Mofiler!</text>
+                    <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="null">custom</action_fire>
+                </behavior>
+            </button>
+
+            <button uid="13015">
+                <appearance>
+                    <color_id>69006</color_id>
+<!--                     <width>100</width> -->
+                    <btn_alignment>hcentered</btn_alignment>
+                    <font_unfocused>91003</font_unfocused>
+                    <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                    <font_focused>91003</font_focused>
+                    <rgb_text_focused>ffffff</rgb_text_focused>
+                    <text txt_alignment="hcentered" txt_fx="scroll">Flush data to Mofiler!</text>
+                    <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="null">custom</action_fire>
+                </behavior>
+            </button>
+
+
+            <!-- BUTTON: MAIN menu option -->
+            <button uid="13052">
+                <appearance>
+                    <color_id>69006</color_id>
+                    <width>100</width>
+                    <btn_alignment>hcentered</btn_alignment>
+                    <font_unfocused>91003</font_unfocused>
+                    <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                    <font_focused>91003</font_focused>
+                    <rgb_text_focused>ffffff</rgb_text_focused>
+                    <text txt_alignment="hcentered" txt_fx="scroll">BACK</text>
+                    <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="null">goback</action_fire>
+                </behavior>
+            </button>
+
+
+
+
+        </buttons>
+    </form>
+
+
+    <template_group uid="12980" >
+        <template uid="12980">
+            <appearance>
+                <anchor>bottom</anchor>
+                <color_id>69002</color_id>
+                <btn_alignment>hcentered</btn_alignment>
+                <font_unfocused>91001</font_unfocused>
+                <rgb_text_unfocused>cccccc</rgb_text_unfocused>
+                <font_focused>91002</font_focused>
+                <rgb_text_focused>000000</rgb_text_focused>
+                <text txt_alignment="hcentered" txt_fx="scroll">EXIT</text>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <action_fire fire_param="null">exitapp</action_fire>
+            </behavior>
+        </template>
+    </template_group>
+
+
+    <template_group uid="12960" >
+        <template uid="12960">
+            <appearance>
+                <anchor>bottom</anchor>
+                <focusable>no</focusable>
+                <x_coord>0</x_coord>
+                <y_coord>290</y_coord>
+                <height>19</height>
+                <color_id>69002</color_id>
+                <btn_alignment>absolute</btn_alignment>
+                <font_unfocused>91001</font_unfocused>
+                <rgb_text_unfocused>cccccc</rgb_text_unfocused>
+                <font_focused>91002</font_focused>
+                <rgb_text_focused>000000</rgb_text_focused>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <action_fire fire_param="null">exitapp</action_fire>
+            </behavior>
+        </template>
+        <template uid="12959">
+            <appearance>
+                <anchor>bottom</anchor>
+                <focusable>no</focusable>
+                <x_coord>140</x_coord>
+                <y_coord>290</y_coord>
+                <height>19</height>
+                <width>100</width>
+                <color_id>69002</color_id>
+                <btn_alignment>absolute</btn_alignment>
+                <font_unfocused>91001</font_unfocused>
+                <rgb_text_unfocused>cccccc</rgb_text_unfocused>
+                <font_focused>91002</font_focused>
+                <rgb_text_focused>000000</rgb_text_focused>
+                <text txt_alignment="hcentered" txt_fx="scroll">Menu</text>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <action_fire fire_param="60000">goto</action_fire>
+            </behavior>
+        </template>
+    </template_group>
+
+    <softkey_map>
+        <!-- <key value="-6" template_id="12960"/> -->
+        <key value="-7" template_id="12959"/>
+        <key value="-7" template_id="12970"/>
+        <key value="-7" template_id="12969"/>
+        <key value="-7" template_id="12968"/>
+    </softkey_map>
+
+    <template_group uid="12970" >
+        <template uid="12970">
+            <appearance>
+                <color_id>69006</color_id>
+                <btn_alignment>hcentered</btn_alignment>
+                <font_unfocused>91004</font_unfocused>
+                <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                <font_focused>91004</font_focused>
+                <rgb_text_focused>ffffff</rgb_text_focused>
+                <text txt_alignment="hcentered" txt_fx="scroll">Select</text>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <!-- <action_fire fire_param="73001">trigger_timer</action_fire> -->
+            </behavior>
+        </template>
+        <!-- BUTTON: select -->
+        <template uid="12969">
+            <appearance>
+                <color_id>69006</color_id>
+                <btn_alignment>hcentered</btn_alignment>
+                <font_unfocused>91004</font_unfocused>
+                <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                <font_focused>91004</font_focused>
+                <rgb_text_focused>ffffff</rgb_text_focused>
+                <text txt_alignment="hcentered" txt_fx="scroll">Back</text>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <action_fire fire_param="null">goback</action_fire>
+            </behavior>
+        </template>
+        <!-- BUTTON: select -->
+        <template uid="12968">
+            <appearance>
+                <color_id>69006</color_id>
+                <btn_alignment>hcentered</btn_alignment>
+                <font_unfocused>91004</font_unfocused>
+                <rgb_text_unfocused>ffffff</rgb_text_unfocused>
+                <font_focused>91004</font_focused>
+                <rgb_text_focused>ffffff</rgb_text_focused>
+                <text txt_alignment="hcentered" txt_fx="scroll">EXIT</text>
+                <img_onfocus_id img_onfocus_alignment="left" >83001</img_onfocus_id>
+            </appearance>
+            <behavior>
+                <action_fire fire_param="null">exitapp</action_fire>
+            </behavior>
+        </template>
+
+    </template_group>
+
+
+    <font uid="91001">
+        <description>FSYS|FB|FME</description>
+    </font>
+
+    <font uid="91002">
+        <description>FSYS|FB|FME</description>
+    </font>
+
+    <font uid="91003">
+        <description>FSYS|FB|FL</description>
+    </font>
+
+    <font uid="91004">
+        <description>FSYS|FPL|FS</description>
+    </font>
+
+
+    <timer uid="71001">
+        <active>yes</active>
+        <delay>3000</delay>
+        <period>3000</period>
+        <freq>once</freq>
+<!--         <action act_param="12000">goto</action> -->
+        <action act_param="13000">goto</action>
+    </timer>
+
+    <!-- this works like a clock! updates the form every 1 second -->
+    <timer uid="72001">
+        <active>yes</active>
+        <delay>1000</delay>
+        <period>1000</period>
+        <freq>forever</freq>
+        <!-- <freq>once</freq> -->
+        <action act_param="50014">repaint</action>
+    </timer>
+
+    <timer uid="73001">
+        <active>yes</active>
+        <delay>3000</delay>
+        <period>3000</period>
+        <freq>once</freq>
+        <action act_param="11000">goto</action>
+    </timer>
+
+
+    <timer uid="75001">
+        <active>yes</active>
+        <delay>5000</delay>
+        <period>5000</period>
+        <freq>once</freq>
+        <action act_param="72001">trigger_timer</action>
+    </timer>
+
+
+    <color uid="69001">
+        <bkg_rgb_start>FFFFFF</bkg_rgb_start>
+        <bkg_style>transp</bkg_style>
+    </color>
+
+    <color uid="69002">
+        <bkg_rgb_start>555555</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <border_rgb>0000FF</border_rgb>
+        <border_thick>1</border_thick>
+        <bkg_focused_rgb_start>FFFFFF</bkg_focused_rgb_start>
+        <bkg_focused_style>plain</bkg_focused_style>
+        <border_focused_rgb>FF0000</border_focused_rgb>
+        <border_focused_thick>1</border_focused_thick>
+    </color>
+
+    <color uid="69003">
+        <bkg_rgb_start>FFFFFF</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <border_rgb>0000FF</border_rgb>
+        <border_thick>1</border_thick>
+        <bkg_focused_rgb_start>FFFFFF</bkg_focused_rgb_start>
+        <bkg_focused_style>plain</bkg_focused_style>
+        <border_focused_rgb>FF0000</border_focused_rgb>
+        <border_focused_thick>1</border_focused_thick>
+    </color>
+
+    <color uid="69004">
+        <bkg_rgb_start>cccccc</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <border_rgb>EEEEEE</border_rgb>
+        <border_thick>1</border_thick>
+    </color>
+
+    <color uid="69005">
+        <bkg_rgb_start>cccccc</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <border_rgb>0000FF</border_rgb>
+        <border_thick>1</border_thick>
+    </color>
+
+    <color uid="69006">
+        <bkg_rgb_start>cb0101</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <bkg_focused_rgb_start>cb0101</bkg_focused_rgb_start>
+        <bkg_focused_rgb_end>cbcccc</bkg_focused_rgb_end>
+        <bkg_focused_style>towhite</bkg_focused_style>
+        <border_focused_rgb>FFFF00</border_focused_rgb>
+        <border_focused_thick>1</border_focused_thick>
+    </color>
+
+
+    <color uid="69007">
+        <bkg_rgb_start>FFFFFF</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+        <border_rgb>eeeeee</border_rgb>
+        <border_thick>1</border_thick>
+    </color>
+
+    <color uid="69009">
+        <bkg_style>transp</bkg_style>
+    </color>
+
+    <color uid="69012">
+        <bkg_rgb_start>b5c1c8</bkg_rgb_start>
+        <bkg_rgb_end>eeeeee</bkg_rgb_end>
+        <bkg_style>towhite</bkg_style>
+        <border_rgb>a5b1b8</border_rgb>
+        <border_thick>1</border_thick>
+
+        <bkg_focused_rgb_start>ffffff</bkg_focused_rgb_start>
+        <bkg_focused_rgb_end>ff3900</bkg_focused_rgb_end>
+        <bkg_focused_style>towhite</bkg_focused_style>
+
+        <border_focused_rgb>ffffff</border_focused_rgb>
+        <border_focused_thick>1</border_focused_thick>
+    </color>
+
+
+    <color uid="69020">
+        <bkg_rgb_start>FFFFFF</bkg_rgb_start>
+        <bkg_style>plain</bkg_style>
+    </color>
+
+    <img_array uid="81001" >
+        <image uid="81001">
+            <path>/splash.png</path>
+            <height>120</height>
+            <width>120</width>
+            <img_alignment>vcentered|hcentered</img_alignment>
+            <allows_delete>no</allows_delete>
+        </image>
+        <image uid="81002">
+            <path>/hello.png</path>
+            <height>120</height>
+            <width>120</width>
+            <img_alignment>top|hcentered</img_alignment>
+            <allows_delete>no</allows_delete>
+        </image>
+    </img_array>
+
+
+    <img_array uid="83001" >
+        <image uid="83001">
+            <path>/arrow2.png</path>
+            <x_coord>0</x_coord>
+            <y_coord>13</y_coord>
+            <height>5</height>
+            <width>8</width>
+            <img_alignment>bottom|left</img_alignment>
+            <allows_delete>no</allows_delete>
+        </image>
+    </img_array>
+
+
+    <scrollbar uid="12000" >
+        <color_id>69012</color_id>
+    </scrollbar>
+
+
+    <scrollbar uid="13000" >
+        <color_id>69012</color_id>
+    </scrollbar>
+
+    <scrollbar uid="40000" >
+        <color_id>69012</color_id>
+    </scrollbar>
+
+
+
+    <form uid="14000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>14004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="14004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 15000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="15000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+    <form uid="15000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>15004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="15004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 16000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="16000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="16000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>16004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="16004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 17000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="17000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="17000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>17004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="17004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 18000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="18000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="18000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>18004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="18004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 19000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="19000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="19000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>19004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="19004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 20000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="20000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="20000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>20004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="20004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 21000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="21000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="21000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>21004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="21004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 22000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="22000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="22000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>22004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="22004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 23000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="23000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+    <form uid="23000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>23004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="23004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 24000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="24000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="24000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>24004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="24004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goto 25000</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="25000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <form uid="25000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>25004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="25004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">END</text>
+                </appearance>
+                <behavior>
+                    <action_fire>goback</action_fire>
+                </behavior>
+            </button>
+            <button uid="25005">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">Start AGAIN</text>
+                </appearance>
+                <behavior>
+                    <action_fire fire_param="11000">goto</action_fire>
+                </behavior>
+            </button>
+        </buttons>
+    </form>
+
+
+    <!-- DEBUG CONSOLE -->
+    <form uid="26000">
+        <appearance>
+            <template_id>12960</template_id>
+        </appearance>
+        <behavior>
+            <default_focus>26004</default_focus>
+        </behavior>
+        <buttons>
+            <button uid="26004">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="10">@@debug@@</text>
+                    <!-- <text txt_alignment="left" txt_fx="2">dale loco a ver como sale todo esto con un texto largo, deberia estar calculando los renglolnes y a partirde ahi vemos que hacmos no?</text> -->
+                </appearance>
+                <behavior>
+                    <action_fire>act_default</action_fire>
+                </behavior>
+            </button>
+            <button uid="26005">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">Reset debug string</text>
+                </appearance>
+                <behavior>
+                    <action_fire>reset_debug_string</action_fire>
+                </behavior>
+            </button>
+            <button uid="26006">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">Free memory: @@freemem@@</text>
+                </appearance>
+            </button>
+            <button uid="26007">
+                <appearance>
+                    <text txt_alignment="left" txt_fx="scroll">goback</text>
+                </appearance>
+                <behavior>
+                    <action_fire>goback</action_fire>
+                </behavior>
+            </button>
+
+        </buttons>
+
+    </form>
+
+</application>

@@ -1,0 +1,502 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Debug"
+		Type="java"
+		AppTypeList="application,applet,j2me,custom"
+		DebugCallbackName="jdwp"
+		ObjectDir="tmpclasses"
+		AppType="j2me"
+		Version="7"
+		OutputFile=""
+		CompilerConfigName="">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				Dialog="_java_options_form Compiler"
+				EnableBuildFirst="0"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine='javac %~other -bootclasspath C:\WTK2.5.2\lib\midpapi20.jar;C:\WTK2.5.2\lib\cldcapi10.jar %jbd %cp "%f"'
+					OtherOptions="-source 1.4"/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamake"/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javarebuild"/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Debugger"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK2.5.2\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xdevice:DefaultColorPhone -Xdescriptor:HelloProsciutto.jad"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Interpreter"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK2.5.2\bin\emulator.exe -Xdevice:DefaultColorPhone -Xdescriptor:HelloProsciutto.jad"/>
+			</Target>
+			<Target
+				Name="UnitTest"
+				MenuCaption="Unit Test"
+				ShowOnMenu="Never"
+				Dialog=""
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				PreMacro="unittest_pre_build"
+				PostMacro="unittest_post_build"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp junit.slickedit.TestRunner"/>
+			</Target>
+			<Target
+				Name="dash"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="View Javadoc"
+				MenuCaption="&amp;View Javadoc"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine="javaviewdoc"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Javadoc All"
+				MenuCaption="Javadoc All"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakedoc javadoc -d docs %cp %{*.java}"/>
+			</Target>
+			<Target
+				Name="dash2"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Make Jar"
+				MenuCaption="Make &amp;Jar"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form jar"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakejar jar cvfm HelloProsciutto.jar .\bin\manifest.mf %{*} %~other"/>
+			</Target>
+			<Target
+				Name="Java Options"
+				MenuCaption="Java &amp;Options"
+				ShowOnMenu="HideIfNoCmdLine"
+				Deletable="0">
+				<Exec
+					CmdLine="javaoptions"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Make Jar2"
+				MenuCaption="&amp;Make Jar2"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1">
+				<Exec CmdLine='"C:\Archivos de programa\Java\jdk1.6.0\bin\jar.EXE"  cvfm %rpbin\%rn.jar %rpbin\manifest.mf -C classes . -C res .'/>
+			</Target>
+			<Target
+				Name="Make Jad2"
+				MenuCaption="&amp;Make Jad2"
+				RunFromDir="%rw">
+				<Exec
+					Type="Slick-C"
+					CmdLine="make_jad %r"/>
+			</Target>
+			<Target
+				Name="Launch JDebugTool"
+				MenuCaption="&amp;Launch JDebugTool"
+				RunFromDir="%rw">
+				<Exec CmdLine='"C:\Program Files (x86)\Java\jdk1.7.0_21\bin\java" -Xms256m -Xmx256m -jar "C:\Program Files (x86)\jdebugtool\jdebugtool.jar"'/>
+			</Target>
+			<Target
+				Name="Launch JVM"
+				MenuCaption="&amp;Launch JVM"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer">
+				<Exec CmdLine="C:\WTK2.5.2_01\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -classpath C:\WTK2.5.2_01\lib\midpapi20.jar;C:\WTK2.5.2_01\lib\cldcapi11.jar;C:\WTK2.5.2_01\lib\jsr179.jar;C:\WTK2.5.2_01\lib\mmapi.jar;%rpbuild\;%rpbuild-j2me\;%rp;%rpres\;;libs\prosciutto-midp20cldc10-connectionless.jar;%rplibs\mofiler-midp20cldc11.jar  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\english\mofiler_demo\Nokia\Asha\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Launch Emu"
+				MenuCaption="&amp;Launch Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\WTK2.5.2_01\bin\emulator.exe -Xnoagent  -classpath C:\WTK2.5.2_01\lib\midpapi20.jar;C:\WTK2.5.2_01\lib\cldcapi11.jar;C:\WTK2.5.2_01\lib\jsr179.jar;C:\WTK2.5.2_01\lib\mmapi.jar;%rpbuild\;%rpbuild-j2me\;%rp;%rpres\;%rplibs\prosciutto-midp20cldc10-connectionless.jar;%rplibs\mofiler-midp20cldc11.jar -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\english\mofiler_demo\Nokia\Asha\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Obfuscate"
+				MenuCaption="&amp;Obfuscate"
+				RunFromDir="%rp\bin"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="java -jar c:\wtk25\bin\proguard.jar @config.pro"/>
+			</Target>
+			<Target
+				Name="Launch S60 Emu"
+				MenuCaption="&amp;Launch S60 Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\S60\devices\S60_3rd_MIDP_SDK_FP1\bin\emulator.exe -Xdescriptor:D:\proyectos\PROSH_REP\demos\helloworld\bin\english\phonetest4_cldc11_hecl_mmapi_lbs\Nokia\6255i\HelloProsciutto.jad"/>
+			</Target>
+		</Menu>
+		<AppTypeTargets Name="Debug">
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer -J-Xdebug -J-Xnoagent -J-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="jdb %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<AppTypeTargets Name="Execute">
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				AppletClass="HelloMofiler"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<ClassPath>
+			<ClassPathElement Value="C:/WTK2.5.2/lib/midpapi20.jar"/>
+			<ClassPathElement Value="C:/WTK2.5.2/lib/cldcapi10.jar"/>
+		</ClassPath>
+		<PostBuildCommands>
+			<Exec CmdLine="C:\WTK2.5.2\bin\preverify.exe -cldc %cp -d classes tmpclasses"/>
+		</PostBuildCommands>
+	</Config>
+	<Config
+		Name="Release"
+		Type="java"
+		AppTypeList="application,applet,custom"
+		DebugCallbackName="jdwp"
+		ObjectDir="tmpclasses"
+		AppType="j2me"
+		Version="7"
+		OutputFile=""
+		CompilerConfigName="">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				Dialog="_java_options_form Compiler"
+				EnableBuildFirst="0"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine='javac %~other -bootclasspath C:\WTK2.5.2\lib\midpapi20.jar;C:\WTK2.5.2\lib\cldcapi10.jar %jbd %cp "%f"'
+					OtherOptions="-source 1.4"/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamake"/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javarebuild"/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Debugger"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK2.5.2\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xdevice:DefaultColorPhone -Xdescriptor:HelloProsciutto.jad"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Interpreter"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK2.5.2\bin\emulator.exe -Xdevice:DefaultColorPhone -Xdescriptor:HelloProsciutto.jad"/>
+			</Target>
+			<Target
+				Name="UnitTest"
+				MenuCaption="Unit Test"
+				ShowOnMenu="Never"
+				Dialog=""
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				PreMacro="unittest_pre_build"
+				PostMacro="unittest_post_build"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp junit.slickedit.TestRunner"/>
+			</Target>
+			<Target
+				Name="dash"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="View Javadoc"
+				MenuCaption="&amp;View Javadoc"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine="javaviewdoc"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Javadoc All"
+				MenuCaption="Javadoc All"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakedoc javadoc -d docs %cp %{*.java}"/>
+			</Target>
+			<Target
+				Name="dash2"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Make Jar"
+				MenuCaption="Make &amp;Jar"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form jar"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakejar jar cvfm HelloProsciutto.jar .\bin\manifest.mf %{*} %~other"/>
+			</Target>
+			<Target
+				Name="Java Options"
+				MenuCaption="Java &amp;Options"
+				ShowOnMenu="HideIfNoCmdLine"
+				Deletable="0">
+				<Exec
+					CmdLine="javaoptions"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Make Jar2"
+				MenuCaption="&amp;Make Jar2"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1">
+				<Exec CmdLine='"C:\Archivos de programa\Java\jdk1.6.0\bin\jar.EXE"  cvfm %rpbin\%rn.jar %rpbin\manifest.mf -C classes . -C res .'/>
+			</Target>
+			<Target
+				Name="Make Jad2"
+				MenuCaption="&amp;Make Jad2"
+				RunFromDir="%rw">
+				<Exec
+					Type="Slick-C"
+					CmdLine="make_jad %r"/>
+			</Target>
+			<Target
+				Name="Launch JDebugTool"
+				MenuCaption="&amp;Launch JDebugTool"
+				RunFromDir="%rw">
+				<Exec CmdLine='"C:\Program Files (x86)\Java\jdk1.7.0_21\bin\java" -Xms256m -Xmx256m -jar "C:\Program Files (x86)\jdebugtool\jdebugtool.jar"'/>
+			</Target>
+			<Target
+				Name="Launch JVM"
+				MenuCaption="&amp;Launch JVM"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer">
+				<Exec CmdLine="C:\WTK2.5.2_01\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -classpath C:\WTK2.5.2_01\lib\midpapi20.jar;C:\WTK2.5.2_01\lib\cldcapi11.jar;C:\WTK2.5.2_01\lib\jsr179.jar;C:\WTK2.5.2_01\lib\mmapi.jar;%rpbuild\;%rpbuild-j2me\;%rp;%rpres\;;libs\prosciutto-midp20cldc10-connectionless.jar;%rplibs\mofiler-midp20cldc11.jar  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\english\mofiler_demo\Nokia\Asha\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Launch Emu"
+				MenuCaption="&amp;Launch Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\WTK2.5.2_01\bin\emulator.exe -Xnoagent  -classpath C:\WTK2.5.2_01\lib\midpapi20.jar;C:\WTK2.5.2_01\lib\cldcapi11.jar;C:\WTK2.5.2_01\lib\jsr179.jar;C:\WTK2.5.2_01\lib\mmapi.jar;%rpbuild\;%rpbuild-j2me\;%rp;%rpres\;%rplibs\prosciutto-midp20cldc10-connectionless.jar;%rplibs\mofiler-midp20cldc11.jar -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\english\mofiler_demo\Nokia\Asha\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Obfuscate"
+				MenuCaption="&amp;Obfuscate"
+				RunFromDir="%rp\bin"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="java -jar c:\wtk25\bin\proguard.jar @config.pro"/>
+			</Target>
+			<Target
+				Name="Launch S60 Emu"
+				MenuCaption="&amp;Launch S60 Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\S60\devices\S60_3rd_MIDP_SDK_FP1\bin\emulator.exe -Xdescriptor:D:\proyectos\PROSH_REP\demos\helloworld\bin\english\phonetest4_cldc11_hecl_mmapi_lbs\Nokia\6255i\HelloProsciutto.jad"/>
+			</Target>
+		</Menu>
+		<AppTypeTargets Name="Debug">
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer -J-Xdebug -J-Xnoagent -J-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="jdb %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<AppTypeTargets Name="Execute">
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				AppletClass="HelloMofiler"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<ClassPath>
+			<ClassPathElement Value="C:/WTK2.5.2/lib/midpapi20.jar"/>
+			<ClassPathElement Value="C:/WTK2.5.2/lib/cldcapi10.jar"/>
+		</ClassPath>
+		<PostBuildCommands>
+			<Exec CmdLine="C:\WTK2.5.2\bin\preverify.exe -cldc %cp -d classes tmpclasses"/>
+		</PostBuildCommands>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.java;*.c;*.cpp;*.cxx;*.hxx;*.prg;*.pas;*.dpr;*.asm;*.bas;*.sc;*.e"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.jpg;*.gif;*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters=""/>
+	</CustomFolders>
+	<Files AutoFolders="PackageView">
+		<Folder Name="models">
+			<F N="models/model.xml"/>
+		</Folder>
+		<Folder Name="src">
+			<F N="src/HelloMofiler.java"/>
+			<F N="src/Navigation.java"/>
+		</Folder>
+		<F
+			N="build.xml"
+			Type="Ant"/>
+		<F N="Prosciutto_NormalMem10forms.symbols"/>
+	</Files>
+</Project>

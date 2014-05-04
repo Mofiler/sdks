@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/*
+ * @(#)build.xml		v1.0 11-16-2008
+ *
+
+    Copyright (C) 2006-2008  Mario Zorz email me at marionetazorz at yahoo dot com
+    The Prosciutto Project website: http://www.prosciuttoproject.org
+    The Prosciutto Project blog:   http://prosciutto.boutiquestartups.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
+-->
+
+<project name="HelloProsciutto" default="build_all">
+
+  <property file="build.properties"/>
+
+  <!-- ZA START: this is antenna-specific tags see http://antenna.sourceforge.net -->
+  <taskdef resource="antenna.properties"/>
+  <property name="wtk.home" value="${WTK-home}"/>
+  <!-- <property name="wtk.cldc.version" value="CLDC-1.0"/>
+  <property name="wtk.midp.version" value="MIDP-2.0"/> -->
+  
+  <!-- ZA END: this is antenna-specific tags see http://antenna.sourceforge.net -->
+
+
+  <target name="init">
+    <tstamp/>
+    <fail message="Please set 'WTK-home' in build.properties">
+      <condition>
+        <not>
+          <available file="${WTK-home}" type="dir"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please put proguard.jar in 'bin' under the WTK install directory">
+      <condition>
+        <not>
+          <available file="${WTK-home}/bin/proguard.jar" type="file"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please build 'ZAMAE' first">
+      <condition>
+        <not>
+          <available file="libs/${zamae-jar-name}" type="file"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="Please build 'Mofiler' first">
+      <condition>
+        <not>
+          <available file="libs/${mofiler-jar-name}" type="file"/>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="compile_midp1" depends="init">
+    <mkdir dir="build"/>
+    <!--
+    <javac srcdir="src"
+    -->
+    <property name="wtk.midp.version" value="1.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+
+    <wtkbuild 
+        bootclasspath="${libspluszamae-classpath}"
+        destdir="build" 
+        srcdir="out" 
+        target="1.2" 
+        preverify="true"/>
+
+  </target>
+
+  <target name="compile" depends="init">
+    <mkdir dir="build"/>
+    <!--
+    <javac srcdir="src"
+    -->
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+
+	<wtkbuild 
+        bootclasspath="${libspluszamae-classpath}"
+	    destdir="build" 
+	    srcdir="out" 
+	    target="1.2" 
+	    preverify="true"/>
+
+  </target>
+
+
+  <target name="compile_cldc11" depends="init">
+    <mkdir dir="build"/>
+    <!--
+    <javac srcdir="src"
+    -->
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.1"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+
+    <wtkbuild 
+        bootclasspath="${libspluszamae-classpath}"
+        destdir="build" 
+        srcdir="out" 
+        target="1.2" 
+        preverify="true"/>
+
+  </target>
+
+
+
+  <target name="preprocess_base">
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+    <wtkpreprocess 
+        verbose="false"
+        srcdir="src" 
+        destdir="out" 
+        device="${device-name}"
+        devicedbpath="D:\proyectos\devices"
+        symbols="MYSCREENSIZE='${myscreensize}',ZAMAEUA='${zamae-ua}'"
+        printsymbols="true">
+
+        <!-- Load a.symbols -->
+        <symbols_file name="${basedir}/${symbol-filename}"/>
+
+    </wtkpreprocess>
+  </target>
+
+
+  <target name="preprocess_base_cldc11">
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.1"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+    <wtkpreprocess 
+        verbose="false"
+        srcdir="src" 
+        destdir="out" 
+        device="${device-name}"
+        devicedbpath="D:\proyectos\devices"
+        symbols="MYSCREENSIZE='${myscreensize}',ZAMAEUA='${zamae-ua}'"
+        printsymbols="true">
+
+        <!-- Load a.symbols -->
+        <symbols_file name="${basedir}/${symbol-filename}"/>
+
+    </wtkpreprocess>
+  </target>
+
+
+  <target name="package_base" unless="cless">
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+      <!-- also include any audio files in the res folder -->
+      <fileset dir="audio">
+        <include name="**/*.mid"/>
+      </fileset>
+
+      <!-- also include any hecl script files in the res folder -->
+      <fileset dir="scripts">
+        <include name="**/*.hcl"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="The Prosciutto Project"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.0"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-2.0"/>
+        <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/>
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="libs/${zamae-jar-name}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+
+  <target name="package_base_midp1" unless="cless">
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+      <!-- also include any audio files in the res folder -->
+      <fileset dir="audio">
+        <include name="**/*.mid"/>
+      </fileset>
+
+      <!-- also include any hecl script files in the res folder -->
+      <fileset dir="scripts">
+        <include name="**/*.hcl"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="1.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="The Prosciutto Project"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.0"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-1.0"/>
+        <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/>
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="libs/${zamae-jar-name}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+
+  <target name="package_base_cldc11" unless="cless">
+
+    <!--
+    <mkdir dir="build-j2me"/>
+    <unzip src="../../libs/${zamae-jar-name}" dest="build-j2me"/>
+
+    <copy todir="build-j2me">
+      <fileset dir="build">
+        <include name="**"/>
+      </fileset>
+    </copy>
+      -->
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+      <!-- also include any audio files in the res folder -->
+      <fileset dir="audio">
+        <include name="**/*.mid"/>
+      </fileset>
+
+      <!-- also include any hecl script files in the res folder -->
+      <fileset dir="scripts">
+        <include name="**/*.hcl"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.1"/>
+    <property name="wtk.locationservices.enabled" value="true"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="The Prosciutto Project"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.1"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-2.0"/>
+        <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/>
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <!-- <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="wtk-build-path"
+        basedir="build-j2me"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+    -->
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="libs/${zamae-jar-name}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+
+  <target name="package_base_dontobfuscate"  unless="cless">
+
+      <mkdir dir="build-j2me"/>
+      <unzip src="libs/${zamae-jar-name}" dest="build-j2me"/>
+      <unzip src="libs/${mofiler-jar-name}" dest="build-j2me"/>
+
+      <copy todir="build-j2me">
+        <fileset dir="build">
+          <include name="**"/>
+        </fileset>
+      </copy>
+
+      <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+      <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+      size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+      <delete dir="res"/>
+      <mkdir dir="res"/>
+
+      <copy todir="res" flatten="true">
+        <fileset dir="res_formats/${myscreensize}">
+          <include name="**/*.png" if="myscreensize"/>
+        </fileset>
+        <fileset dir="icon_formats/${myiconsize}">
+          <include name="**/*.png" if="myiconsize"/>
+        </fileset>
+        <!-- also include any xml models in the res folder -->
+        <fileset dir="models">
+          <include name="**/model.xml"/>
+        </fileset>
+        <!-- also include any audio files in the res folder -->
+        <fileset dir="audio">
+          <include name="**/*.mid"/>
+        </fileset>
+
+        <!-- also include any hecl script files in the res folder -->
+        <fileset dir="scripts">
+          <include name="**/*.hcl"/>
+        </fileset>
+
+      </copy>
+
+      <copy file="bin/MANIFEST.MF.template"
+            tofile="bin/MANIFEST.MF" overwrite="true">
+        <filterset>
+          <filter token="APP_NAME" value="${jar-name}"/>
+          <filter token="VERSION" value="${version}"/>
+        </filterset>
+      </copy>
+
+      <property name="wtk.midp.version" value="2.0"/>
+      <property name="wtk.cldc.version" value="1.0"/>
+
+      <wtkjad
+          jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+          jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+          update="false"
+          manifest="bin/MANIFEST.MFF"
+          name="${jar-name}"
+          vendor="The Prosciutto Project"
+          version="${version}">
+          <attribute name="MIDlet-Description" value="${jar-name}"/>
+          <attribute name="MicroEdition-Configuration" value="CLDC-1.0"/>
+          <attribute name="MicroEdition-Profile" value="MIDP-2.0"/>
+          <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/>
+          <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+      </wtkjad>
+
+      <wtkpackage 
+          jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+          jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+          classpathref="javame-compile-bootclasspath"
+          basedir="build-j2me"
+          manifest="bin/MANIFEST.MF"
+          obfuscate="false"  
+          preverify="true">
+          <fileset dir="res">
+              <include name="**"/>
+          </fileset>
+      </wtkpackage>
+
+  </target>
+
+
+
+  <target name="package_base_midp1_cless"  if="cless">
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+      <!-- also include any audio files in the res folder -->
+      <fileset dir="audio">
+        <include name="**/*.mid"/>
+      </fileset>
+
+      <!-- also include any hecl script files in the res folder -->
+      <fileset dir="scripts">
+        <include name="**/*.hcl"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="1.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="The Prosciutto Project"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.0"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-1.0"/>
+        <!-- <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/> -->
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <!-- <wtkpreverify
+            srcdir="build"
+            destdir="build-preverified"
+            classpath="${libspluszamae-classpath}"
+        >
+    </wtkpreverify> -->
+
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="libs/${zamae-jar-name}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+  <target name="package_base_cless"  if="cless">
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+      <!-- also include any audio files in the res folder -->
+      <fileset dir="audio">
+        <include name="**/*.mid"/>
+      </fileset>
+
+      <!-- also include any hecl script files in the res folder -->
+      <fileset dir="scripts">
+        <include name="**/*.hcl"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.0"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="The Prosciutto Project"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.0"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-2.0"/>
+        <!-- <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/> -->
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <!-- <wtkpreverify
+            srcdir="build"
+            destdir="build-preverified"
+            classpath="${libspluszamae-classpath}"
+        >
+    </wtkpreverify> -->
+
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="libs/${zamae-jar-name}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+
+  <target name="package_base_cless_cldc11"  if="cless">
+
+    <!-- here copy only those png files that belong to the screensize as defined in the specific handset ant task caller -->
+    <!-- this will copy the default screenwidth, the screensize, then fullcanvassize. So if fullcanvas
+    size property is defined, the res folder will end up having the png files sized as per the best infromation available -->
+    <delete dir="res"/>
+    <mkdir dir="res"/>
+
+    <copy todir="res" flatten="true">
+      <fileset dir="res_formats/${myscreensize}">
+        <include name="**/*.png" if="myscreensize"/>
+      </fileset>
+      <fileset dir="icon_formats/${myiconsize}">
+        <include name="**/*.png" if="myiconsize"/>
+      </fileset>
+      <!-- also include any xml models in the res folder -->
+      <fileset dir="models">
+        <include name="**/model.xml"/>
+      </fileset>
+
+    </copy>
+
+    <copy file="bin/MANIFEST.MF.template"
+          tofile="bin/MANIFEST.MF" overwrite="true">
+      <filterset>
+        <filter token="APP_NAME" value="${jar-name}"/>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+
+    <property name="wtk.midp.version" value="2.0"/>
+    <property name="wtk.cldc.version" value="1.1"/>
+    <property name="wtk.optionalpda.enabled" value="true"/>
+
+    <wtkjad
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        update="false"
+        manifest="bin/MANIFEST.MF"
+        name="${jar-name}"
+        vendor="Mofiler"
+        version="${version}">
+        <attribute name="MIDlet-Description" value="${jar-name}"/>
+        <attribute name="MicroEdition-Configuration" value="CLDC-1.1"/>
+        <attribute name="MicroEdition-Profile" value="MIDP-2.0"/>
+        <!-- <attribute name="MIDlet-Permissions" value="javax.microedition.io.Connector.http"/> -->
+        <midlet name="${jar-name}" icon="/icon.png" class="${jar-name}"/>
+    </wtkjad>
+
+    <!-- <wtkpreverify
+            srcdir="build"
+            destdir="build-preverified"
+            classpath="${libspluszamae-classpath}"
+        >
+    </wtkpreverify> -->
+
+    <property name="libspath"
+          value="libs/${zamae-jar-name};
+          libs/${mofiler-jar-name}"
+    />
+
+    <wtkpackage 
+        jadfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jad"
+        jarfile="bin/${jar-dir}/${zamae-ua}/${jar-name}.jar"
+        classpathref="javame-compile-bootclasspath"
+        libclasspath="${libspath}"
+        basedir="build"
+        manifest="bin/MANIFEST.MF"
+        obfuscate="true"  
+        preverify="true">
+        <fileset dir="res">
+            <include name="**"/>
+        </fileset>
+    </wtkpackage>
+
+  </target>
+
+
+  <target name="build_base">
+    <description>Builds the main application .jar file</description>
+    <!-- ZA START: SET these variables to the proper names for project jar and right ZAMAE jar-->
+    <antcall target="clean"/>
+    <mkdir dir="bin/${jar-dir}/${zamae-ua}"/>
+    <!-- ZA END: SET these variables to the proper names for project jar and right ZAMAE jar-->
+
+    <path id="wtk-build-path">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi20.jar"/>
+      </fileset>
+      <pathelement location="libs/${zamae-jar-name}"/>
+    </path>
+    <property name="preverify-classpath" refid="wtk-build-path"/>
+    <property name="libspluszamae-classpath" refid="wtk-build-path"/>
+
+    <path id="javame-compile-bootclasspath">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi20.jar"/>
+      </fileset>
+    </path>
+    <property name="javame-compile-bootclasspath-path" refid="javame-compile-bootclasspath"/>
+    <antcall target="preprocess_base">
+        <param name="device-name" value="${zamae-ua}"/>
+        <param name="symbol-filename" value="${symbol-filename}"/>
+        <param name="zamae-ua" value="${zamae-ua}"/>
+        <param name="myscreensize" value="${myscreensize}"/>
+    </antcall>
+    <antcall target="compile"/>
+    <antcall target="package_base_cless">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+    <antcall target="package_base">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+  </target>
+
+
+
+  <target name="build_base_cldc11">
+    <description>Builds the main application .jar file</description>
+    <!-- ZA START: SET these variables to the proper names for project jar and right ZAMAE jar-->
+    <antcall target="clean"/>
+    <mkdir dir="bin/${jar-dir}/${zamae-ua}"/>
+    <!-- ZA END: SET these variables to the proper names for project jar and right ZAMAE jar-->
+
+    <path id="wtk-build-path">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi11.jar"/>
+        <include name="midpapi20.jar"/>
+        <include name="jsr179.jar"/>
+        <include name="jsr75.jar"/>
+        <include name="mmapi.jar"/>
+      </fileset>
+      <pathelement location="libs/${zamae-jar-name}"/>
+      <pathelement location="libs/${mofiler-jar-name}"/>
+    </path>
+    <property name="preverify-classpath" refid="wtk-build-path"/>
+    <property name="libspluszamae-classpath" refid="wtk-build-path"/>
+
+    <path id="javame-compile-bootclasspath">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi11.jar"/>
+        <include name="midpapi20.jar"/>
+        <include name="jsr75.jar"/>
+        <include name="jsr179.jar"/>
+        <include name="mmapi.jar"/>
+      </fileset>
+    </path>
+    <property name="javame-compile-bootclasspath-path" refid="javame-compile-bootclasspath"/>
+    <antcall target="preprocess_base">
+        <param name="device-name" value="${zamae-ua}"/>
+        <param name="symbol-filename" value="${symbol-filename}"/>
+        <param name="zamae-ua" value="${zamae-ua}"/>
+        <param name="myscreensize" value="${myscreensize}"/>
+    </antcall>
+    <antcall target="compile_cldc11"/>
+    <!-- <antcall target="package_base_cless_cldc11"/>
+    <antcall target="package_base_cldc11"/> -->
+    <antcall target="package_base_cless_cldc11">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+    <antcall target="package_base_cldc11">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+
+  </target>
+
+
+  <target name="build_base_midp1">
+    <description>Builds the main application .jar file</description>
+    <!-- ZA START: SET these variables to the proper names for project jar and right ZAMAE jar-->
+    <antcall target="clean"/>
+    <mkdir dir="bin/${jar-dir}/${zamae-ua}"/>
+    <!-- ZA END: SET these variables to the proper names for project jar and right ZAMAE jar-->
+
+    <path id="wtk-build-path">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi10.jar"/>
+      </fileset>
+      <pathelement location="libs/${zamae-jar-name}"/>
+    </path>
+    <property name="preverify-classpath" refid="wtk-build-path"/>
+    <property name="libspluszamae-classpath" refid="wtk-build-path"/>
+
+    <path id="javame-compile-bootclasspath">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi10.jar"/>
+      </fileset>
+    </path>
+    <property name="javame-compile-bootclasspath-path" refid="javame-compile-bootclasspath"/>
+    <antcall target="preprocess_base">
+        <param name="device-name" value="${zamae-ua}"/>
+        <param name="symbol-filename" value="${symbol-filename}"/>
+        <param name="zamae-ua" value="${zamae-ua}"/>
+        <param name="myscreensize" value="${myscreensize}"/>
+    </antcall>
+    <antcall target="compile_midp1"/>
+    <!-- <antcall target="package_base_midp1_cless"/>
+    <antcall target="package_base_midp1"/> -->
+
+    <antcall target="package_base_midp1_cless">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+    <antcall target="package_base_midp1">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+
+  </target>
+
+
+
+
+
+
+  <target name="build_base_dontobfuscate">
+    <description>Builds the main application .jar file</description>
+    <!-- ZA START: SET these variables to the proper names for project jar and right ZAMAE jar-->
+    <antcall target="clean"/>
+    <mkdir dir="bin/${jar-dir}/${zamae-ua}"/>
+    <!-- ZA END: SET these variables to the proper names for project jar and right ZAMAE jar-->
+
+    <path id="wtk-build-path">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi20.jar"/>
+      </fileset>
+      <pathelement location="libs/${zamae-jar-name}"/>
+    </path>
+    <property name="preverify-classpath" refid="wtk-build-path"/>
+    <property name="libspluszamae-classpath" refid="wtk-build-path"/>
+
+    <path id="javame-compile-bootclasspath">
+      <fileset dir="${WTK-home}/lib">
+        <include name="cldcapi10.jar"/>
+        <include name="midpapi20.jar"/>
+      </fileset>
+    </path>
+    <property name="javame-compile-bootclasspath-path" refid="javame-compile-bootclasspath"/>
+    <antcall target="preprocess_base">
+        <param name="device-name" value="${zamae-ua}"/>
+        <param name="symbol-filename" value="${symbol-filename}"/>
+        <param name="zamae-ua" value="${zamae-ua}"/>
+        <param name="myscreensize" value="${myscreensize}"/>
+    </antcall>
+    <antcall target="compile"/>
+    <!-- <antcall target="package_base_cless"/>
+    <antcall target="package_base_dontobfuscate"/> -->
+
+    <antcall target="package_base_cless">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+    <antcall target="package_base_dontobfuscate">
+      <reference refid="javame-compile-bootclasspath" torefid="javame-compile-bootclasspath"/>
+    </antcall>
+
+  </target>
+
+
+  <target name="build_ONLY_MOFILER_DEMO_cless" depends="clean">
+    <description>Builds the main application .jar file</description>
+    <!-- this builds the base version for NORMAL mem  -->
+    <property name="cless" value="true"/>
+    <antcall target="build_base_cldc11">
+        <param name="myscreensize" value="240x320"/>
+        <param name="myiconsize" value="37x37"/>
+        <param name="jar-name" value="HelloMofiler"/>
+        <param name="zamae-jar-name" value="prosciutto-midp20cldc10-connectionless.jar"/>
+        <param name="mofiler-jar-name" value="mofiler-midp20cldc11.jar"/>
+        <param name="symbol-filename" value="Prosciutto_NormalMem10forms.symbols"/>
+        <param name="zamae-ua" value="Nokia/Asha"/>
+        <param name="jar-dir" value="english/mofiler_demo"/>
+
+    </antcall>
+  </target>
+
+
+  <target name="build_all" depends="clean">
+    <description>Builds the whole set of application .jar files</description>
+    <!-- this builds ALL Versions for both english and Portuguese  -->
+    <antcall target="build_ONLY_MOFILER_DEMO_cless"/>
+  </target>
+
+
+  <target name="clean">
+    <delete dir="build"/>
+    <delete dir="build-j2me"/>
+    <delete dir="out"/>
+    <delete dir="res"/>
+    <delete dir="bin" includes="*.jar"/>
+    <delete dir="bin" includes="*.jad"/>
+    <delete file="bin/MANIFEST.MF"/>
+  </target>
+
+</project>

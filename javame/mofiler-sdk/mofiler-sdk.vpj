@@ -1,0 +1,560 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Debug"
+		Type="java"
+		AppTypeList="application,applet,j2me,custom"
+		DebugCallbackName="jdwp"
+		ObjectDir="tmpclasses"
+		AppType="j2me"
+		Version="7"
+		OutputFile=""
+		CompilerConfigName="">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				Dialog="_java_options_form Compiler"
+				EnableBuildFirst="0"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine='javac %~other %jbd %cp -bootclasspath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar "%f"'
+					OtherOptions="-source 1.4 -g"/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir=".">
+				<Exec CmdLine="antmake -emacs -f build.xml build_all"/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javarebuild"/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Debugger"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %cp -Xdevice:DefaultColorPhone -Xdescriptor:D:\proyectos\ZA_UIAPI_REP\trunk\client\package\zamae.jad"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Interpreter"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe %cp -Xdevice:DefaultColorPhone -Xdescriptor:D:\proyectos\ZA_UIAPI_REP\trunk\client\package\zamae.jad"/>
+			</Target>
+			<Target
+				Name="UnitTest"
+				MenuCaption="Unit Test"
+				ShowOnMenu="Never"
+				Dialog=""
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				PreMacro="unittest_pre_build"
+				PostMacro="unittest_post_build"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp junit.slickedit.TestRunner"/>
+			</Target>
+			<Target
+				Name="dash"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="View Javadoc"
+				MenuCaption="&amp;View Javadoc"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine="javaviewdoc"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Javadoc All"
+				MenuCaption="Javadoc All"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakedoc javadoc -d docs %cp %{*.java}"/>
+			</Target>
+			<Target
+				Name="dash2"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Make Jar"
+				MenuCaption="Make &amp;Jar"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form jar"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakejar jar cvfm zamae.jar .\bin\manifest.mf %{*} %~other"/>
+			</Target>
+			<Target
+				Name="Java Options"
+				MenuCaption="Java &amp;Options"
+				ShowOnMenu="HideIfNoCmdLine"
+				Deletable="0">
+				<Exec
+					CmdLine="javaoptions"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Make Jar2"
+				MenuCaption="&amp;Make Jar2"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1">
+				<Exec CmdLine='"C:\Archivos de programa\Java\jdk1.6.0\bin\jar.EXE"  cvf %rpbin\%rn.jar -C classes .'/>
+			</Target>
+			<Target
+				Name="Make Jad2"
+				MenuCaption="&amp;Make Jad2"
+				RunFromDir="%rw">
+				<Exec
+					Type="Slick-C"
+					CmdLine="make_jad %r"/>
+			</Target>
+			<Target
+				Name="Launch JDebugTool"
+				MenuCaption="&amp;Launch JDebugTool"
+				RunFromDir="%rw">
+				<Exec CmdLine='"c:\Archivos de programa\Java\jdk1.6.0\bin\java" -Xms256m -Xmx256m -jar "c:\Archivos de programa\jdebugtool\jdebugtool.jar"'/>
+			</Target>
+			<Target
+				Name="Launch JVM"
+				MenuCaption="&amp;Launch JVM"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -classpath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar;%rp\classes\;%rp  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Launch Emu"
+				MenuCaption="&amp;Launch Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xnoagent  -classpath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar;%rp\classes\;%rp  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Obfuscate"
+				MenuCaption="&amp;Obfuscate"
+				RunFromDir="%rp\bin"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="java -jar c:\wtk25\bin\proguard.jar @config.pro"/>
+			</Target>
+		</Menu>
+		<AppTypeTargets Name="Debug">
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer -J-Xdebug -J-Xnoagent -J-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="jdb %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<AppTypeTargets Name="Execute">
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				AppletClass="zamae"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<ClassPath>
+			<ClassPathElement Value="C:/WTK25/lib/cldcapi10.jar"/>
+			<ClassPathElement Value="C:/WTK25/lib/midpapi20.jar"/>
+		</ClassPath>
+		<PostBuildCommands>
+			<Exec CmdLine="C:\WTK25\bin\preverify.exe -cldc %cp -d classes tmpclasses"/>
+		</PostBuildCommands>
+	</Config>
+	<Config
+		Name="Release"
+		Type="java"
+		AppTypeList="application,applet,custom"
+		DebugCallbackName="jdwp"
+		ObjectDir="tmpclasses"
+		AppType="j2me"
+		Version="7"
+		OutputFile=""
+		CompilerConfigName="">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				Dialog="_java_options_form Compiler"
+				EnableBuildFirst="0"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine='javac %~other %jbd %cp -bootclasspath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar "%f"'
+					OtherOptions="-source 1.4 -g"/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamake"/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				Dialog="_java_options_form Compiler"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javarebuild"/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Debugger"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %cp -Xdevice:DefaultColorPhone -Xdescriptor:D:\proyectos\ZA_UIAPI_REP\trunk\client\package\zamae.jad"/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Interpreter"
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				RunFromDir="%rw">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe %cp -Xdevice:DefaultColorPhone -Xdescriptor:D:\proyectos\ZA_UIAPI_REP\trunk\client\package\zamae.jad"/>
+			</Target>
+			<Target
+				Name="UnitTest"
+				MenuCaption="Unit Test"
+				ShowOnMenu="Never"
+				Dialog=""
+				BuildFirst="1"
+				Deletable="0"
+				CaptureOutputWith="ProcessBuffer"
+				PreMacro="unittest_pre_build"
+				PostMacro="unittest_post_build"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp junit.slickedit.TestRunner"/>
+			</Target>
+			<Target
+				Name="dash"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="View Javadoc"
+				MenuCaption="&amp;View Javadoc"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				Deletable="0"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec
+					CmdLine="javaviewdoc"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Javadoc All"
+				MenuCaption="Javadoc All"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form javadoc"
+				CaptureOutputWith="ProcessBuffer"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakedoc javadoc -d docs %cp %{*.java}"/>
+			</Target>
+			<Target
+				Name="dash2"
+				MenuCaption="-">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Make Jar"
+				MenuCaption="Make &amp;Jar"
+				ShowOnMenu="HideIfNoCmdLine"
+				Dialog="_java_options_form jar"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1"
+				Deletable="0"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec CmdLine="javamakejar jar cvfm zamae.jar .\bin\manifest.mf %{*} %~other"/>
+			</Target>
+			<Target
+				Name="Java Options"
+				MenuCaption="Java &amp;Options"
+				ShowOnMenu="HideIfNoCmdLine"
+				Deletable="0">
+				<Exec
+					CmdLine="javaoptions"
+					Type="Slick-C"/>
+			</Target>
+			<Target
+				Name="Make Jar2"
+				MenuCaption="&amp;Make Jar2"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer"
+				BuildFirst="1">
+				<Exec CmdLine='"C:\Archivos de programa\Java\jdk1.6.0\bin\jar.EXE"  cvf %rpbin\%rn.jar -C classes .'/>
+			</Target>
+			<Target
+				Name="Make Jad2"
+				MenuCaption="&amp;Make Jad2"
+				RunFromDir="%rw">
+				<Exec
+					Type="Slick-C"
+					CmdLine="make_jad %r"/>
+			</Target>
+			<Target
+				Name="Launch JDebugTool"
+				MenuCaption="&amp;Launch JDebugTool"
+				RunFromDir="%rw">
+				<Exec CmdLine='"c:\Archivos de programa\Java\jdk1.6.0\bin\java" -Xms256m -Xmx256m -jar "c:\Archivos de programa\jdebugtool\jdebugtool.jar"'/>
+			</Target>
+			<Target
+				Name="Launch JVM"
+				MenuCaption="&amp;Launch JVM"
+				RunFromDir="%rw"
+				CaptureOutputWith="ProcessBuffer">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -classpath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar;%rp\classes\;%rp  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Launch Emu"
+				MenuCaption="&amp;Launch Emu"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="C:\WTK25\bin\emulator.exe -Xnoagent  -classpath C:\WTK25\lib\midpapi20.jar;C:\WTK25\lib\cldcapi10.jar;%rp\classes\;%rp  -Xdevice:DefaultColorPhone -Xdescriptor:%rpbin\%rn.jad"/>
+			</Target>
+			<Target
+				Name="Obfuscate"
+				MenuCaption="&amp;Obfuscate"
+				RunFromDir="%rp\bin"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="java -jar c:\wtk25\bin\proguard.jar @config.pro"/>
+			</Target>
+		</Menu>
+		<AppTypeTargets Name="Debug">
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer -J-Xdebug -J-Xnoagent -J-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="&amp;Debug"
+				BuildFirst="1"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="jdb %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<AppTypeTargets Name="Execute">
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				Dialog="_java_options_form Appletviewer"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				AppletClass="zamae"
+				Deletable="0"
+				AppType="applet"
+				RunFromDir="%rw">
+				<Exec CmdLine="appletviewer %h"/>
+			</AppTypeTarget>
+			<AppTypeTarget
+				MenuCaption="E&amp;xecute"
+				BuildFirst="1"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				Deletable="0"
+				AppType="custom"
+				RunFromDir="%rw">
+				<Exec CmdLine="java %cp %&lt;e"/>
+			</AppTypeTarget>
+		</AppTypeTargets>
+		<ClassPath>
+			<ClassPathElement Value="C:/WTK25/lib/cldcapi10.jar"/>
+			<ClassPathElement Value="C:/WTK25/lib/midpapi20.jar"/>
+		</ClassPath>
+		<PostBuildCommands>
+			<Exec CmdLine="C:\WTK25\bin\preverify.exe -cldc %cp -d classes tmpclasses"/>
+		</PostBuildCommands>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.java;*.c;*.cpp;*.cxx;*.hxx;*.prg;*.pas;*.dpr;*.asm;*.bas;*.sc;*.e"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.jpg;*.gif;*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters=""/>
+	</CustomFolders>
+	<Files AutoFolders="PackageView">
+		<Folder
+			Name="com.mofiler"
+			Type="Package">
+			<F N="src/com/mofiler/Mofiler.java"/>
+			<F N="src/com/mofiler/MofilerClient.java"/>
+			<F N="src/com/mofiler/MofilerInstallationInfo.java"/>
+			<F N="src/com/mofiler/MofilerValueStack.java"/>
+		</Folder>
+		<Folder
+			Name="com.mofiler.api"
+			Type="Package">
+			<F N="src/com/mofiler/api/ApiListener.java"/>
+			<F N="src/com/mofiler/api/Constants.java"/>
+			<F N="src/com/mofiler/api/Fetcher.java"/>
+			<F N="src/com/mofiler/api/FetcherListener.java"/>
+			<F N="src/com/mofiler/api/MO_Connection.java"/>
+			<F N="src/com/mofiler/api/RESTApi.java"/>
+		</Folder>
+		<Folder
+			Name="com.mofiler.device"
+			Type="Package">
+			<F N="src/com/mofiler/device/MO_Device.java"/>
+		</Folder>
+		<Folder
+			Name="com.mofiler.exception"
+			Type="Package">
+			<F N="src/com/mofiler/exception/AppKeyNotSetException.java"/>
+			<F N="src/com/mofiler/exception/IdentityNotSetException.java"/>
+		</Folder>
+		<Folder
+			Name="com.mofiler.util"
+			Type="Package">
+			<F N="src/com/mofiler/util/GZIP.java"/>
+			<F N="src/com/mofiler/util/URLDecoder.java"/>
+			<F N="src/com/mofiler/util/URLEncoder.java"/>
+		</Folder>
+		<Folder
+			Name="com.sun.lwuit.io"
+			Type="Package">
+			<F N="src/com/sun/lwuit/io/CacheMap.java"/>
+			<F N="src/com/sun/lwuit/io/Cookie.java"/>
+			<F N="src/com/sun/lwuit/io/Externalizable.java"/>
+			<F N="src/com/sun/lwuit/io/FileSystemStorage.java"/>
+			<F N="src/com/sun/lwuit/io/NetworkManager.java"/>
+			<F N="src/com/sun/lwuit/io/Storage.java"/>
+		</Folder>
+		<Folder
+			Name="com.sun.lwuit.io.impl"
+			Type="Package">
+			<F N="src/com/sun/lwuit/io/impl/IOImplementation.java"/>
+			<F N="src/com/sun/lwuit/io/impl/MIDPImpl.java"/>
+			<F N="src/com/sun/lwuit/io/impl/PlatformImplementation.java"/>
+			<F N="src/com/sun/lwuit/io/impl/RIMImplementation.java"/>
+		</Folder>
+		<Folder
+			Name="com.sun.lwuit.io.util"
+			Type="Package">
+			<F N="src/com/sun/lwuit/io/util/BufferedInputStream.java"/>
+			<F N="src/com/sun/lwuit/io/util/BufferedOutputStream.java"/>
+			<F N="src/com/sun/lwuit/io/util/IOProgressListener.java"/>
+			<F N="src/com/sun/lwuit/io/util/JSONParseCallback.java"/>
+			<F N="src/com/sun/lwuit/io/util/JSONParser.java"/>
+			<F N="src/com/sun/lwuit/io/util/Util.java"/>
+		</Folder>
+		<Folder
+			Name="org.json.me"
+			Type="Package">
+			<F N="src/org/json/me/JSONArray.java"/>
+			<F N="src/org/json/me/JSONException.java"/>
+			<F N="src/org/json/me/JSONObject.java"/>
+			<F N="src/org/json/me/JSONString.java"/>
+			<F N="src/org/json/me/JSONStringer.java"/>
+			<F N="src/org/json/me/JSONTokener.java"/>
+			<F N="src/org/json/me/JSONWriter.java"/>
+			<F N="src/org/json/me/StringWriter.java"/>
+		</Folder>
+		<Folder
+			Name="org.json.me.util"
+			Type="Package">
+			<F N="src/org/json/me/util/XML.java"/>
+			<F N="src/org/json/me/util/XMLTokener.java"/>
+		</Folder>
+		<F
+			N="build.xml"
+			Type="Ant"/>
+		<F N="mofiler_midp20cldc11.symbols"/>
+	</Files>
+</Project>

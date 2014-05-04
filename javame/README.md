@@ -5,7 +5,20 @@ Check the HelloMofiler project to see rapidly how to use the Mofiler SDK.
 
 ## Quick stuff to get you going
 
-Include the library .jar file in your libs folder inside your Eclipse Blackberry plugin project. 
+Include the library .jar file in your libs path or into your project (depending on the IDE you use). 
+
+For a brief on how to build the HelloMofiler application, follow these steps:
+Download and install:
+1.1)JDK 1.6+
+1.2)WTK 2.5.2 or newer (http://java.sun.com/products/sjwtoolkit/download.html)
+1.3)ant (http://ant.apache.org/manual/install.html)
+1.4)antenna (http://antenna.sourceforge.net/)
+1.5)Proguard (http://proguard.sourceforge.net/)
+on your computer.
+
+Then you just need to run the target "build_all" in build.xml inside HelloMofiler project folder.
+
+NOTE: HelloMofiler is build with Prosciutto. You can use any other JavaME-compatible IDE / development platform in order to user Mofiler J2ME SDK.
 
 This is all the code you need:
 
@@ -14,11 +27,10 @@ This is all the code you need:
         Mofiler mof;
         mof = Mofiler.getInstance();
         mof.setAppKey("MY-APPKEY-HERE");
-        mof.setAppName("MyTestApplication");
+        mof.setAppName("MyTestJ2MEApplication");
         mof.setURL("mofiler.com:8081");
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
-        mof.addIdentity("bbPIN", "227BBA67");
         mof.setListener(this);
 
 ### Inject values to Mofiler:
@@ -45,13 +57,12 @@ Before exiting your application (i.e., before calling System.exit()), you need t
 
 	mof.onDestroyApp();
 
-For example, on your application MainScreen (net.rim.device.api.ui.container.MainScreen) you could do this:
+For example, on your application MIDlet you could do this:
 
-    public boolean onClose() {
-        // TODO Auto-generated method stub
-        //Call Mofiler.onDestroyApp() when you know your main screen is going off and your app is going to be finished
+    protected void destroyApp( boolean unconditional )throws MIDletStateChangeException
+    {
         mof.onDestroyApp();
-        return super.onClose();
+        exitMIDlet();
     }
 
 

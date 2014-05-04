@@ -1,0 +1,5 @@
+add_if_new@MIDP20=1
+add_if_new@CLDC10=1
+add_if_new@FORMQTY=10
+add_if_new@BUTTONQTY=60
+add_if_new@LineDrawingOffset=1
