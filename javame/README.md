@@ -9,11 +9,11 @@ Include the library .jar file in your libs path or into your project (depending 
 
 For a brief on how to build the HelloMofiler application, follow these steps:
 Download and install:
-1.1)JDK 1.6+
-1.2)WTK 2.5.2 or newer (http://java.sun.com/products/sjwtoolkit/download.html)
-1.3)ant (http://ant.apache.org/manual/install.html)
-1.4)antenna (http://antenna.sourceforge.net/)
-1.5)Proguard (http://proguard.sourceforge.net/)
+- 1.1)JDK 1.6+
+- 1.2)WTK 2.5.2 or newer (http://java.sun.com/products/sjwtoolkit/download.html)
+- 1.3)ant (http://ant.apache.org/manual/install.html)
+- 1.4)antenna (http://antenna.sourceforge.net/)
+- 1.5)Proguard (http://proguard.sourceforge.net/)
 on your computer.
 
 Then you just need to run the target "build_all" in build.xml inside HelloMofiler project folder.
