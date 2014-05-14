@@ -48,6 +48,7 @@ NOTE: the ANE was built based on https://github.com/katopz/ane-device-file-util/
 This ANE will provide methods to access cross-platform native information like Mac Address, Device Name, etc. and some specific information like PIN unique to BlackBerry Platform. 
 
 HOW TO USE IT
+Add thise code to your AS3/Flash project
 
     import com.debokeh.anes.utils.DeviceInfoUtil;
 
@@ -71,6 +72,7 @@ HOW TO USE IT
     }
 
 -- TO BE IMPLEMTED
+In future releases...
 
         Mofiler uses an internal stack and persistence in order to collect data from your application before attempting to send it over to the server, thus
         ensuring internet usage and user experience is taken care of.
