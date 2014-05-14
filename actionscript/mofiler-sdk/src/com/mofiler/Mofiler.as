@@ -5,9 +5,6 @@ import com.mofiler.device.MO_Device;
 import com.mofiler.exception.AppKeyNotSetException;
 import com.mofiler.exception.IdentityNotSetException;
 
-import flash.net.NetworkInfo;
-import flash.net.NetworkInterface;
-
 
 public class Mofiler{
 	static private var instance:Mofiler= null;
