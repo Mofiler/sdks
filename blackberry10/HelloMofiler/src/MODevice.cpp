@@ -36,6 +36,15 @@ QString MODevice::getDeviceModelName(){
 	return hardinfo.modelName();
 }
 
+QString MODevice::getIMEI(){
+	bb::device::HardwareInfo hardinfo;
+	return hardinfo.imei();
+}
+QString MODevice::getSerialNumber(){
+	bb::device::HardwareInfo hardinfo;
+	return hardinfo.serialNumber();
+}
+
 bool MODevice::isPhysicalKeyboardDevice(){
 	bb::device::HardwareInfo hardinfo;
 	return hardinfo.isPhysicalKeyboardDevice();
@@ -57,6 +66,8 @@ QVariantMap MODevice::getDeviceInfo(){
 	allinfo.insert("display", getDisplaySize());
 	allinfo.insert("is_physical_keyboard", isPhysicalKeyboardDevice() ? "true" : "false");
 	allinfo.insert("locale", getLocale());
+	allinfo.insert("imei", getIMEI());
+	allinfo.insert("serial", getSerialNumber());
 
 	return allinfo;
 }

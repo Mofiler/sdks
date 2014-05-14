@@ -28,6 +28,8 @@ class MODevice : public QObject
 		QString getDeviceModelName();
 		bool isPhysicalKeyboardDevice();
 		QString getLocale();
+		QString getIMEI();
+		QString getSerialNumber();
 		QVariantMap getDeviceInfo();
 };
 
