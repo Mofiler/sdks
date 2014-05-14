@@ -9,7 +9,7 @@ Include the mofiler-sdk.swc file as a library to your project (see Library path 
 
 Add these permissions to your project: 
 
-For Android add to <project_name>-app.xml file:
+For Android add to project_name-app.xml file:
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -48,6 +48,7 @@ NOTE: the ANE was built based on https://github.com/katopz/ane-device-file-util/
 This ANE will provide methods to access cross-platform native information like Mac Address, Device Name, etc. and some specific information like PIN unique to BlackBerry Platform. 
 
 HOW TO USE IT
+
     import com.debokeh.anes.utils.DeviceInfoUtil;
 
     if(DeviceInfoUtil.getPIN()!=null){
@@ -70,6 +71,7 @@ HOW TO USE IT
     }
 
 -- TO BE IMPLEMTED
+
         Mofiler uses an internal stack and persistence in order to collect data from your application before attempting to send it over to the server, thus
         ensuring internet usage and user experience is taken care of.
         Should you want to send data over to Mofiler server right away, you just need to perform the following call:
