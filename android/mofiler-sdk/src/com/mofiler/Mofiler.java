@@ -21,6 +21,7 @@ public final class Mofiler{
 	private String cookie;
 	private Hashtable identity;
 	private String strURL;
+	private boolean useLocation = true; //defaults to true
 	
 	private Context context;
 
@@ -28,9 +29,9 @@ public final class Mofiler{
 		//moClient = new MofilerClient(false);
 		setContext(context);
 		DataBaseManager.initializeDB(context);
-		moClient = new MofilerClient(true, context);
+		moClient = new MofilerClient(true, true, context);
 	}
-	
+
 	static public Mofiler getInstance(Context context) {
 		if(instance == null)
 			instance = new Mofiler(context);
@@ -39,6 +40,10 @@ public final class Mofiler{
 
 	public void setContext(Context context){
 		this.context = context;
+	}
+
+	public Context getContext(){
+		return this.context;
 	}
 	
 	public String getAppKey() {
@@ -83,6 +88,16 @@ public final class Mofiler{
 		this.moClient.setURL(a_URL);
 	}
 
+	public boolean isUseLocation() {
+		return useLocation;
+	}
+
+	public void setUseLocation(boolean useLocation) {
+		this.useLocation = useLocation;
+		moClient.setUseLocation(useLocation);
+	}
+
+	
 	public void addIdentity(String key, String value) {
 		if (this.identity == null)
 			this.identity = new Hashtable();

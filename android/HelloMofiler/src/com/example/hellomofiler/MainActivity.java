@@ -84,10 +84,11 @@ public class MainActivity extends ActionBarActivity {
      	            mof = Mofiler.getInstance(getActivity());
      	            //mof.setURL("mofiler.com:8081");
      	            //mof.setURL("localhost:3000");
-     	            mof.setURL("192.168.0.26:3000");
+     	            mof.setURL("192.168.0.26:8081");
      	            mof.setAppKey("MY-APPKEY-HERE-ANDROID");
      	            mof.setAppName("MyAndroidTestApplication");
      	            mof.addIdentity("username", "johndoe");
+     	            mof.setUseLocation(true); //defaults to true
      	            mof.setListener(mofListenerExample);
     			}
     		});

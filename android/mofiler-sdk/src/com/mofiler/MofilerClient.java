@@ -13,6 +13,8 @@ import android.content.Context;
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.RESTApi;
 import com.mofiler.daos.MofilerDao;
+import com.mofiler.service.LocationService;
+import com.mofiler.service.LocationServiceImpl;
 
 //this class will hold the actual client / server logic, at the uppermost level, and will hold
 //data in persistence until it deserves to be pushed to the server, in chunks, in a single push.
@@ -29,8 +31,10 @@ public class MofilerClient implements ApiListener {
 	private ApiListener listener = null;
 	private String strURL;
 	private Context context;
+	private LocationService locationService;
+	private boolean useLocation;
 
-	public MofilerClient(boolean a_bUseDeferredSend, Context context) {
+	public MofilerClient(boolean a_bUseDeferredSend, boolean a_bUseLocation, Context context) {
 		//initialization for LWUIT IO
         /*com.sun.lwuit.io.Storage.init("mofiler");
         Util.register("MofilerValueStack", MofilerValueStack.class);
@@ -45,6 +49,13 @@ public class MofilerClient implements ApiListener {
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
 		restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
 		this.bUseDeferredSend = a_bUseDeferredSend;
+		this.useLocation = a_bUseLocation;
+		locationService = new LocationServiceImpl(context);
+	
+		if (a_bUseLocation){
+			locationService.startProvider();
+		}
+		
 	}
 	
 	public void setContext(Context context){
@@ -52,6 +63,18 @@ public class MofilerClient implements ApiListener {
 		restApi.setContext(context);
 	}
 	
+	public boolean isUseLocation() {
+		return useLocation;
+	}
+
+	public void setUseLocation(boolean useLocation) {
+		this.useLocation = useLocation;
+		locationService.stopProvider(); //stop it if it was working for some reason
+		if (useLocation){ //only start it if they're requesting to get location updates
+			locationService.startProvider();
+		}
+	}
+
 	public void addHeaderKeyValue(String header, String value)
 	{
 		restApi.addPropertyKeyValuePair(header, value);		
@@ -84,6 +107,8 @@ public class MofilerClient implements ApiListener {
 		JSONObject tmpObj = new JSONObject();
 		tmpObj.put(key, value);
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+		if (useLocation)
+			tmpObj.put(RESTApi.K_MOFILER_API_LOCATION_KEY, locationService.getLastKnownLocationJSON());
 		jsonUserValues.put(tmpObj);
 	}
 
@@ -94,6 +119,8 @@ public class MofilerClient implements ApiListener {
 		tmpObj.put(key, value);
 		tmpObj.put("expireAfter", expireAfterMs);
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+		if (useLocation)
+			tmpObj.put(RESTApi.K_MOFILER_API_LOCATION_KEY, locationService.getLastKnownLocationJSON());
 		jsonUserValues.put(tmpObj);
 	}
 	
@@ -157,7 +184,10 @@ public class MofilerClient implements ApiListener {
 	
 	private void pushValue_single(String key, String value){
 		try{
-			restApi.pushKeyValue(key, value);
+			if (useLocation)
+				restApi.pushKeyValue(key, value, locationService.getLastKnownLocationJSON());
+			else
+				restApi.pushKeyValue(key, value);
 		}
 		catch(JSONException ex)
 		{

@@ -11,6 +11,7 @@ Add these permissions to your project AndroidManifest.xml file:
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 This is all the code you need:
 
@@ -23,6 +24,7 @@ This is all the code you need:
         mof.setURL("mofiler.com:8081");
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
+        mof.setUseLocation(true); //defaults to true
         mof.setListener(this);
 
 ### Inject values to Mofiler:
