@@ -15,12 +15,12 @@ For Android add to project_name-app.xml file:
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 
-For BlackBerry add to bar-descriptor.xml:
+For BlackBerry add to bar-descriptor.xml: <br>
 <code>
-   < permission>read_device_identifying_information</permission>
-   < permission>read_personally_identifiable_information</permission>
-   < permission>access_internet</permission>
-   < permission>access_shared</permission>
+   < permission>read_device_identifying_information< /permission><br>
+   < permission>read_personally_identifiable_information< /permission><br>
+   < permission>access_internet< /permission><br>
+   < permission>access_shared< /permission><br>
 </code>
 
 This is all the code you need:
