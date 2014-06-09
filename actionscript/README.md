@@ -26,6 +26,7 @@ For BlackBerry add to bar-descriptor.xml:
 This is all the code you need:
 
 ### Initialization
+        import com.mofiler.Mofiler;
 
         var mof:Mofiler = new Mofiler();
         mof.setAppKey("myAppKey");
@@ -36,9 +37,9 @@ This is all the code you need:
         mof.addIdentity("email", "john@doe.com");
 
 ### Inject values to Mofiler:
-
-  		mof.injectValue("mykey", "myvalue");
-        mof.injectValue("mykey2", "myvalue2", new Date().getTime() + (1000*60*60*24));
+        
+        mof.injectValue("mykey2", "myvalue2", 0); <-- no expiration
+        mof.injectValue("mykey2", "myvalue2", new Date().getTime() + (1000*60*60*24)); <-- expires tomorrow
 
 ### Obtaining user identification properties
 
