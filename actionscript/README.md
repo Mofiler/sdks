@@ -17,10 +17,10 @@ For Android add to project_name-app.xml file:
 
 For BlackBerry add to bar-descriptor.xml:
 <code>
-   <permission>read_device_identifying_information</permission>
-   <permission>read_personally_identifiable_information</permission>
-   <permission>access_internet</permission>
-   <permission>access_shared</permission>
+   < permission>read_device_identifying_information</permission>
+   < permission>read_personally_identifiable_information</permission>
+   < permission>access_internet</permission>
+   < permission>access_shared</permission>
 </code>
 
 This is all the code you need:
