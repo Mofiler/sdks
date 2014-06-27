@@ -117,7 +117,6 @@ public class MO_Device {
 //		strData += "\"X-Mofiler-InstallID\": \"8171096689745553707\",";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_LOCALE+"\": \""+getLocale()+"\" } }";
 
-
 		request.data = strData;
 		
 		loader.dataFormat = URLLoaderDataFormat.TEXT; 

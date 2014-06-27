@@ -10,7 +10,6 @@ package
 	import flash.text.TextField;
 	
 	
-	
 	[SWF(height="600", width="1024", frameRate="30", backgroundColor="#BBBBBB")]
 	public class HelloMofiler extends Sprite
 	{
@@ -50,8 +49,9 @@ package
 			m.setAppKey("myAppKey");
 			m.setAppName("myAppName");
 			m.setAppVersion("1.0");
-			m.setURL("mofiler.com:8081");
-			m.addIdentity("username", "flash_jhondoe");
+			//m.setURL("mofiler.com:8081");
+			m.setURL("localhost:8081");
+			m.addIdentity("username", "flash_jhondoe1");
 			if(DeviceInfoUtil.getPIN()!=null){
 				m.addIdentity("pin", DeviceInfoUtil.getPIN());
 			}
@@ -80,6 +80,19 @@ package
 				
 				
 			m.injectValue("testKey", "testValue", 0);
+			m.injectValue("testKey", "testValue", 0);
+			m.injectValue("testKey", "testValue", 0);
+			m.injectValue("testKey1", "testValue", 0);
+			m.injectValue("testKey1", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey2", "testValue", 0);
+			m.injectValue("testKey3", "testValue", 0);
+			m.injectValue("testKey4", "testValue", 0);
+			m.injectValue("testKey5", "testValue", 0);
 			
 		}
 	}
