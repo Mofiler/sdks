@@ -1,2 +1,3 @@
 add_if_new@MIDP20=1
 add_if_new@CLDC11=1
+add_if_new@UseJSR179=1

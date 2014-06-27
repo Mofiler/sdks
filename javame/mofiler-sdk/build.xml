@@ -72,6 +72,7 @@
   <target name="preprocess_midp20cldc11">
       <property name="wtk.midp.version" value="2.0"/>
       <property name="wtk.cldc.version" value="1.1"/>
+      <property name="wtk.locationservices.enabled" value="true"/>
     <wtkpreprocess 
         verbose="false"
         srcdir="src" 
@@ -92,12 +93,14 @@
       <property name="wtk.midp.version" value="2.0"/>
       <property name="wtk.cldc.version" value="1.1"/>
       <property name="wtk.optionalpda.enabled" value="true"/>
+      <property name="wtk.locationservices.enabled" value="true"/>
 
       <path id="wtk-build-path">
         <fileset dir="${wtk.home}/lib">
           <include name="cldcapi11.jar"/>
           <include name="midpapi20.jar"/>
           <include name="jsr75.jar"/>
+          <include name="jsr179.jar"/> <!-- added for LBS compatibility -->
         </fileset>
       </path>
       <property name="libs-classpath" refid="wtk-build-path"/>
@@ -114,6 +117,7 @@
       <property name="wtk.midp.version" value="2.0"/>
       <property name="wtk.cldc.version" value="1.1"/>
       <property name="wtk.optionalpda.enabled" value="true"/>
+      <property name="wtk.locationservices.enabled" value="true"/>
 
       <wtkpreverify
               srcdir="classes_midp20cldc11"

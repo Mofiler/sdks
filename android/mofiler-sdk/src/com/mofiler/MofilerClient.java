@@ -209,6 +209,10 @@ public class MofilerClient implements ApiListener {
 	private void pushValue_single(String key, String value, long expireAfterMs){
 		try{
 			restApi.pushKeyValue(key, value, expireAfterMs);
+			if (useLocation)
+				restApi.pushKeyValue(key, value, expireAfterMs, locationService.getLastKnownLocationJSON());
+			else
+				restApi.pushKeyValue(key, value, expireAfterMs);
 		}
 		catch(JSONException ex)
 		{

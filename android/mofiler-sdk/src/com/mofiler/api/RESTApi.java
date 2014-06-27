@@ -226,6 +226,24 @@ Request:
         return retCode;
     }
 
+    public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter, JSONObject a_jsonLocation) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_strValue);
+        json.put("expireAfter", expireAfter);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+    
+    
+
     public int pushKeyValue(String a_strKey, String a_strValue) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
