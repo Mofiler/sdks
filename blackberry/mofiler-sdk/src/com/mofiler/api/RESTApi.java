@@ -2,10 +2,8 @@ package com.mofiler.api;
 /*
  * @(#)RESTApi	1.0 24-02-14
 
-    Copyright (C) 2006-2014  Mario Zorz email me at mariozorz at gmail dot com
-    The Prosciutto Project website: http://www.prosciuttoproject.org
-    The Prosciutto Project blog:   http://prosciutto.boutiquestartups.com
-
+	Mofiler
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -54,7 +52,8 @@ public class RESTApi implements FetcherListener
     
     public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "X-Mofiler-SessionID";
     public static final String K_MOFILER_API_TIMESTAMP_KEY          = "tstamp";
-    
+    public static final String K_MOFILER_API_LOCATION_KEY          = "location";
+
     private String strCurrentMethodName = null;
     
     static private Hashtable msgListeners;
@@ -221,6 +220,24 @@ Request:
         return retCode;
     }
 
+    public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter, JSONObject a_jsonLocation) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_strValue);
+        json.put("expireAfter", expireAfter);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
+
+
     public int pushKeyValue(String a_strKey, String a_strValue) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
@@ -235,6 +252,21 @@ Request:
         return retCode;
     }
 
+    public int pushKeyValue(String a_strKey, String a_strValue, JSONObject a_jsonLocation) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_strValue);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
     public int pushKeyValue(String a_strKey, JSONObject a_jsonValue) throws JSONException
     {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
@@ -243,6 +275,21 @@ Request:
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_jsonValue);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        setHTTPPOSTPayload(json);
+        int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
+
+        return retCode;
+    }
+
+    public int pushKeyValue(String a_strKey, JSONObject a_jsonValue, JSONObject a_jsonLocation) throws JSONException
+    {
+        String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
+        strCurrentMethodName = K_MOFILER_API_METHOD_NAME_inject;
+
+        JSONObject json = new JSONObject();
+        json.put(a_strKey, a_jsonValue);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
         setHTTPPOSTPayload(json);
         int retCode = connWrapper(K_MOFILER_API_METHOD_NAME_inject, strURL, true);
 

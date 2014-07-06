@@ -2,10 +2,8 @@ package com.mofiler.api;
 /*
  * @(#)FetcherListener	1.0 24-02-14
 
-    Copyright (C) 2006-2014  Mario Zorz email me at mariozorz at gmail dot com
-    The Prosciutto Project website: http://www.prosciuttoproject.org
-    The Prosciutto Project blog:   http://prosciutto.boutiquestartups.com
-
+	Mofiler
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
