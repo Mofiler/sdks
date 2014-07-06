@@ -260,7 +260,6 @@ public class LocationService
     public Vector GPS_GetData()
     {
         Vector vectResult = null;
-        String resultado = null;
         String strLatitude = "";
         String strLongitude = "";
         String strExceptions = new String();
@@ -374,13 +373,12 @@ public class LocationService
         strLastExceptions = strExceptions;
         if (err == 0)
         {
-            resultado = strLatitude + "|" + strLongitude;
             vectResult = new Vector();
             vectResult.addElement(strLatitude);
             vectResult.addElement(strLongitude);
         } /* end if */
         
-        return vectResult; //resultado; // += strExceptions;
+        return vectResult;
     }
 
     public boolean isJSR179Supported()
