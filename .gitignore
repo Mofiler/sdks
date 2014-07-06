@@ -1,5 +1,6 @@
 deliverables
 bin
+build
 .preprocessed
 .settings
 ~$*
