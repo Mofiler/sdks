@@ -494,8 +494,14 @@ public class LocationService
 
     public JSONObject getLastKnownLocationJSON() {
             //build JSON object from latest location
-            String strLat = lastKnownLocation.getLatitude() + "";
-            String strLon = lastKnownLocation.getLongitude() + "";
+            String strLat, strLon;
+            if (lastKnownLocation != null){
+                strLat = lastKnownLocation.getLatitude() + "";
+                strLon = lastKnownLocation.getLongitude() + "";
+            } else {
+                strLat = "0.0"; //default to 0.0
+                strLon = "0.0";
+            }
             JSONObject json = new JSONObject();
             try {
                     json.put("latitude", strLat);

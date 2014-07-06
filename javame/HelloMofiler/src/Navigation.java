@@ -122,6 +122,9 @@ public class Navigation extends za_UI_api implements za_UI_api_callbacks, com.mo
                     try
                     {
                         mof.injectValue("mykey" + iTestCounter, "myvalue");
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
                         //mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
                         iTestCounter++;
                         ZA_UI_Api_GenericAction_ChangeButtonTextAndStateAndShowItsForm(13013, "Send Data to Mofiler - "+ iTestCounter, null);
