@@ -18,10 +18,11 @@ public final class Mofiler{
 	private String cookie;
 	private Hashtable identity;
 	private String strURL;
+	private boolean useLocation = true; //defaults to true
 
 	private Mofiler() {
 		//moClient = new MofilerClient(false);
-		moClient = new MofilerClient(true);
+		moClient = new MofilerClient(true, true);
 	}
 	
 	static public Mofiler getInstance() {
@@ -75,6 +76,15 @@ public final class Mofiler{
         public void setDisplaySize(int iWidth, int iHeight){
             moClient.setDisplaySize(iWidth, iHeight);
         }
+
+	public boolean isUseLocation() {
+		return useLocation;
+	}
+
+	public void setUseLocation(boolean useLocation) {
+		this.useLocation = useLocation;
+		moClient.setUseLocation(useLocation);
+	}
 
 	public void addIdentity(String key, String value) {
 		if (this.identity == null)

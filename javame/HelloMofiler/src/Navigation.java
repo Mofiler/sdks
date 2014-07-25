@@ -103,8 +103,10 @@ public class Navigation extends za_UI_api implements za_UI_api_callbacks, com.mo
                         mof.setAppKey("MY-APPKEY-HERE");
                         mof.setAppName("MyTestJ2MEApplication");
                         //mof.setURL("mofiler.com:8081");
-                        mof.setURL("localhost:3000");
+                        //mof.setURL("localhost:3000");
+                        mof.setURL("localhost:8081");
                         mof.addIdentity("username", "johndoe");
+                        mof.setUseLocation(true); //defaults to true
                         mof.setListener(this);
 
                     } catch (Exception ex)
@@ -119,6 +121,9 @@ public class Navigation extends za_UI_api implements za_UI_api_callbacks, com.mo
                 {
                     try
                     {
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
+                        mof.injectValue("mykey" + iTestCounter, "myvalue");
                         mof.injectValue("mykey" + iTestCounter, "myvalue");
                         //mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
                         iTestCounter++;

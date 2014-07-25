@@ -470,6 +470,9 @@
 			Filters=""/>
 	</CustomFolders>
 	<Files AutoFolders="PackageView">
+		<Folder Name="..">
+			<F N="../README.md"/>
+		</Folder>
 		<Folder
 			Name="com.mofiler"
 			Type="Package">
@@ -498,6 +501,11 @@
 			Type="Package">
 			<F N="src/com/mofiler/exception/AppKeyNotSetException.java"/>
 			<F N="src/com/mofiler/exception/IdentityNotSetException.java"/>
+		</Folder>
+		<Folder
+			Name="com.mofiler.service"
+			Type="Package">
+			<F N="src/com/mofiler/service/LocationService.java"/>
 		</Folder>
 		<Folder
 			Name="com.mofiler.util"

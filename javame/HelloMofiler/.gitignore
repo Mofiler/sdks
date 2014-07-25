@@ -1,5 +1,6 @@
 out/
 classes_midp20cldc11/
 classes_midp20cldc11_preverified/
+build/
 *.vpwhist
 *.vtg

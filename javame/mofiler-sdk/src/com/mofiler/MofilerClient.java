@@ -10,6 +10,7 @@ import org.json.me.JSONObject;
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.RESTApi;
 import com.mofiler.device.MO_Device;
+import com.mofiler.service.LocationService;
 import com.sun.lwuit.io.util.Util;
 
 //this class will hold the actual client / server logic, at the uppermost level, and will hold
@@ -27,8 +28,11 @@ public class MofilerClient implements ApiListener {
 	private ApiListener listener = null;
 	private String strURL;
         private MO_Device modev = new MO_Device();
+	private boolean useLocation;
+        private LocationService locationService;
 
-	public MofilerClient(boolean a_bUseDeferredSend) {
+
+	public MofilerClient(boolean a_bUseDeferredSend, boolean a_bUseLocation) {
 		//initialization for LWUIT IO
             com.sun.lwuit.io.Storage.init("mofiler");
             Util.register("MofilerValueStack", MofilerValueStack.class);
@@ -41,9 +45,34 @@ public class MofilerClient implements ApiListener {
             restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
             restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
             this.bUseDeferredSend = a_bUseDeferredSend;
+            this.useLocation = a_bUseLocation;
+            if (a_bUseLocation){
+                locationService = new LocationService(180, LocationService.K_GPSHANDLER_MODE_ASSIST); //setup 30 secs timeout for retrieving current location
+                //locationService.startProvider();
+            }
+
             restApi.setMODeviceObject(modev);
+
 	}
-	
+
+	public boolean isUseLocation() {
+		return useLocation;
+	}
+
+	public void setUseLocation(boolean useLocation) {
+            this.useLocation = useLocation;
+            if (useLocation){
+                if (locationService == null)
+                    locationService = new LocationService(180, LocationService.K_GPSHANDLER_MODE_ASSIST); //setup 30 secs timeout for retrieving current location
+                locationService.startProvider();
+            }
+            else
+            {
+                if (locationService != null)
+                    locationService.stopProvider();
+            }
+	}
+
 	
 	public void addHeaderKeyValue(String header, String value)
 	{
@@ -77,6 +106,8 @@ public class MofilerClient implements ApiListener {
 		JSONObject tmpObj = new JSONObject();
 		tmpObj.put(key, value);
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+		if (useLocation)
+			tmpObj.put(RESTApi.K_MOFILER_API_LOCATION_KEY, locationService.getLastKnownLocationJSON());
 		jsonUserValues.put(tmpObj);
 	}
 
@@ -87,6 +118,8 @@ public class MofilerClient implements ApiListener {
 		tmpObj.put(key, value);
 		tmpObj.put("expireAfter", expireAfterMs);
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+		if (useLocation)
+			tmpObj.put(RESTApi.K_MOFILER_API_LOCATION_KEY, locationService.getLastKnownLocationJSON());
 		jsonUserValues.put(tmpObj);
 	}
 	

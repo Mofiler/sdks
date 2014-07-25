@@ -31,6 +31,7 @@ This is all the code you need:
         mof.setURL("mofiler.com:8081");
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
+        mof.setUseLocation(true); //defaults to true, but please take a look into the "Location" subsection below in README.md
         mof.setListener(this);
 
 ### Inject values to Mofiler:
@@ -64,6 +65,16 @@ For example, on your application MIDlet you could do this:
         mof.onDestroyApp();
         exitMIDlet();
     }
+
+
+### Location in JavaME
+
+In MIDP 2.0 devices and non-operator / non-handset maker signed jad/jar pairs the user is asked for permission to use location and/or network each time the application needs so, or at least the very first time since the application started to run on each run. Therefore, Mofiler SDK does not try to start fetching
+location updates until you invoke the following line:
+
+        mof.setUseLocation(true);
+
+So, even if location is enabled by default in mofiler SDK, you will still need to make a call to mof.setUseLocation(true) for information to start flowing from the device's underlying LBS capabilities.
 
 
 ### Listeners

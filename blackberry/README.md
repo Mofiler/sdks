@@ -19,6 +19,7 @@ This is all the code you need:
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
         mof.addIdentity("bbPIN", "227BBA67");
+        mof.setUseLocation(true); //defaults to true, but please take a look into the "Location" subsection below in README.md
         mof.setListener(this);
 
 ### Inject values to Mofiler:
