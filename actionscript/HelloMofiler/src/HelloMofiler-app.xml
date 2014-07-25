@@ -251,6 +251,21 @@
 			    <!--Removing the permission android.permission.INTERNET will have the side effect
 		of preventing you from debugging your application on your device-->
 			    <uses-permission android:name="android.permission.INTERNET"/>
+				<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+				<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+				<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+				<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+				<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.motorola.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.motorola.dlauncher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.fede.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.lge.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="org.adw.launcher.permission.READ_SETTINGS"/>
+				<uses-permission android:name="com.motorola.launcher.permission.INSTALL_SHORTCUT"/>
+				<uses-permission android:name="com.motorola.dlauncher.permission.INSTALL_SHORTCUT"/>
+				<uses-permission android:name="com.lge.launcher.permission.INSTALL_SHORTCUT"/>			
+					    
 			    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
 			    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
@@ -264,23 +279,6 @@
 		together in order to use AIR's NetworkInfo APIs-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
-			    
-			    
-	 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	 <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	 <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-	 <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
-	 <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.motorola.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.motorola.dlauncher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.fede.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.lge.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="org.adw.launcher.permission.READ_SETTINGS"/>
-	 <uses-permission android:name="com.motorola.launcher.permission.INSTALL_SHORTCUT"/>
-	 <uses-permission android:name="com.motorola.dlauncher.permission.INSTALL_SHORTCUT"/>
-	 <uses-permission android:name="com.lge.launcher.permission.INSTALL_SHORTCUT"/>			
-			    
 			</manifest>
 			
 		]]></manifestAdditions>
@@ -296,6 +294,7 @@
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
 
+	
 <extensions>
         <extensionID>com.debokeh.anes.utils.DeviceInfoUtil</extensionID>
     </extensions>

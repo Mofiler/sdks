@@ -145,8 +145,8 @@ public class MO_Device {
 //		trace("my_so.data.installId="+my_so.data.installId);
 		if(my_so.data.installId == null || my_so.data.installId == ""){
 			my_so.data.installId = ""+(new Date().getTime()*Number.random()/100000);
+			my_so.flush();
 		}
-		
 		return my_so.data.installId;
 	}
 	
