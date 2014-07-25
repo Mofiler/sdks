@@ -6,6 +6,7 @@ package com.mofiler.device {
 	import flash.events.IOErrorEvent;
 	import flash.net.NetworkInfo;
 	import flash.net.NetworkInterface;
+	import flash.net.SharedObject;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
@@ -16,6 +17,7 @@ package com.mofiler.device {
 public class MO_Device {
 
 	private var headers:Hashtable;
+	private var sessionId:String = ""+new Date().getTime();
 	
 	public function MO_Device()
 	{
@@ -98,7 +100,7 @@ public class MO_Device {
 		strData += "\""+Constants.K_MOFILER_API_USER_VALUES+"\":";
 		strData += "[ { \"tstamp\": "+new Date().getTime()+", \""+key+"\": \""+value+"\" } ], ";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT+"\": {";
-//		strData += "{ \"X-Mofiler-SessionID\": \"-1737187713851127507\",";
+		strData += "\"X-Mofiler-SessionID\": \""+getSessionID()+"\",";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE+"\": \""+getDisplaySize()+"\",";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_MODELNAME+"\": \""+getDeviceModelName()+"\",";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_OS+"\": \""+getOS()+"\",";
@@ -114,9 +116,10 @@ public class MO_Device {
 		strData += "\","; 
 		
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER+"\": \""+getDeviceManufacturer()+"\",";
-//		strData += "\"X-Mofiler-InstallID\": \"8171096689745553707\",";
+		strData += "\"X-Mofiler-InstallID\": \""+getInstallID()+"\",";
 		strData += "\""+Constants.K_MOFILER_API_DEVICE_CONTEXT_LOCALE+"\": \""+getLocale()+"\" } }";
 
+//		trace(strData);
 		request.data = strData;
 		
 		loader.dataFormat = URLLoaderDataFormat.TEXT; 
@@ -134,6 +137,22 @@ public class MO_Device {
 		}
 
 		
+	}
+	
+	private function getInstallID():String
+	{
+		var my_so:SharedObject = SharedObject.getLocal("mof_installid");
+//		trace("my_so.data.installId="+my_so.data.installId);
+		if(my_so.data.installId == null || my_so.data.installId == ""){
+			my_so.data.installId = ""+(new Date().getTime()*Number.random()/100000);
+		}
+		
+		return my_so.data.installId;
+	}
+	
+	private function getSessionID():String
+	{
+		return sessionId;
 	}
 	
 	public function addHeaderKeyValue(header:String, value:String):void
