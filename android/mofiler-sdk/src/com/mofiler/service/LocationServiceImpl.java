@@ -67,9 +67,18 @@ public class LocationServiceImpl implements LocationService{
 	 */
 	@Override
 	public void startProvider () {
-		//if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
-		//}
+		//20140630 encapsulating this in a try/catch block just because *SOMETIMES* it will throw this
+		//http://stackoverflow.com/questions/20660561/illegalargumentexception-provider-doesnt-exisit-null-on-maps-v1
+		try{
+			if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+			
 	}
 	
 	@Override

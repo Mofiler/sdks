@@ -20,6 +20,9 @@ package
 		public function HelloMofiler()
 		{
 			super();
+
+			
+			
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
@@ -46,30 +49,29 @@ package
 		private function onHelloButtonClick(event:MouseEvent):void
 		{
 			var m:Mofiler = new Mofiler();
-			m.setAppKey("myAppKey");
-			m.setAppName("myAppName");
+			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
+			m.setAppName("App Test Flash");
 			m.setAppVersion("1.0");
-			//m.setURL("mofiler.com:8081");
-			m.setURL("localhost:8081");
-			m.addIdentity("username", "flash_jhondoe1");
+			m.setURL("mofiler.com:8081");
+			
+			
+			//SET UNIQUE IDENTIFIERS FOR YOUR USER
+			
+			//m.addIdentity("username", "flash_jhondoe1");
+			//m.addIdentity("pin", "2b2c78f1");
+			
+			m.addIdentity("userid", "usr"+new Date().getMilliseconds());
+			
 			if(DeviceInfoUtil.getPIN()!=null){
 				m.addIdentity("pin", DeviceInfoUtil.getPIN());
-			}
-			if(DeviceInfoUtil.getCurrentDeviceName()!=null){
-				m.addIdentity("deviceName", DeviceInfoUtil.getCurrentDeviceName());
 			}
 			if(DeviceInfoUtil.getCurrentMACAddress()!=null){
 				m.addIdentity("macAddress", DeviceInfoUtil.getCurrentMACAddress());
 			}
-			if(DeviceInfoUtil.getCurrentSSID()!=null){
-				m.addIdentity("ssid", DeviceInfoUtil.getCurrentSSID());
-			}
 			if(DeviceInfoUtil.getIMEI()!=null){
 				m.addIdentity("imei", DeviceInfoUtil.getIMEI());
 			}
-			if(DeviceInfoUtil.getDeviceModelName()!=null){
-				m.addIdentity("deviceModelName", DeviceInfoUtil.getDeviceModelName());
-			}
+
 			
 			txtField.text = "Pin: "+DeviceInfoUtil.getPIN()+"\n";
 			txtField.text += "deviceName"+DeviceInfoUtil.getCurrentDeviceName()+"\n";;
@@ -78,21 +80,30 @@ package
 			txtField.text += "imei: "+DeviceInfoUtil.getIMEI()+"\n";;
 			txtField.text += "deviceModelName: "+DeviceInfoUtil.getDeviceModelName()+"\n";;
 				
-				
-			m.injectValue("testKey", "testValue", 0);
-			m.injectValue("testKey", "testValue", 0);
-			m.injectValue("testKey", "testValue", 0);
-			m.injectValue("testKey1", "testValue", 0);
-			m.injectValue("testKey1", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey2", "testValue", 0);
-			m.injectValue("testKey3", "testValue", 0);
-			m.injectValue("testKey4", "testValue", 0);
-			m.injectValue("testKey5", "testValue", 0);
+			//INJECT VALUES FOR THE USER
+			if(DeviceInfoUtil.getDeviceModelName()!=null){
+				m.injectValue("deviceModelName", DeviceInfoUtil.getDeviceModelName(), 0);
+			}
+			if(DeviceInfoUtil.getCurrentDeviceName()!=null){
+				m.injectValue("deviceName", DeviceInfoUtil.getCurrentDeviceName(), 0);
+			}
+			if(DeviceInfoUtil.getCurrentSSID()!=null){
+				m.injectValue("ssid", DeviceInfoUtil.getCurrentSSID(), 0);
+			}
+			m.injectValue("testKey0-1", "testValue0", 0);
+			m.injectValue("testKey-1", "testValue", 0);
+			m.injectValue("testKey-1", "testValue", 0);
+			m.injectValue("testKey1-1", "testValue", 0);
+			m.injectValue("testKey1-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey2-1", "testValue", 0);
+			m.injectValue("testKey3-1", "testValue", 0);
+			m.injectValue("testKey4-1", "testValue", 0);
+			m.injectValue("testKey5-1", "testValue", 0);
 			
 		}
 	}
