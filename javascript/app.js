@@ -1,10 +1,10 @@
 
 MF.Mofiler.init({
     scope: this,
-    url: 'localhost:8081',
+    url: 'mofiler.com:8081',
     appKey: 'KEY-TEST-JS',
     appName: 'TestAppJS',
-    identity: {'username':'juanp'},
+    identity: {'username':'johndoe'},
     useLocation: false,
     success: function(response,operation){
         var res = JSON.parse(response);

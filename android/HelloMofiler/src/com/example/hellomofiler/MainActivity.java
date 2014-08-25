@@ -84,11 +84,19 @@ public class MainActivity extends ActionBarActivity {
      	            mof = Mofiler.getInstance(getActivity());
      	            //mof.setURL("mofiler.com:8081");
      	            //mof.setURL("localhost:3000");
-     	            mof.setURL("192.168.0.26:8081");
+     	            mof.setURL("192.168.0.27:8081");
      	            mof.setAppKey("MY-APPKEY-HERE-ANDROID");
      	            mof.setAppName("MyAndroidTestApplication");
      	            mof.addIdentity("username", "johndoe");
-     	            mof.setUseLocation(true); //defaults to true
+//     	            mof.addIdentity("", "");
+//     	            mof.addIdentity(" ", " ");
+//     	            mof.addIdentity(" unake", " ");
+//     	            mof.addIdentity("otrka ", " ");
+//     	            mof.addIdentity("", " val1");
+//     	            mof.addIdentity(" ", "val2 ");
+//     	            mof.addIdentity(" kesp ", "val2 ");
+     	            
+     	            mof.setUseLocation(false); //defaults to true
      	            mof.setListener(mofListenerExample);
     			}
     		});
@@ -209,8 +217,8 @@ public class MainActivity extends ActionBarActivity {
             			}
             			
             		}
+            		}
             	}
-        	}
 
         	
         }
