@@ -59,6 +59,8 @@ public class Fetcher
     private Hashtable identity = null;
     
     private Context context;
+    
+    private boolean bUseVerboseExtras;
 
 	public Fetcher()
 	{
@@ -117,6 +119,9 @@ public class Fetcher
     	return this.identity;
     }
     
+    public void setUseVerboseDeviceContext(boolean bVerbose){
+    	this.bUseVerboseExtras = bVerbose;
+    }
     
     private void connPlainHitURL_UnThreaded()
     {
@@ -305,6 +310,9 @@ public class Fetcher
         	/* 2014-03-24 added into the body */
         	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_SESSIONID, strSessionIDValue);
         	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_INSTALLID, strInstallIDValue);
+
+        	/* 2014-11-16 added extras */
+        	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_EXTRAS, MO_Device.getExtras(context, bUseVerboseExtras));
         	
         	//jsonobj.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, jsonobjInner);
     	}

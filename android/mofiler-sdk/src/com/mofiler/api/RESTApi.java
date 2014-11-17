@@ -38,21 +38,21 @@ public class RESTApi implements FetcherListener
     /* class members here */
     private Fetcher connFetcher;
 
-    //public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "www.mofiler.net/";
-    //public static final String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
-    //public String K_MOFILER_API_URL_BASE_POSTFIX                    = "localhost:3000";
-    public String K_MOFILER_API_URL_BASE_POSTFIX                    = null;
-    //public static final String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
-    public String K_MOFILER_API_URL_BASE                    = "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
-    public static final String K_MOFILER_API_URL_METHOD_inject           = "/api/values/";
-    public static final String K_MOFILER_API_URL_METHOD_get           = "/api/values/";
+    //public static final String K_MOFILER_API_URL_BASE_POSTFIX             = "www.mofiler.net/";
+    //public static final String K_MOFILER_API_URL_BASE_POSTFIX             = "localhost:3000";
+    //public String K_MOFILER_API_URL_BASE_POSTFIX                   		= "localhost:3000";
+    public String K_MOFILER_API_URL_BASE_POSTFIX                    		= null;
+    //public static final String K_MOFILER_API_URL_BASE                    	= "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
+    public String K_MOFILER_API_URL_BASE                    				= "http://" + K_MOFILER_API_URL_BASE_POSTFIX;
+    public static final String K_MOFILER_API_URL_METHOD_inject           	= "/api/values/";
+    public static final String K_MOFILER_API_URL_METHOD_get           		= "/api/values/";
 
-    public static final String K_MOFILER_API_METHOD_NAME_inject           = "POST_VALUES"; //arbitrary name
-    public static final String K_MOFILER_API_METHOD_NAME_get           = "GET_VALUES";
+    public static final String K_MOFILER_API_METHOD_NAME_inject           	= "POST_VALUES"; //arbitrary name
+    public static final String K_MOFILER_API_METHOD_NAME_get           		= "GET_VALUES";
     
-    public static final String K_MOFILER_API_HEADER_X_SESSION_ID          = "X-Mofiler-SessionID";
-    public static final String K_MOFILER_API_TIMESTAMP_KEY          = "tstamp";
-    public static final String K_MOFILER_API_LOCATION_KEY          = "location";
+    public static final String K_MOFILER_API_HEADER_X_SESSION_ID          	= "X-Mofiler-SessionID";
+    public static final String K_MOFILER_API_TIMESTAMP_KEY          		= "tstamp";
+    public static final String K_MOFILER_API_LOCATION_KEY          			= "location";
     
     private String strCurrentMethodName = null;
     
@@ -64,7 +64,7 @@ public class RESTApi implements FetcherListener
     private Hashtable hashApplicationHeaders = null;
     
     private Context context;
-
+    
 
     public RESTApi(String a_strInstallationId)
     {
@@ -131,6 +131,10 @@ public class RESTApi implements FetcherListener
     public void setContext(Context context){
     	this.context = context;
     	connFetcher.setContext(context);
+    }
+    
+    public void setUseVerboseDeviceContext(boolean bVerbose){
+    	connFetcher.setUseVerboseDeviceContext(bVerbose);
     }
 
     public void useThreadedConnections(boolean a_bUseThreadedConns, boolean a_bBlockThem)

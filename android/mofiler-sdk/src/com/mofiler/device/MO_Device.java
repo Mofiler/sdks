@@ -1,7 +1,15 @@
 package com.mofiler.device;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.mofiler.util.Utils;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -88,18 +96,103 @@ public class MO_Device {
         return connectionString;
     }
 
-    private static String getCarrierName(TelephonyManager telephonyManager)
+    public static String getCarrierName(TelephonyManager telephonyManager)
     {
     	String operatorName = telephonyManager.getNetworkOperatorName();    	
 
         return operatorName;
     }
     
-    private static String getSIMCarrierName(TelephonyManager telephonyManager)
+    public static String getSIMCarrierName(TelephonyManager telephonyManager)
     {
     	String operatorName = telephonyManager.getSimOperatorName();
     	return operatorName;
     }
     
+
 	
+    /**
+     * Whatever other information is available to describe the device context, will be packaged into an "extras" object.
+     * @return A string with the connection info
+     */
+    public static JSONObject getExtras(Context context, boolean bUseVerboseExtras)
+    {
+    	JSONObject extras = new JSONObject();
+
+    	try {
+        	TelephonyManager mgr =((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+        	switch (mgr.getPhoneType()) {
+			case TelephonyManager.PHONE_TYPE_CDMA:
+	        	extras.put("phonetype", "CDMA");
+				break;
+			case TelephonyManager.PHONE_TYPE_SIP:
+	        	extras.put("phonetype", "SIP");
+				break;
+			case TelephonyManager.PHONE_TYPE_GSM:
+	        	extras.put("phonetype", "GSM");
+				break;
+			case TelephonyManager.PHONE_TYPE_NONE:
+			default:
+	        	extras.put("phonetype", "NONE");
+				break;
+			}
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getLine1Number()))
+        		extras.put("linenumber", mgr.getLine1Number());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getNetworkCountryIso()))
+        		extras.put("operator_mcc", mgr.getNetworkCountryIso());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getNetworkOperator()))
+        		extras.put("operator_mccmnc", mgr.getNetworkOperator());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getNetworkOperatorName()))
+        		extras.put("operator_name", mgr.getNetworkOperatorName());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getSimOperatorName()))
+        		extras.put("sim_operator_name", mgr.getSimOperatorName());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getSimOperator()))
+        		extras.put("sim_operator_mccmnc", mgr.getSimOperator());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getSubscriberId()))
+        		extras.put("subscriber_id", mgr.getSubscriberId());
+        	
+        	if (!Utils.isNullOrWhitespace(mgr.getDeviceId()))
+        		extras.put("device_id", mgr.getDeviceId());
+        	
+        	//VERBOSE EXTRAS GO HERE!!
+        	if (bUseVerboseExtras)
+        		extras.put("running_apps", getRunningApps(context));
+    		
+        	
+    	} catch (Exception ex){
+    		ex.printStackTrace();
+    	}
+    	
+    	return extras;
+    }
+    
+    
+    public static JSONArray getRunningApps(Context context){
+    	JSONArray apps = new JSONArray();
+    	
+    	ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+
+        for(int i = 0; i < procInfos.size(); i++)
+        {
+        	if (procInfos.get(i) != null){
+        		if (procInfos.get(i).processName != null)
+                	apps.put(procInfos.get(i).processName);
+        	}
+
+//            if(procInfos.get(i).processName.equals("com.android.browser"))
+//            {
+//
+//            }
+        }
+    	return apps;
+    }
 }

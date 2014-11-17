@@ -22,6 +22,7 @@ public final class Mofiler{
 	private Hashtable identity;
 	private String strURL;
 	private boolean useLocation = true; //defaults to true
+	private boolean useVerboseContext = true; // defaults to true
 	
 	private Context context;
 
@@ -97,6 +98,14 @@ public final class Mofiler{
 		moClient.setUseLocation(useLocation);
 	}
 
+	public boolean isUseVerboseContext() {
+		return useVerboseContext;
+	}
+
+	public void setUseVerboseContext(boolean verbosecon) {
+		this.useVerboseContext = verbosecon;
+		moClient.setUseVerboseContext(this.useVerboseContext);
+	}
 	
 	public void addIdentity(String key, String value) {
 		if (this.identity == null)

@@ -12,6 +12,7 @@ Add these permissions to your project AndroidManifest.xml file:
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
 This is all the code you need:
 
@@ -25,6 +26,7 @@ This is all the code you need:
         mof.addIdentity("username", "johndoe");
         mof.addIdentity("email", "john@doe.com");
         mof.setUseLocation(true); //defaults to true
+        mof.setUseVerboseContext(true); //defaults to false, but helps Mofiler get a lot of information about the device context
         mof.setListener(this);
 
 ### Inject values to Mofiler:

@@ -33,6 +33,7 @@ public class MofilerClient implements ApiListener {
 	private Context context;
 	private LocationService locationService;
 	private boolean useLocation;
+	private boolean useVerboseContext;
 
 	public MofilerClient(boolean a_bUseDeferredSend, boolean a_bUseLocation, Context context) {
 		//initialization for LWUIT IO
@@ -74,6 +75,16 @@ public class MofilerClient implements ApiListener {
 			locationService.startProvider();
 		}
 	}
+	
+	public boolean isUseVerboseContext() {
+		return useVerboseContext;
+	}
+
+	public void setUseVerboseContext(boolean verbosecon) {
+		this.useVerboseContext = verbosecon;
+		this.restApi.setUseVerboseDeviceContext(verbosecon);
+	}
+	
 
 	public void addHeaderKeyValue(String header, String value)
 	{

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.mofiler.Mofiler;
 import com.mofiler.api.ApiListener;
@@ -77,27 +78,23 @@ public class MainActivity extends ActionBarActivity {
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            Button btninit = (Button) rootView.findViewById(R.id.init_mofiler);
+            final Button btninit = (Button) rootView.findViewById(R.id.init_mofiler);
             btninit.setOnClickListener(new OnClickListener() {
      			@Override
     			public void onClick(View v) {
      	            mof = Mofiler.getInstance(getActivity());
-     	            //mof.setURL("mofiler.com:8081");
+     	            mof.setURL("mofiler.com:8081");
      	            //mof.setURL("localhost:3000");
-     	            mof.setURL("192.168.0.27:8081");
+     	            //mof.setURL("192.168.0.27:8081");
      	            mof.setAppKey("MY-APPKEY-HERE-ANDROID");
      	            mof.setAppName("MyAndroidTestApplication");
      	            mof.addIdentity("username", "johndoe");
-//     	            mof.addIdentity("", "");
-//     	            mof.addIdentity(" ", " ");
-//     	            mof.addIdentity(" unake", " ");
-//     	            mof.addIdentity("otrka ", " ");
-//     	            mof.addIdentity("", " val1");
-//     	            mof.addIdentity(" ", "val2 ");
-//     	            mof.addIdentity(" kesp ", "val2 ");
-     	            
-     	            mof.setUseLocation(false); //defaults to true
+     	            mof.setUseVerboseContext(true); //defaults to false, but helps Mofiler get a lot of information about the device context if set to true
+     	            mof.setUseLocation(true); //defaults to true
      	            mof.setListener(mofListenerExample);
+     	            
+     	            Toast.makeText(getActivity(), "Mofiler initialized!", Toast.LENGTH_SHORT).show();
+     	            btninit.setEnabled(false);
     			}
     		});
             
