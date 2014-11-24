@@ -6,17 +6,21 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.mofiler.util.Utils;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.view.Display;
+import android.view.WindowManager;
+
+import com.mofiler.util.Utils;
 
 public class MO_Device {
 
@@ -38,9 +42,13 @@ public class MO_Device {
 	}
 	
 
-	public static String getDisplaySize(final Display display) {
+	public static String getDisplaySize(final Context context) {
 		String strDimensions = "";
 	    final Point point = new Point();
+	    
+	    WindowManager window = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE); 
+	    Display display = window.getDefaultDisplay();
+	    
 	    try {
 	        display.getSize(point);
 	    } catch (java.lang.NoSuchMethodError ignore) { // Older device
@@ -51,8 +59,8 @@ public class MO_Device {
         int height = point.y;
         strDimensions = width + "x" + height;
 	    return strDimensions;
+	    
 	}
-	
 	
 	public static String getDeviceManufacturer()
 	{
@@ -181,18 +189,39 @@ public class MO_Device {
 
         List<RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
 
+        PackageManager pm = context.getPackageManager();
+        
         for(int i = 0; i < procInfos.size(); i++)
         {
         	if (procInfos.get(i) != null){
         		if (procInfos.get(i).processName != null)
-                	apps.put(procInfos.get(i).processName);
-        	}
+        			try{
+        				//only add apps that are not system packages.. we are not really interested in these. Are we?
+            			if (!isSystemPackage(pm.getPackageInfo(procInfos.get(i).processName, PackageManager.GET_META_DATA)))
+            				apps.put(procInfos.get(i).processName);
+        			} catch (PackageManager.NameNotFoundException ex){
 
-//            if(procInfos.get(i).processName.equals("com.android.browser"))
-//            {
-//
-//            }
+        				//ex.printStackTrace();
+
+        				//add it anyway! we need info, info, info
+        				apps.put(procInfos.get(i).processName);
+        			}
+        	}
         }
     	return apps;
     }
+    
+    /**
+     * Return whether the given PackgeInfo represents a system package or not.
+     * User-installed packages (Market or otherwise) should not be denoted as
+     * system packages.
+     * 
+     * @param pkgInfo
+     * @return
+     */
+    private static boolean isSystemPackage(PackageInfo pkgInfo) {
+        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
+                : false;
+    }
+    
 }

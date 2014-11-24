@@ -3,6 +3,7 @@ bin
 build
 .preprocessed
 .settings
+.DS_Store
 ~$*
 actionscript/HelloMofiler/bin-debug/HelloMofiler.swf
 actionscript/HelloMofiler/bin-debug/HelloMofiler-app.xml

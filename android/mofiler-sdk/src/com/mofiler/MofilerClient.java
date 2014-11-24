@@ -35,6 +35,8 @@ public class MofilerClient implements ApiListener {
 	private boolean useLocation;
 	private boolean useVerboseContext;
 
+	public static String K_MOFILER_PROBE_KEY_NAME = "mofiler_probe";
+	
 	public MofilerClient(boolean a_bUseDeferredSend, boolean a_bUseLocation, Context context) {
 		//initialization for LWUIT IO
         /*com.sun.lwuit.io.Storage.init("mofiler");
@@ -98,8 +100,9 @@ public class MofilerClient implements ApiListener {
 		try {
 			for (int i=0; i < a_jsonArrToLookIn.length(); i++){
 				JSONObject tmpObj = a_jsonArrToLookIn.getJSONObject(i);
-				if (tmpObj.has(key)){
+				if (tmpObj.has(key) && !MofilerClient.K_MOFILER_PROBE_KEY_NAME.equals(key)){
 					//discard this object from array and put the new key value instead
+					//Except it is the mofiler_probe data, then please keep it and send it to the server.
 				} else {
 					newJsonArray.put(tmpObj);
 				}
@@ -112,11 +115,28 @@ public class MofilerClient implements ApiListener {
 		return newJsonArray;
 	}
 	
+	private JSONObject makeExtrasObject(String extras){
+		JSONObject extrasObj = null;
+		try{
+			extrasObj = new JSONObject(extras);
+		} catch (JSONException ex){
+			ex.printStackTrace();
+		}
+		
+		return extrasObj;
+	}
+	
 	private void internal_populateVector(String key, String value) throws JSONException
 	{
 		jsonUserValues = discardKeyValueIfExistsInArray(jsonUserValues, key, value);
 		JSONObject tmpObj = new JSONObject();
-		tmpObj.put(key, value);
+		//tmpObj.put(key, value);
+		if (MofilerClient.K_MOFILER_PROBE_KEY_NAME.equals(key)){
+			JSONObject jsobj = makeExtrasObject(value);
+			tmpObj.put(key, (jsobj == null) ? value : jsobj);
+		} else {
+			tmpObj.put(key, value);
+		}
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 		if (useLocation)
 			tmpObj.put(RESTApi.K_MOFILER_API_LOCATION_KEY, locationService.getLastKnownLocationJSON());
@@ -127,7 +147,13 @@ public class MofilerClient implements ApiListener {
 	{
 		jsonUserValues = discardKeyValueIfExistsInArray(jsonUserValues, key, value);
 		JSONObject tmpObj = new JSONObject();
-		tmpObj.put(key, value);
+		//tmpObj.put(key, value);
+		if (MofilerClient.K_MOFILER_PROBE_KEY_NAME.equals(key)){
+			JSONObject jsobj = makeExtrasObject(value);
+			tmpObj.put(key, (jsobj == null) ? value : jsobj);
+		} else {
+			tmpObj.put(key, value);
+		}
 		tmpObj.put("expireAfter", expireAfterMs);
 		tmpObj.put(RESTApi.K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 		if (useLocation)
@@ -148,11 +174,18 @@ public class MofilerClient implements ApiListener {
 
 	private void pushValue_array_internal(String key, String value, long expireAfterMs, boolean bUseExpireAfter){
 		try{
+			
+			//we need to load from DB and save to DB on each call, as we might be coming from another process with
+			//verbose extras being triggered by our service.
+			loadDataFromStorage();
+		
 			if (((jsonUserValues.length() % K_MOFILER_STACK_LENGTH) != 0) || (jsonUserValues.length() == 0)){
 				if (bUseExpireAfter)
 					internal_populateVector(key, value, expireAfterMs);
 				else
 					internal_populateVector(key, value);
+				doSaveDataToDisk();
+				
 			}
 			else if(jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH){
 				//send this and clean all
@@ -176,6 +209,7 @@ public class MofilerClient implements ApiListener {
 					internal_populateVector(key, value, expireAfterMs);
 				else
 					internal_populateVector(key, value);
+				doSaveDataToDisk();
 			}
 		}
 		catch(JSONException ex)

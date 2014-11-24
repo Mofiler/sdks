@@ -49,7 +49,6 @@ public class MofilerDao {
 			db.beginTransaction();
 			String id = String.valueOf(objID);
 			
-			//first, delete ALL records belonging to this alarm, as it is an EVENTUAL one.
 			long resultDel = db.delete(DataBaseManager.TABLE_INSTALLATIONINFO, "_id = ?", new String[] { id } );
  			System.out.println("DELETED N records: " + resultDel);
 			

@@ -303,7 +303,7 @@ public class Fetcher
     		
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER, MO_Device.getDeviceManufacturer());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MODELNAME, MO_Device.getDeviceModelName());
-        	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE, MO_Device.getDisplaySize(((Activity)context).getWindowManager().getDefaultDisplay()));
+        	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE, MO_Device.getDisplaySize(context));
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_LOCALE, MO_Device.getLocale());
         	jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_NETWORK, MO_Device.getConnectionString(context));
 

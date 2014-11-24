@@ -15,6 +15,7 @@ public class DataBaseManager {
 	public static String DATA_BASE = "mofiler.db";
 
 	public static final String TABLE_INSTALLATIONINFO = "mofiler";
+	public static final String TABLE_IDENTITIES = "mofidentities";
 	
 	public static SQLiteDatabase getDatabase(Context context) {
 		if (database == null) {
@@ -34,6 +35,7 @@ public class DataBaseManager {
 
 	private static void createAndInitializeTables() {
 		createMofilerTable();
+		createMofilerIdentitiesTable();
 	}
 
 	public static Cursor getCursorFromQuery(String query, Context context) {
@@ -69,5 +71,16 @@ public class DataBaseManager {
 		dbc.closeConnection();
 	}
 
+	private static void createMofilerIdentitiesTable() {
+		DBConnection dbc = new DBConnection(mContext, DATA_BASE);
+		
+		HashMap<String, String> fields = new HashMap<String, String>();
+		fields.put("_id", "INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT");
+		fields.put("identity_key", "VARCHAR NOT NULL");
+		fields.put("identity_value", "VARCHAR NOT NULL");
+
+		dbc.createTable(TABLE_IDENTITIES, fields);
+		dbc.closeConnection();
+	}
 	
 }

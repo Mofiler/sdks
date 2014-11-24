@@ -14,6 +14,31 @@ Add these permissions to your project AndroidManifest.xml file:
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+If you are going to use the Verbose Extras mode, you also should add these to your manifest:
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+And inside your <application> tag, add these:
+        <!-- MOFILER SERVICES -->
+        <service android:name="com.mofiler.service.AlarmService" />
+
+
+        <!-- MOFILER RECEIVERS -->
+        <receiver
+            android:name="com.mofiler.receivers.AlarmNotificationReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name="com.mofiler.receivers.OnBootReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+
+Verbose Extras mode tracks the user activity not only within your application but within the context of the device.
+
 This is all the code you need:
 
 ### Initialization

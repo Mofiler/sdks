@@ -83,13 +83,14 @@ public class MainActivity extends ActionBarActivity {
      			@Override
     			public void onClick(View v) {
      	            mof = Mofiler.getInstance(getActivity());
-     	            mof.setURL("mofiler.com:8081");
+     	            //mof.setURL("mofiler.com:8081");
      	            //mof.setURL("localhost:3000");
-     	            //mof.setURL("192.168.0.27:8081");
+     	            mof.setURL("192.168.0.21:8081");
      	            mof.setAppKey("MY-APPKEY-HERE-ANDROID");
      	            mof.setAppName("MyAndroidTestApplication");
      	            mof.addIdentity("username", "johndoe");
      	            mof.setUseVerboseContext(true); //defaults to false, but helps Mofiler get a lot of information about the device context if set to true
+     	            //mof.setUseVerboseContext(false); //defaults to false, but helps Mofiler get a lot of information about the device context if set to true
      	            mof.setUseLocation(true); //defaults to true
      	            mof.setListener(mofListenerExample);
      	            
