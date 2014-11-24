@@ -19,9 +19,9 @@ If you are going to use the Verbose Extras mode, you also should add these to yo
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-And inside your <application> tag, add these:
+And inside your application tag, add these:
         <!-- MOFILER SERVICES -->
-        <service android:name="com.mofiler.service.AlarmService" />
+        < service android:name="com.mofiler.service.AlarmService" />
 
 
         <!-- MOFILER RECEIVERS -->
