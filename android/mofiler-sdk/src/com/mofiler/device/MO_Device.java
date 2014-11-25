@@ -1,13 +1,16 @@
 package com.mofiler.device;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -191,20 +194,38 @@ public class MO_Device {
 
         PackageManager pm = context.getPackageManager();
         
+        RunningAppProcessInfo info = null;
+        
         for(int i = 0; i < procInfos.size(); i++)
         {
-        	if (procInfos.get(i) != null){
-        		if (procInfos.get(i).processName != null)
+    		info = procInfos.get(i);
+        	if (info != null){
+        		if (info.processName != null)
         			try{
         				//only add apps that are not system packages.. we are not really interested in these. Are we?
-            			if (!isSystemPackage(pm.getPackageInfo(procInfos.get(i).processName, PackageManager.GET_META_DATA)))
-            				apps.put(procInfos.get(i).processName);
+            			if (!isSystemPackage(pm.getPackageInfo(info.processName, PackageManager.GET_META_DATA))){
+
+            				apps.put(info.processName);
+//            	            if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+//            	                    && !isRunningService(info.processName, activityManager)){
+//
+//            	            	JSONObject jsonForegroundApp = new JSONObject();
+//            	            	try{
+//                	            	jsonForegroundApp.put("foregroundapp", info.processName);
+//                	            	apps.put(jsonForegroundApp);
+//            	            	} catch (JSONException ex)
+//            	            	{
+//                    				apps.put(info.processName);
+//            	            	}
+//            	            }
+//            	            else{
+//                				apps.put(info.processName);
+//            	            }
+            			}
         			} catch (PackageManager.NameNotFoundException ex){
 
-        				//ex.printStackTrace();
-
         				//add it anyway! we need info, info, info
-        				apps.put(procInfos.get(i).processName);
+        				apps.put(info.processName);
         			}
         	}
         }
@@ -223,5 +244,41 @@ public class MO_Device {
         return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ? true
                 : false;
     }
+    
+    
+    private static RunningAppProcessInfo getForegroundApp(Context context) {
+        RunningAppProcessInfo result=null, info=null;
+
+    	ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        
+        List <RunningAppProcessInfo> l = activityManager.getRunningAppProcesses();
+        Iterator <RunningAppProcessInfo> i = l.iterator();
+        while(i.hasNext()){
+            info = i.next();
+            if(info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && !isRunningService(info.processName, activityManager)){
+                result=info;
+                break;
+            }
+        }
+        return result;
+    }  
+    
+    private static boolean isRunningService(String processname, ActivityManager activityManager){
+        if(processname==null || processname.isEmpty())
+            return false;
+
+        RunningServiceInfo service;
+
+        List <RunningServiceInfo> l = activityManager.getRunningServices(9999);
+        Iterator <RunningServiceInfo> i = l.iterator();
+        while(i.hasNext()){
+            service = i.next();
+            if(service.process.equals(processname))
+                return true;
+        }
+
+        return false;
+    }    
     
 }
