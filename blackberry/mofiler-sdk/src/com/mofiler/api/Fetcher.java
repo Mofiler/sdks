@@ -55,6 +55,7 @@ public class Fetcher
     private JSONArray jsonPayload = null;
     
     private Hashtable identity = null;
+    private boolean bUseVerboseExtras;
 
 	public Fetcher()
 	{
@@ -110,6 +111,10 @@ public class Fetcher
     }
     
     
+    public void setUseVerboseDeviceContext(boolean bVerbose){
+        this.bUseVerboseExtras = bVerbose;
+    }
+
     private void connPlainHitURL_UnThreaded()
     {
         try {
@@ -273,10 +278,6 @@ public class Fetcher
 			hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_SESSIONID, strSessionIDValue);
 			hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_API_VERSION, Constants.K_MOFILER_API_VERSION);
 			
-			//OJOOOO no tiene que ir en el header, esto tiene que ser parte del payload que se envia!!
-			//OJOOOO no tiene que ir en el header, esto tiene que ser parte del payload que se envia!!
-			//OJOOOO no tiene que ir en el header, esto tiene que ser parte del payload que se envia!!
-			//hashSessionHeaders.put(Constants.K_MOFILER_API_HEADER_DEVICE_CONTEXT, buildDeviceContextJSONObject());
     	}
     	
     }
@@ -297,6 +298,9 @@ public class Fetcher
         	/* 2014-03-24 added into the body */
         	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_SESSIONID, strSessionIDValue);
         	jsonobjInner.put(Constants.K_MOFILER_API_HEADER_INSTALLID, strInstallIDValue);
+
+            /* 2014-11-16 added extras */
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_EXTRAS, MO_Device.getExtras(bUseVerboseExtras));
         	
         	//jsonobj.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, jsonobjInner);
     	}

@@ -126,6 +126,9 @@ public class RESTApi implements FetcherListener
         }
     }
 
+    public void setUseVerboseDeviceContext(boolean bVerbose){
+        connFetcher.setUseVerboseDeviceContext(bVerbose);
+    }
 
     public void useThreadedConnections(boolean a_bUseThreadedConns, boolean a_bBlockThem)
     {

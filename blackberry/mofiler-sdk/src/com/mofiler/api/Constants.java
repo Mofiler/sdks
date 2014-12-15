@@ -27,5 +27,5 @@ public class Constants {
 	public static String K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER = "manufacturer";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_MODELNAME = "model";
 	public static String K_MOFILER_API_DEVICE_CONTEXT_LOCALE = "locale";
-	
+    public static String K_MOFILER_API_DEVICE_CONTEXT_EXTRAS = "extras"; //this content can vary from platform to platform
 }

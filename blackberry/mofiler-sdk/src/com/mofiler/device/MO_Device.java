@@ -1,5 +1,11 @@
 package com.mofiler.device;
 
+import org.json.me.JSONArray;
+import org.json.me.JSONException;
+import org.json.me.JSONObject;
+
+import com.mofiler.util.Utils;
+
 import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
@@ -7,6 +13,13 @@ import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.WLANInfo;
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.CDMAInfo;
+import net.rim.device.api.system.GlobalEventListener;
+import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.ApplicationDescriptor;
 
 public class MO_Device {
 
@@ -155,4 +168,126 @@ public class MO_Device {
         return null;
     }
 	
+
+//  public static String getCarrierName(TelephonyManager telephonyManager)
+//  {
+//      String operatorName = telephonyManager.getNetworkOperatorName();
+//
+//      return operatorName;
+//  }
+//
+//  public static String getSIMCarrierName(TelephonyManager telephonyManager)
+//  {
+//      String operatorName = telephonyManager.getSimOperatorName();
+//      return operatorName;
+//  }
+
+
+
+    /**
+     * Whatever other information is available to describe the device context, will be packaged into an "extras" object.
+     * @return A string with the connection info
+     */
+    public static JSONObject getExtras(boolean bUseVerboseExtras)
+    {
+        JSONObject extras = new JSONObject();
+
+        try {
+            switch (RadioInfo.getNetworkType()) {
+            case RadioInfo.NETWORK_CDMA:
+                extras.put("phonetype", "CDMA");
+                break;
+            case RadioInfo.NETWORK_GPRS:
+                extras.put("phonetype", "GSM");
+                break;
+            case RadioInfo.NETWORK_IDEN:
+                extras.put("phonetype", "IDEN");
+                break;
+            case RadioInfo.NETWORK_UMTS:
+                extras.put("phonetype", "UMTS");
+                break;
+            case RadioInfo.NETWORK_802_11:
+                extras.put("phonetype", "802_11");
+                break;
+            default:
+                extras.put("phonetype", "NONE");
+                break;
+            }
+
+            if (!Utils.isNullOrWhitespace(Phone.getDevicePhoneNumber(true) ))
+                extras.put("linenumber", Phone.getDevicePhoneNumber(true) );
+
+            if (!Utils.isNullOrWhitespace(RadioInfo.getNetworkCountryCode(RadioInfo.getCurrentNetworkIndex())))
+                extras.put("operator_mcc", RadioInfo.getNetworkCountryCode(RadioInfo.getCurrentNetworkIndex()));
+
+            extras.put("operator_mccmnc", RadioInfo.getNetworkId(RadioInfo.getCurrentNetworkIndex())+ "");
+
+            if (!Utils.isNullOrWhitespace(RadioInfo.getCurrentNetworkName()))
+                extras.put("operator_name", RadioInfo.getCurrentNetworkName());
+
+            /*if (!Utils.isNullOrWhitespace(mgr.getSimOperatorName()))
+                extras.put("sim_operator_name", mgr.getSimOperatorName());
+
+            if (!Utils.isNullOrWhitespace(mgr.getSimOperator()))
+                extras.put("sim_operator_mccmnc", mgr.getSimOperator());
+
+            if (!Utils.isNullOrWhitespace(mgr.getSubscriberId()))
+                extras.put("subscriber_id", mgr.getSubscriberId());*/
+
+            if (RadioInfo.getNetworkType() == RadioInfo.NETWORK_CDMA)
+            {
+                String esn = CDMAInfo.getESN() + "";
+                if (!Utils.isNullOrWhitespace(esn))
+                    extras.put("device_id", esn);
+            } 
+            else 
+            if (RadioInfo.getNetworkType() == RadioInfo.NETWORK_GPRS)
+            {
+               String imei = GPRSInfo.imeiToString(GPRSInfo.getIMEI());
+               if (!Utils.isNullOrWhitespace(imei))
+                   extras.put("device_id", imei);
+            }
+
+            //VERBOSE EXTRAS GO HERE!!
+            if (bUseVerboseExtras)
+                extras.put("running_apps", getRunningApps());
+
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return extras;
+    }
+
+
+    public static JSONArray getRunningApps(){
+        JSONArray apps = new JSONArray();
+
+        ApplicationManager appMan = ApplicationManager.getApplicationManager();
+        ApplicationDescriptor[] mAppDes = appMan.getVisibleApplications();
+        for (int i = 0; i < mAppDes.length; i++) {
+               boolean isFG = appMan.getProcessId(mAppDes[i]) == appMan
+                               .getForegroundProcessId();
+               if (isFG)
+               {
+                   JSONObject jsonForegroundApp = new JSONObject();
+                   try{
+                       jsonForegroundApp.put("foregroundapp", mAppDes[i].getName());
+                       apps.put(jsonForegroundApp);
+                   } catch (JSONException ex)
+                   {
+                       apps.put(mAppDes[i].getName());
+                   }
+               }
+               else 
+               {
+                   apps.put(mAppDes[i].getName());
+               }
+        }
+
+
+        return apps;
+    }
+
 }
