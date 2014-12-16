@@ -2,6 +2,8 @@ package mypackage;
 
 import net.rim.device.api.ui.UiApplication;
 
+import com.mofiler.Mofiler;
+
 /**
  * This class extends the UiApplication class, providing a
  * graphical user interface.
@@ -16,7 +18,10 @@ public class MyAppDbg extends UiApplication
     {
         // Create a new instance of the application and make the currently
         // running thread the application's event dispatch thread.
-        MyAppDbg theApp = new MyAppDbg();       
+        MyAppDbg theApp = new MyAppDbg();
+        
+        Mofiler.getInstance().onStart(args);
+
         theApp.enterEventDispatcher();
     }
     

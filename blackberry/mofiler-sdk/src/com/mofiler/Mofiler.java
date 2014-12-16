@@ -38,17 +38,26 @@ public final class Mofiler{
 			appVersion = (String) com.sun.lwuit.io.Storage.getInstance().readObject("appVersion");
 			strURL = (String) com.sun.lwuit.io.Storage.getInstance().readObject("strURL");
 
+			if (appKey != null)
+				System.err.println("appkey is " + appKey);
+			if (appName != null)
+				System.err.println("appName is " + appName);
+			if (appVersion != null)
+				System.err.println("appVersion is " + appVersion);
+			if (strURL != null)
+				System.err.println("strURL is " + strURL);
+			
 			String strUseLocation = (String) com.sun.lwuit.io.Storage.getInstance().readObject("useLocation");
-			if (!Utils.isNullOrWhitespace(strUseLocation) && strUseLocation.compareTo("true") == 0)
-				useLocation = true;
-			else
+			if (!Utils.isNullOrWhitespace(strUseLocation) && strUseLocation.compareTo("false") == 0)
 				useLocation = false;
+			else
+				useLocation = true;
 
 			String strUseVerboseContext = (String) com.sun.lwuit.io.Storage.getInstance().readObject("useVerboseContext");
-			if (!Utils.isNullOrWhitespace(strUseVerboseContext) && strUseVerboseContext.compareTo("true") == 0)
-				useVerboseContext = true;
-			else
+			if (!Utils.isNullOrWhitespace(strUseVerboseContext) && strUseVerboseContext.compareTo("false") == 0)
 				useVerboseContext = false;
+			else
+				useVerboseContext = true;
 
 			moClient.setURL(strURL);
 			moClient.setUseLocation(useLocation);
@@ -79,6 +88,7 @@ public final class Mofiler{
 	public void setAppKey(String appKey) {
 		this.appKey = appKey;
 		com.sun.lwuit.io.Storage.getInstance().writeObject("appKey", appKey);
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 	}
 
 	public String getAppName() {
@@ -88,6 +98,7 @@ public final class Mofiler{
 	public void setAppName(String appName) {
 		this.appName = appName;
 		com.sun.lwuit.io.Storage.getInstance().writeObject("appName", appName);
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 	}
 
 	public String getAppVersion() {
@@ -97,6 +108,7 @@ public final class Mofiler{
 	public void setAppVersion(String appVersion) {
 		this.appVersion = appVersion;
 		com.sun.lwuit.io.Storage.getInstance().writeObject("appVersion", appVersion);
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 	}
 
 	public String getCookie() {
@@ -116,6 +128,7 @@ public final class Mofiler{
 		this.strURL = a_URL;
 		this.moClient.setURL(a_URL);
 		com.sun.lwuit.io.Storage.getInstance().writeObject("strURL", strURL);
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 	}
 
 	public boolean isUseLocation() {
@@ -126,6 +139,7 @@ public final class Mofiler{
 			this.useLocation = useLocation;
 			moClient.setUseLocation(useLocation);
 			com.sun.lwuit.io.Storage.getInstance().writeObject("useLocation", useLocation ? "true" : "false");
+	        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 	}
 
 	public boolean isUseVerboseContext() {
@@ -137,6 +151,7 @@ public final class Mofiler{
 		this.useVerboseContext = verbosecon;
 		moClient.setUseVerboseContext(this.useVerboseContext);
 		com.sun.lwuit.io.Storage.getInstance().writeObject("useVerboseContext", useVerboseContext ? "true" : "false");
+        com.sun.lwuit.io.Storage.getInstance().flushStorageCache();
 		if (useVerboseContext && !bTriggeredAlready)
 			doScheduleNextInjection();
 	}
@@ -229,7 +244,9 @@ public final class Mofiler{
 	
 	
 	public void onStart(String[] argv){
+		System.err.println("ONSTART MOFILER SDK");
 		if(argv.length>0&&"alternate".equals(argv[0])){  
+			System.err.println("ONSTART MOFILER SDK ALTERNATE");
 			//if we have verbose flag set,  we will send running apps. If we have location at least,
 			//we will send probe with location (location tracking).
 			injectValue(MofilerClient.K_MOFILER_PROBE_KEY_NAME, MO_Device.getExtras(isUseVerboseContext()).toString());
@@ -248,6 +265,8 @@ public final class Mofiler{
 		ApplicationDescriptor ad = new ApplicationDescriptor(me,me.getName(),args);  
 		ad.setPowerOnBehavior(ApplicationDescriptor.POWER_ON);  
 				 
-		am.scheduleApplication(ad, System.currentTimeMillis()+60000, true);
+		boolean sched = am.scheduleApplication(ad, System.currentTimeMillis()+70000, true);
+		if (!sched) // if not scheduled, try a longer time, as BBOS rounds up to 1 minute gaps
+			sched = am.scheduleApplication(ad, System.currentTimeMillis()+120000, true);
 	}
 }
