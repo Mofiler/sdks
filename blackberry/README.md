@@ -22,9 +22,32 @@ This is all the code you need:
         mof.setUseLocation(true); //defaults to true, but please take a look into the "Location" subsection below in README.md
         mof.setListener(this);
 
+
+IMPORTANT things about initialization:
+
+- Always use setAppName() with the right name for your application. This value MUST match that of the name informed in the ApplicationDescriptor, which
+is the same name that your users see in the device launcher icon. Mofiler Blackberry SDK uses it to check whether there´s a running instance of your
+app and filter that out to make the right execution flow.
+
+- Mofiler uses alternate entry points to keep a probe going on and track verbose information in verbose mode (if such mode is set). So the right way to make it work
+is to initialize it in your main method and check Mofiler to see whether you need to create a new instance of your app or not with the onStart() method, like this:
+
+        public static void main(String[] args)
+        {
+                // Create a new instance of the application and make the currently
+                // running thread the application's event dispatch thread.
+                if (Mofiler.getInstance().onStart(args)){
+                    MyAppDbg theApp = new MyAppDbg();
+                    theApp.addGlobalEventListener(Mofiler.getInstance());
+                    theApp.enterEventDispatcher();
+                }
+        }
+
+- Also remember to add Mofiler instance as a GlobalEventListener before entering the event dispatcher.
+
 ### Inject values to Mofiler:
 
-  		mof.injectValue("mykey", "myvalue");
+        mof.injectValue("mykey", "myvalue");
         mof.injectValue("mykey2", "myvalue2", System.currentTimeMillis() + (1000*60*60*24));
 
 Mofiler uses an internal stack and persistence in order to collect data from your application before attempting to send it over to the server, thus

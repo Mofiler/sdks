@@ -18,11 +18,11 @@ public class MyAppDbg extends UiApplication
     {
         // Create a new instance of the application and make the currently
         // running thread the application's event dispatch thread.
-        MyAppDbg theApp = new MyAppDbg();
-        
-        Mofiler.getInstance().onStart(args);
-
-        theApp.enterEventDispatcher();
+        if (Mofiler.getInstance().onStart(args)){
+            MyAppDbg theApp = new MyAppDbg();
+            theApp.addGlobalEventListener(Mofiler.getInstance());
+            theApp.enterEventDispatcher();
+        }
     }
     
 

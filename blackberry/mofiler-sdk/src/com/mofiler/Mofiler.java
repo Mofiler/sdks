@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.GlobalEventListener;
 
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.Constants;
@@ -13,7 +14,7 @@ import com.mofiler.exception.IdentityNotSetException;
 import com.mofiler.util.Utils;
 
 
-public final class Mofiler{
+public final class Mofiler implements GlobalEventListener {
 	static private Mofiler instance = null;
 	private MofilerClient moClient;
 	
@@ -175,6 +176,8 @@ public final class Mofiler{
 			if (this.identity != null && (this.identity.size() > 0)){
 				addAllAvailableHeaders();
 				moClient.setIdentity(identity);
+				System.err.println("INJECTVALUE key: " + key);
+				System.err.println("INJECTVALUE value: " + value);
 				moClient.pushValue(key, value);
 			}
 			else
@@ -243,17 +246,81 @@ public final class Mofiler{
 	
 	
 	
-	public void onStart(String[] argv){
-		System.err.println("ONSTART MOFILER SDK");
-		if(argv.length>0&&"alternate".equals(argv[0])){  
-			System.err.println("ONSTART MOFILER SDK ALTERNATE");
-			//if we have verbose flag set,  we will send running apps. If we have location at least,
-			//we will send probe with location (location tracking).
-			injectValue(MofilerClient.K_MOFILER_PROBE_KEY_NAME, MO_Device.getExtras(isUseVerboseContext()).toString());
+	public boolean onStart(String[] argv){
+		boolean bDoCreateNewApp = false;
 
-			//finally reschedule next injection
-			doScheduleNextInjection();
+        if(argv.length>0&&"mofalternate".equals(argv[0])){  
+
+            //start background thread to handle alternate entry point  
+            System.err.println("WE ARE IN AN ALTERNATE ENTRY POINT");
+
+            //check if this app is already running
+            boolean bFoundApp = false;
+            int iIndexALternate = -1;
+            int iIndexMain = -1;
+            ApplicationManager manager = ApplicationManager.getApplicationManager();
+            ApplicationDescriptor descriptors[] = manager.getVisibleApplications();
+            for (int i=0; i < descriptors.length; i++) {
+                String appname1 = descriptors[i].getName();
+                System.err.println("APLICACION ENCONTRADA: " + appname1);
+                if (appname1.compareTo(appName) == 0) {
+                    bFoundApp = true;
+                    //now compare descriptor arguments
+                    String[] arrStrARgs = descriptors[i].getArgs();
+                    boolean bFoundAlternate = false;
+                    for (int j=0; j < arrStrARgs.length; j++) {
+                        if (arrStrARgs[j].compareTo("mofalternate") == 0) {
+                            System.err.println("MMMH ESTAMOS EN EL ALTERNATE");
+                            iIndexALternate = i;
+                            bFoundAlternate = true;
+                        }
+                    }
+                    if (!bFoundAlternate) {
+                        iIndexMain = i;
+                    }
+                }
+            }
+            
+
+            if (iIndexMain > -1) //main app found running, so let´s post the global event so the main app catches it
+            {
+                System.err.println("POSTING GLOBAL EVENT");
+                ApplicationManager.getApplicationManager().postGlobalEvent(0xcaf96080e2c2968L); //"mofalternate"
+            }
+            else
+            {
+            	//we are in alternate flow, do NOT create a new application, just inject value only
+				//bDoCreateNewApp = true;
+
+				//if we have verbose flag set,  we will send running apps. If we have location at least,
+				//we will send probe with location (location tracking).
+            	try{
+    				injectValue(MofilerClient.K_MOFILER_PROBE_KEY_NAME, MO_Device.getExtras(isUseVerboseContext()).toString());
+            	} catch (Exception ex){
+            		ex.printStackTrace();
+            	}
+
+				//finally reschedule next injection
+				doScheduleNextInjection();
+            }
+
+        	
+        	
+//			//if we have verbose flag set,  we will send running apps. If we have location at least,
+//			//we will send probe with location (location tracking).
+//			injectValue(MofilerClient.K_MOFILER_PROBE_KEY_NAME, MO_Device.getExtras(isUseVerboseContext()).toString());
+//
+//			//finally reschedule next injection
+//			doScheduleNextInjection();
+        	
+            System.exit(0);
+        }
+		else
+		{
+			bDoCreateNewApp = true;
 		}
+
+		return bDoCreateNewApp;
 	}
 
 	public void doScheduleNextInjection(){
@@ -261,12 +328,40 @@ public final class Mofiler{
 		ApplicationDescriptor me = ApplicationDescriptor.currentApplicationDescriptor();  
 		ApplicationManager am = ApplicationManager.getApplicationManager();  
 
-		String[] args = { "alternate" };  
+		String[] args = { "mofalternate" };  
 		ApplicationDescriptor ad = new ApplicationDescriptor(me,me.getName(),args);  
 		ad.setPowerOnBehavior(ApplicationDescriptor.POWER_ON);  
 				 
-		boolean sched = am.scheduleApplication(ad, System.currentTimeMillis()+70000, true);
+		long lSched = System.currentTimeMillis()+130000;
+		boolean sched = am.scheduleApplication(ad, lSched, true);
 		if (!sched) // if not scheduled, try a longer time, as BBOS rounds up to 1 minute gaps
-			sched = am.scheduleApplication(ad, System.currentTimeMillis()+120000, true);
+		{
+			System.err.println("NO SCHEDULEADO. INTENTADO: " + lSched);
+			lSched = System.currentTimeMillis() + 250000;
+			sched = am.scheduleApplication(ad, lSched, true);
+			if (!sched) // if not scheduled, try a longer time, as BBOS rounds up to 1 minute gaps
+				System.err.println("NO SCHEDULEADO BIS. INTENTADO: " + lSched);
+			else
+				System.err.println("OOKK SCHEDULEADO BIS. ms: " + lSched);
+		} else {
+			System.err.println("OOKK SCHEDULEADO. ms: " + lSched);
+		}
+		
+		
 	}
+
+	public void eventOccurred( long guid, int data0, int data1, Object object0, Object object1 )
+	{
+		 if( guid == 0xcaf96080e2c2968L ) // "mofalternate"
+		 {
+			 System.err.println("EVENT OCCURRED ALTERNATIVE");
+			 //if we have verbose flag set,  we will send running apps. If we have location at least,
+			 //we will send probe with location (location tracking).
+			 injectValue(MofilerClient.K_MOFILER_PROBE_KEY_NAME, MO_Device.getExtras(isUseVerboseContext()).toString());
+
+			 //finally reschedule next injection
+			 doScheduleNextInjection();
+		 }
+	}
+
 }
