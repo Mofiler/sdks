@@ -276,6 +276,7 @@ public final class MO_Connection
                     conn = null;
                 }
 
+                //System.err.println("URL A CONECTAR: " + a_url);
                 conn = (HttpConnection)Connector.open(a_url);
 
             } catch (SecurityException e)

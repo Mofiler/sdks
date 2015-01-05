@@ -50,9 +50,10 @@ public final class MyScreen extends MainScreen implements FieldChangeListener, A
         
         mof = Mofiler.getInstance();
         //mof.setURL("mofiler.com:8081");
-        mof.setURL("localhost:8081");
+        //mof.setURL("localhost:8081");
+        mof.setURL("192.168.0.21:8081");
         mof.setAppKey("MY-APPKEY-HERE");
-        mof.setAppName("MyTestApplication");
+        mof.setAppName("HelloMofiler");
         mof.addIdentity("username", "johndoe");
         mof.setListener(this);
     }
