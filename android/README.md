@@ -1,6 +1,6 @@
-# MOFILER SDK FOR ANDROID:
+# Mofiler SDK for Android:
 
-Check the HelloMofiler project to see rapidly how to use the Mofiler SDK.
+Check the HelloMofiler project to rapidly see how to use the Mofiler SDK.
 
 
 ## Quick stuff to get you going
