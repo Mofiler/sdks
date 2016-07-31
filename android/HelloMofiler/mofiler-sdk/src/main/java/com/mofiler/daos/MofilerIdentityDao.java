@@ -14,84 +14,81 @@ import com.utils.database.DataBaseManager;
 
 public class MofilerIdentityDao {
 
-	public static void saveIdentityDataInDB(Context mContext, String key, String value){
+    public static void saveIdentityDataInDB(Context mContext, String key, String value) {
 
-		SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
-		try {
-			db.beginTransaction();
-			ContentValues cv = new ContentValues();
-			cv.put("identity_key", key);
-			cv.put("identity_value", value);
-			db.insert(DataBaseManager.TABLE_IDENTITIES, null, cv);
- 			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			db.endTransaction();
-		}	
-	}
+        SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
+        try {
+            db.beginTransaction();
+            ContentValues cv = new ContentValues();
+            cv.put("identity_key", key);
+            cv.put("identity_value", value);
+            db.insert(DataBaseManager.TABLE_IDENTITIES, null, cv);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
+    }
 
-	public static void deleteIdentityInDB(Context mContext, int objID)
-	{
- 		SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
+    public static void deleteIdentityInDB(Context mContext, int objID) {
+        SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
 
-		try {
-			
-			db.beginTransaction();
-			String id = String.valueOf(objID);
-			
-			long resultDel = db.delete(DataBaseManager.TABLE_IDENTITIES, "_id = ?", new String[] { id } );
- 			System.out.println("DELETED N records: " + resultDel);
-			
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			db.endTransaction();
-		}	
-		
-	}
+        try {
 
-	public static void deleteAllIdentitiesInDB(Context mContext)
-	{
- 		SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
- 		String id = "0"; //fake
+            db.beginTransaction();
+            String id = String.valueOf(objID);
 
-		try {
-			
-			db.beginTransaction();
-			long resultDel = db.delete(DataBaseManager.TABLE_IDENTITIES, "_id > ?", new String[] { id } );
- 			System.out.println("DELETED N identity records: " + resultDel);
-			
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			db.endTransaction();
-		}	
-		
-	}
-	
-	public static Hashtable getIdentities(Context context) {
-		Hashtable identity = new Hashtable();
+            long resultDel = db.delete(DataBaseManager.TABLE_IDENTITIES, "_id = ?", new String[]{id});
+            System.out.println("DELETED N records: " + resultDel);
 
-		boolean bFound = false;
-		Cursor cursor = DataBaseManager.getCursorFromQuery("SELECT * FROM " + DataBaseManager.TABLE_IDENTITIES, context);
-		if (cursor != null) { 
-			int columnIdentityKey = cursor.getColumnIndexOrThrow("identity_key");
-			int columnIdentityValue = cursor.getColumnIndexOrThrow("identity_value");
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
 
-			while (cursor.moveToNext()) {
-				bFound = true;
-				String key = cursor.getString(columnIdentityKey);
-				String value  = cursor.getString(columnIdentityValue);
-				identity.put(key, value);
-   			}
-		}
-		cursor.close();
-		return identity;
- 	}
-	
-	
- 
+    }
+
+    public static void deleteAllIdentitiesInDB(Context mContext) {
+        SQLiteDatabase db = DataBaseManager.getDatabase(mContext);
+        String id = "0"; //fake
+
+        try {
+
+            db.beginTransaction();
+            long resultDel = db.delete(DataBaseManager.TABLE_IDENTITIES, "_id > ?", new String[]{id});
+            System.out.println("DELETED N identity records: " + resultDel);
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    public static Hashtable getIdentities(Context context) {
+        Hashtable identity = new Hashtable();
+
+        boolean bFound = false;
+        Cursor cursor = DataBaseManager.getCursorFromQuery("SELECT * FROM " + DataBaseManager.TABLE_IDENTITIES, context);
+        if (cursor != null) {
+            int columnIdentityKey = cursor.getColumnIndexOrThrow("identity_key");
+            int columnIdentityValue = cursor.getColumnIndexOrThrow("identity_value");
+
+            while (cursor.moveToNext()) {
+                bFound = true;
+                String key = cursor.getString(columnIdentityKey);
+                String value = cursor.getString(columnIdentityValue);
+                identity.put(key, value);
+            }
+        }
+        cursor.close();
+        return identity;
+    }
+
+
 }

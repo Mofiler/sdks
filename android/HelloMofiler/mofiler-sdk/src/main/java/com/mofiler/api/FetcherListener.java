@@ -1,4 +1,5 @@
 package com.mofiler.api;
+
 /*
  * @(#)FetcherListener	1.0 24-02-14
 
@@ -21,8 +22,8 @@ package com.mofiler.api;
 */
 public interface FetcherListener {
 
-       //public void dataReceived(String a_methodCalled, String a_strPayload) throws Exception;
-       public void dataReceived(String a_methodCalled, String a_strPayload, String a_strOriginalSentPayload, boolean a_bHTTPMethodIsPost) throws Exception;
+    //public void dataReceived(String a_methodCalled, String a_strPayload) throws Exception;
+    public void dataReceived(String a_methodCalled, String a_strPayload, String a_strOriginalSentPayload, boolean a_bHTTPMethodIsPost) throws Exception;
 
 }
 

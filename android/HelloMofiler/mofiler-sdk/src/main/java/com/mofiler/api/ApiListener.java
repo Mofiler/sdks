@@ -19,10 +19,12 @@ package com.mofiler.api;
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import java.util.Vector;
+
 public interface ApiListener {
 
-       public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject);
+    public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject);
 
 }
 

@@ -45,20 +45,19 @@ import android.util.Log;
 
 /**
  * This class provides all http connection capability handling
- * 
+ *
  * @author Mario Zorz
  * @version 1.0
  * @see HttpConnection
  */
-public final class MO_Connection
-{
-	
-	public static String K_MOFILER_METHOD_HTTP_GET = "HttpConnection.GET"; 
-	public static String K_MOFILER_METHOD_HTTP_POST = "HttpConnection.POST"; 
-	
+public final class MO_Connection {
+
+    public static String K_MOFILER_METHOD_HTTP_GET = "HttpConnection.GET";
+    public static String K_MOFILER_METHOD_HTTP_POST = "HttpConnection.POST";
+
     InputStream inputStream = null;
     String result = "";
-	
+
     /**
      * HTTP connection method: GET, POST, etc.
      */
@@ -79,7 +78,7 @@ public final class MO_Connection
     /**
      * holds the last response code as received from server
      */
-    private int    lastRC;
+    private int lastRC;
     /**
      * holds the last exception message in case anything went wrong
      */
@@ -121,21 +120,21 @@ public final class MO_Connection
     /**
      * internal value for HTTP 30x responses (relocation)
      */
-    private static final int MO_CONN_RELOCATION              = -301; //302;
-    private static final int MO_CONN_RELOCATION_TEMP         = -302; //302;
+    private static final int MO_CONN_RELOCATION = -301; //302;
+    private static final int MO_CONN_RELOCATION_TEMP = -302; //302;
     /**
      * internal value for HTTP 100 responses (continue)
      */
-    private static final int MO_CONN_CONTINUE                = -100;
+    private static final int MO_CONN_CONTINUE = -100;
     /**
      * internal value for any unhandled HTTP responses
      */
-    private static final int MO_CONN_SOMEOTHERHTTPRESP       = -42;
+    private static final int MO_CONN_SOMEOTHERHTTPRESP = -42;
 /**     private static final int  MO_CONN_MAXRECEIVEBUFFER        = 4096; */
     /**
      * noise level is measured by the exceptioncounter
      */
-    private int  iExceptionCounter;
+    private int iExceptionCounter;
 
     /**
      */
@@ -144,12 +143,12 @@ public final class MO_Connection
     /**
      * last return code
      */
-    int             rc;
+    int rc;
     /**
      */
     //byte[]       	data1;
-    int             len;
-    int             ch;
+    int len;
+    int ch;
 
     /**
      */
@@ -164,10 +163,8 @@ public final class MO_Connection
 
     /**
      * creator method
-     * 
      */
-    public MO_Connection()
-    {
+    public MO_Connection() {
         /* set local vars */
         method = K_MOFILER_METHOD_HTTP_GET; //"HttpConnection.GET";
         headerHashtable = null; //a_adhocHeaders;
@@ -182,19 +179,14 @@ public final class MO_Connection
 
     /**
      * creator method
-     * 
-     * @param a_strAppVersionString
-     *                 holds the Application Version String which is sent over to the server on every connection
-     * @param a_strDeviceContextString
-     *                 holds the Context String. Any valuable data describing the execution context (device capabilites, etc.) is sent in this chunk to be observde by the server
-     * @param a_method HTTP connection method: GET, POST, etc.
-     * @param a_propertyKey
-     *                 holds ad-hoc http header name
-     * @param a_propertyValue
-     *                 holds ad-hoc header value for propertyKey
+     *
+     * @param a_strAppVersionString    holds the Application Version String which is sent over to the server on every connection
+     * @param a_strDeviceContextString holds the Context String. Any valuable data describing the execution context (device capabilites, etc.) is sent in this chunk to be observde by the server
+     * @param a_method                 HTTP connection method: GET, POST, etc.
+     * @param a_propertyKey            holds ad-hoc http header name
+     * @param a_propertyValue          holds ad-hoc header value for propertyKey
      */
-    public MO_Connection(String a_method, Hashtable a_adhocHeaders)
-    {
+    public MO_Connection(String a_method, Hashtable a_adhocHeaders) {
         /* set local vars */
         method = a_method;
         headerHashtable = a_adhocHeaders;
@@ -206,13 +198,12 @@ public final class MO_Connection
         MO_Connection_Initialize();
 
     }
-    
+
 
     /**
      * initializator proc
      */
-    private void MO_Connection_Initialize()
-    {
+    private void MO_Connection_Initialize() {
         is = null;
         rc = 0;
         len = 0;
@@ -222,201 +213,180 @@ public final class MO_Connection
     }
 
 
-
     /**
      * Initializator. Sets a property key/value pair.
-     * 
-     * @param a_propertyKey
-     *                 holds ad-hoc http header name
-     * @param a_propertyValue
-     *                 holds ad-hoc header value for propertyKey
+     *
+     * @param a_propertyKey   holds ad-hoc http header name
+     * @param a_propertyValue holds ad-hoc header value for propertyKey
      */
-    public void MO_Msg_SetPropertyKeyValuePair(Hashtable a_adhocHeaders)
-    {
+    public void MO_Msg_SetPropertyKeyValuePair(Hashtable a_adhocHeaders) {
         /* set local vars */
         headerHashtable = a_adhocHeaders;
     }
 
     /**
      * Initializator. Sets a property key/value pair.
-     * 
-     * @param a_propertyKey
-     *                 holds ad-hoc http header name
-     * @param a_propertyValue
-     *                 holds ad-hoc header value for propertyKey
+     *
+     * @param a_propertyKey   holds ad-hoc http header name
+     * @param a_propertyValue holds ad-hoc header value for propertyKey
      */
-    public void MO_Msg_AddPropertyKeyValuePair(Hashtable a_adhocHeaders)
-    {
+    public void MO_Msg_AddPropertyKeyValuePair(Hashtable a_adhocHeaders) {
         /* set local vars */
         //headerHashtable. = a_adhocHeaders;
-        if (a_adhocHeaders != null)
-        {
-        	if (headerHashtable == null)
-        		headerHashtable = new Hashtable();
-        	
-        	for (Enumeration e = a_adhocHeaders.keys(); e.hasMoreElements() ;) {
-        		String oneKey = (String) e.nextElement();
-        		String oneValue = (String) a_adhocHeaders.get(oneKey);
-        		headerHashtable.put(oneKey, oneValue);
+        if (a_adhocHeaders != null) {
+            if (headerHashtable == null)
+                headerHashtable = new Hashtable();
+
+            for (Enumeration e = a_adhocHeaders.keys(); e.hasMoreElements(); ) {
+                String oneKey = (String) e.nextElement();
+                String oneValue = (String) a_adhocHeaders.get(oneKey);
+                headerHashtable.put(oneKey, oneValue);
             }
         }
     }
 
-    
-    private void addNoiseLevelToHeaders()
-    {
-    	if (headerHashtable == null)
-    		headerHashtable = new Hashtable();
-    	
-    	headerHashtable.put(Constants.K_MOFILER_API_HEADER_NOISELEVEL, iExceptionCounter + "");
-    	
+
+    private void addNoiseLevelToHeaders() {
+        if (headerHashtable == null)
+            headerHashtable = new Hashtable();
+
+        headerHashtable.put(Constants.K_MOFILER_API_HEADER_NOISELEVEL, iExceptionCounter + "");
+
     }
 
 
     /**
      * gets the actual noise level. Any exception thrown inside this class makes the noise level higher.
-     * 
+     *
      * @return the noise level
      */
-    public int MO_Msg_GetNoiseLevel()
-    {
+    public int MO_Msg_GetNoiseLevel() {
         return iExceptionCounter;
     }
 
     /**
      * resets the actual noise level to zero. Any exception thrown inside this class makes the noise level higher.
      */
-    public void MO_Msg_ResetNoiseLevel()
-    {
+    public void MO_Msg_ResetNoiseLevel() {
         iExceptionCounter = 0;
     }
 
 
-    public void MO_Msg_SetEncoding(String a_strEncoding)
-    {
-        if (a_strEncoding != null)
-        {
-            if (a_strEncoding.length() > 0)
-            {
+    public void MO_Msg_SetEncoding(String a_strEncoding) {
+        if (a_strEncoding != null) {
+            if (a_strEncoding.length() > 0) {
                 strEncoding = a_strEncoding;
             } /* end if */
         } /* end if */
     }
 
 
-
     /**
      * connects to a URL and sends the message as body
-     * 
+     *
      * @param a_url     url to connect to
      * @param a_message message to send to server
      * @param a_method  the HTTP connection method: GET, POST, etc.
-     * 
      * @return 0 if OK
-     *         -1 if NOT OK (exception thrown)
-     *         HTTP return code whenever not equal to 200 OK
-     * @exception IOException
+     * -1 if NOT OK (exception thrown)
+     * HTTP return code whenever not equal to 200 OK
+     * @throws IOException
      */
-    public int MO_Msg_Connect(String a_url, String a_message, String a_method) throws IOException
-    {
+    public int MO_Msg_Connect(String a_url, String a_message, String a_method) throws IOException {
 
         rc = 0;
 
         if (
-           ( a_url != null )
-           &&
-           ( a_message != null )
-           )
-        {
-        	
-        	method = a_method;
-        	
-	        try {
-	            // Set up HTTP post
-	
-	            // HttpClient is more then less deprecated. Need to change to URLConnection
-	            HttpClient httpClient = new DefaultHttpClient();
-	
-				HttpResponse httpResponse;
-				
-				if (method.compareTo(K_MOFILER_METHOD_HTTP_GET) == 0){
-					HttpGet get = new HttpGet(a_url);
-					get.setHeader("Content-type", "application/json");
-					get.setHeader("Accept-Encoding", "application/gzipped");
-		            get.setHeader("Pragma", "no-cache");
-	                addNoiseLevelToHeaders();
-	                if (headerHashtable != null)
-	                {
-	                	for (Enumeration e = headerHashtable.keys(); e.hasMoreElements() ;) {
-	                		String oneKey = (String) e.nextElement();
-	                		String oneValue = (String) headerHashtable.get(oneKey);
-	                		get.setHeader(oneKey, oneValue);
-	                    }
-	                }
-		            httpResponse = httpClient.execute(get);
-				} else {
-		            HttpPost httpPost = new HttpPost(a_url);
-		            httpPost.setHeader("Content-type", "application/json");
-		            httpPost.setHeader("Accept-Encoding", "application/gzipped");
-		            httpPost.setHeader("Pragma", "no-cache");
-	                addNoiseLevelToHeaders();
-	                if (headerHashtable != null)
-	                {
-	                	for (Enumeration e = headerHashtable.keys(); e.hasMoreElements() ;) {
-	                		String oneKey = (String) e.nextElement();
-	                		String oneValue = (String) headerHashtable.get(oneKey);
-	                		httpPost.setHeader(oneKey, oneValue);
-	                    }
-	                }
-		            
-		            httpPost.setEntity(new StringEntity(a_message, "UTF8"));
-		            httpResponse = httpClient.execute(httpPost);
-				}
-				
-	            HttpEntity httpEntity = httpResponse.getEntity();
-	            rc = httpResponse.getStatusLine().getStatusCode();
-	
-	            // Read content & Log
-	            inputStream = httpEntity.getContent();
-	        } catch (UnsupportedEncodingException e1) {
-	            Log.e("UnsupportedEncodingException", e1.toString());
-	            e1.printStackTrace();
-	            iExceptionCounter++;
-	        } catch (ClientProtocolException e2) {
-	            Log.e("ClientProtocolException", e2.toString());
-	            e2.printStackTrace();
-	            iExceptionCounter++;
-	        } catch (IllegalStateException e3) {
-	            Log.e("IllegalStateException", e3.toString());
-	            e3.printStackTrace();
-	            iExceptionCounter++;
-	        } catch (IOException e4) {
-	            Log.e("IOException", e4.toString());
-	            e4.printStackTrace();
-	            iExceptionCounter++;
-	        }
-	        // Convert response to string using String Builder
-	        try {
-	            BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
-	            StringBuilder sBuilder = new StringBuilder();
-	
-	            String line = null;
-	            while ((line = bReader.readLine()) != null) {
-	                sBuilder.append(line + "\n");
-	            }
-	
-	            inputStream.close();
-	            result = sBuilder.toString();
-	            rcvdData = result.getBytes();
-	
-	        } catch (Exception e) {
-	            iExceptionCounter++;
-	            Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
-	        }
-        	
+                (a_url != null)
+                        &&
+                        (a_message != null)
+                ) {
 
-        } else
-        {
+            method = a_method;
+
+            try {
+                // Set up HTTP post
+
+                // HttpClient is more then less deprecated. Need to change to URLConnection
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpResponse httpResponse;
+
+                if (method.compareTo(K_MOFILER_METHOD_HTTP_GET) == 0) {
+                    HttpGet get = new HttpGet(a_url);
+                    get.setHeader("Content-type", "application/json");
+                    get.setHeader("Accept-Encoding", "application/gzipped");
+                    get.setHeader("Pragma", "no-cache");
+                    addNoiseLevelToHeaders();
+                    if (headerHashtable != null) {
+                        for (Enumeration e = headerHashtable.keys(); e.hasMoreElements(); ) {
+                            String oneKey = (String) e.nextElement();
+                            String oneValue = (String) headerHashtable.get(oneKey);
+                            get.setHeader(oneKey, oneValue);
+                        }
+                    }
+                    httpResponse = httpClient.execute(get);
+                } else {
+                    HttpPost httpPost = new HttpPost(a_url);
+                    httpPost.setHeader("Content-type", "application/json");
+                    httpPost.setHeader("Accept-Encoding", "application/gzipped");
+                    httpPost.setHeader("Pragma", "no-cache");
+                    addNoiseLevelToHeaders();
+                    if (headerHashtable != null) {
+                        for (Enumeration e = headerHashtable.keys(); e.hasMoreElements(); ) {
+                            String oneKey = (String) e.nextElement();
+                            String oneValue = (String) headerHashtable.get(oneKey);
+                            httpPost.setHeader(oneKey, oneValue);
+                        }
+                    }
+
+                    httpPost.setEntity(new StringEntity(a_message, "UTF8"));
+                    httpResponse = httpClient.execute(httpPost);
+                }
+
+                HttpEntity httpEntity = httpResponse.getEntity();
+                rc = httpResponse.getStatusLine().getStatusCode();
+
+                // Read content & Log
+                inputStream = httpEntity.getContent();
+            } catch (UnsupportedEncodingException e1) {
+                Log.e("UnsupportedEncodingException", e1.toString());
+                e1.printStackTrace();
+                iExceptionCounter++;
+            } catch (ClientProtocolException e2) {
+                Log.e("ClientProtocolException", e2.toString());
+                e2.printStackTrace();
+                iExceptionCounter++;
+            } catch (IllegalStateException e3) {
+                Log.e("IllegalStateException", e3.toString());
+                e3.printStackTrace();
+                iExceptionCounter++;
+            } catch (IOException e4) {
+                Log.e("IOException", e4.toString());
+                e4.printStackTrace();
+                iExceptionCounter++;
+            }
+            // Convert response to string using String Builder
+            try {
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line = null;
+                while ((line = bReader.readLine()) != null) {
+                    sBuilder.append(line + "\n");
+                }
+
+                inputStream.close();
+                result = sBuilder.toString();
+                rcvdData = result.getBytes();
+
+            } catch (Exception e) {
+                iExceptionCounter++;
+                Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
+            }
+
+
+        } else {
             iExceptionCounter++;
             throw new IllegalArgumentException("URL or message invalid");
         }
@@ -428,31 +398,25 @@ public final class MO_Connection
 
     /**
      * closes any open connection and input/output streams
-     * 
-     * @exception IOException
+     *
+     * @throws IOException
      */
-    private void MO_Int_Msg_Disconnect() throws IOException
-    {
-        try
-        {
-            if (is != null)
-            {
+    private void MO_Int_Msg_Disconnect() throws IOException {
+        try {
+            if (is != null) {
                 is.close();
-                is = null; 
+                is = null;
             }
-            if (os != null)
-            {
+            if (os != null) {
                 os.close();
-                os = null; 
+                os = null;
             }
-            if (conn != null)
-            {
+            if (conn != null) {
                 conn.close();
                 conn = null;
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             iExceptionCounter++;
             throw new IllegalArgumentException("Error al cerrar la conexion");
         }
@@ -462,141 +426,121 @@ public final class MO_Connection
 
     /**
      * Getter method: returns the last HTTP response code
-     * 
+     *
      * @return returns the last HTTP response code
      */
-    public int MO_Msg_GetLastResponseCode()
-    {
+    public int MO_Msg_GetLastResponseCode() {
         return lastRC;
     }
 
     /**
      * Getter method: returns the last exception message
-     * 
+     *
      * @return returns the last exception message
      */
-    public String MO_Msg_GetLastException()
-    {
+    public String MO_Msg_GetLastException() {
         return lastException;
     }
 
     /**
      * Getter method: returns the last response message
-     * 
+     *
      * @return returns the last response message
      */
-    public String MO_Msg_GetLastResponseMessage()
-    {
+    public String MO_Msg_GetLastResponseMessage() {
         return lastRespMessage;
     }
 
     /**
      * Getter method: returns the last content type string
-     * 
+     *
      * @return returns the last content type string
      */
-    public String MO_Msg_GetLastContentType()
-    {
+    public String MO_Msg_GetLastContentType() {
         return lastContentType;
     }
 
     /**
      * Getter method: returns the last content encoding string
-     * 
+     *
      * @return returns the last content encoding string
      */
-    public String MO_Msg_GetLastContentEncoding()
-    {
+    public String MO_Msg_GetLastContentEncoding() {
         return lastContentEncoding;
     }
 
     /**
      * Getter method: returns the last content length
-     * 
+     *
      * @return returns the last content length
      */
-    public int MO_Msg_GetLastContentLength()
-    {
+    public int MO_Msg_GetLastContentLength() {
         return lastContentLength;
     }
 
     /**
      * Getter method: returns the accumulated content length
-     * 
+     *
      * @return returns the accum content length
      */
-    public int MO_Msg_GetAccumReceivedContentLength()
-    {
+    public int MO_Msg_GetAccumReceivedContentLength() {
         return accumContentLength;
     }
 
     /**
      * Getter method: returns the accumulated content length for
      * sent data
-     * 
+     *
      * @return returns the accum content length sent
      */
-    public int MO_Msg_GetAccumSentContentLength()
-    {
+    public int MO_Msg_GetAccumSentContentLength() {
         return accumSentContentLength;
     }
 
 
     /**
      * Getter method: returns the received content from the server in a string object
-     * 
+     *
      * @return returns the received content from the server in a string object
      */
-    public String MO_Msg_GetLastReceivedContentString()
-    {
+    public String MO_Msg_GetLastReceivedContentString() {
         String strToReturn = null;
-        if (lastContentType == null)
-        {
+        if (lastContentType == null) {
             lastContentType = "";
         } /* end if */
 
-        if (lastContentEncoding == null)
-        {
+        if (lastContentEncoding == null) {
             lastContentEncoding = "";
         } /* end if */
 
         if (
-           (lastContentType.startsWith("application/gzipped"))
-           ||
-           (lastContentEncoding.indexOf("gzip") >= 0)
-           )
-        {
+                (lastContentType.startsWith("application/gzipped"))
+                        ||
+                        (lastContentEncoding.indexOf("gzip") >= 0)
+                ) {
             Runtime runtime = Runtime.getRuntime();
             rcvdUncompressedData = MO_Msg_GetLastReceivedContentUnGzip();
-            if (rcvdUncompressedData != null)
-            {
-                try
-                {
+            if (rcvdUncompressedData != null) {
+                try {
                     strToReturn = new String(rcvdUncompressedData, "UTF-8");
 
-                } catch ( java.io.UnsupportedEncodingException ex)
-                {
+                } catch (java.io.UnsupportedEncodingException ex) {
                     //System.err.println("Excepcion: " + ex);
                     strToReturn = new String(rcvdUncompressedData);
                 }
                 return strToReturn;
                 //return new String(rcvdUncompressedData, "UTF-8");
-            } else
-            {
+            } else {
                 return null;
             } /* end if */
 
-        } else
-        {
-            try
-            {
-                if (rcvdData != null)
-                {
+        } else {
+            try {
+                if (rcvdData != null) {
                     strToReturn = new String(rcvdData, "UTF-8");
                 } /* end if */
 
-            } catch ( java.io.UnsupportedEncodingException ex )
-            {
+            } catch (java.io.UnsupportedEncodingException ex) {
                 //System.err.println("Excepcion: " + ex);
                 strToReturn = new String(rcvdData);
             }
@@ -607,11 +551,10 @@ public final class MO_Connection
 
     /**
      * Getter method: returns the received content from the server in a byte[] object
-     * 
+     *
      * @return returns the received content from the server in a byte[] object
      */
-    public byte[] MO_Msg_GetLastReceivedContentByte()
-    {
+    public byte[] MO_Msg_GetLastReceivedContentByte() {
         return rcvdData;
         //return rcvdData.toString();
 
@@ -620,15 +563,14 @@ public final class MO_Connection
     /**
      * empties the last received data object
      */
-    public void MO_Msg_EmptyLastReceivedContent()
-    {
+    public void MO_Msg_EmptyLastReceivedContent() {
         rcvdData = null;
         rcvdUncompressedData = null;
     }
 
     /**
      * unzips the last received data if content type was gzipped
-     * 
+     *
      * @return returns a string represntation of the recived data
      */
     private byte[] MO_Msg_GetLastReceivedContentUnGzip()
@@ -636,24 +578,20 @@ public final class MO_Connection
     {
         String strToReturn = null;
         rcvdUncompressedData = null;
-        try
-        {
-            if (rcvdData != null)
-            {
+        try {
+            if (rcvdData != null) {
                 rcvdUncompressedData = myGzip.inflate(rcvdData);
                 //strToReturn = MO_Msg_Int_UnGzip(rcvdData);
             } /* end if */
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             //no pude leer la data!
-        	int i=0;
+            int i = 0;
             //System.err.println("Exception at decompressing: " + ex.getMessage());
             //System.err.println("Exception at decompressing: " + ex);
         }
         return rcvdUncompressedData;
         //return strToReturn;
     }
-
 
 
 }
