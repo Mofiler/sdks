@@ -1,7 +1,6 @@
 package com.mofiler;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.json.JSONArray;
@@ -10,15 +9,18 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.android.volley.VolleyError;
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.RESTApi;
 import com.mofiler.daos.MofilerDao;
 import com.mofiler.service.LocationService;
 import com.mofiler.service.LocationServiceImpl;
 
-//this class will hold the actual client / server logic, at the uppermost level, and will hold
-//data in persistence until it deserves to be pushed to the server, in chunks, in a single push.
-public class MofilerClient implements ApiListener {
+import static com.mofiler.api.Constants.K_MOFILER_API_USER_VALUES;
+
+// this class will hold the actual client / server logic, at the uppermost level, and will hold
+// data in persistence until it deserves to be pushed to the server, in chunks, in a single push.
+public class MofilerClient {
 
     private RESTApi restApi;
     private JSONArray jsonUserValues;
@@ -28,12 +30,12 @@ public class MofilerClient implements ApiListener {
     private static int K_MOFILER_MAX_STACK_LENGTH = 1000; //if we reach this, just eliminate all data to avoid bloat
     //private MofilerDeferredObject deferredObj;
     private boolean bUseDeferredSend = false;
-    private ApiListener listener = null;
     private String strURL;
     private Context context;
     private LocationService locationService;
     private boolean useLocation;
     private boolean useVerboseContext;
+    private InjectListener injectListener = new InjectListener();
 
     public static String K_MOFILER_PROBE_KEY_NAME = "mofiler_probe";
 
@@ -44,9 +46,6 @@ public class MofilerClient implements ApiListener {
 
         restApi = new RESTApi(mofilerInstallation.getInstallationId());
         restApi.setContext(context);
-        restApi.useThreadedConnections(true, false);
-        restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_inject, this);
-        restApi.addMethodListener(RESTApi.K_MOFILER_API_METHOD_NAME_get, this);
         this.bUseDeferredSend = a_bUseDeferredSend;
         this.useLocation = a_bUseLocation;
         locationService = new LocationServiceImpl(context);
@@ -181,7 +180,7 @@ public class MofilerClient implements ApiListener {
 
             } else if (jsonUserValues.length() > K_MOFILER_MAX_STACK_LENGTH) {
                 //send this and clean all
-                restApi.pushKeyValueStack(jsonUserValues);
+                restApi.pushKeyValueStack(jsonUserValues, injectListener);
                 jsonUserValues = new JSONArray();
                 mofilerValues.setJsonStack(jsonUserValues);
                 if (bUseExpireAfter)
@@ -192,7 +191,7 @@ public class MofilerClient implements ApiListener {
             } else {
                 //send stack data and then push the new data into the stack
                 //deferredObj = new MofilerDeferredObject(key, value);
-                restApi.pushKeyValueStack(jsonUserValues);
+                restApi.pushKeyValueStack(jsonUserValues, injectListener);
                 doSaveDataToDisk();
                 jsonUserValues = new JSONArray();
                 if (bUseExpireAfter)
@@ -217,9 +216,9 @@ public class MofilerClient implements ApiListener {
     private void pushValue_single(String key, String value) {
         try {
             if (useLocation)
-                restApi.pushKeyValue(key, value, locationService.getLastKnownLocationJSON());
+                restApi.pushKeyValue(key, value, locationService.getLastKnownLocationJSON(), injectListener);
             else
-                restApi.pushKeyValue(key, value);
+                restApi.pushKeyValue(key, value, injectListener);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
@@ -237,18 +236,18 @@ public class MofilerClient implements ApiListener {
     private void pushValue_single(String key, String value, long expireAfterMs) {
         try {
             if (useLocation)
-                restApi.pushKeyValue(key, value, expireAfterMs, locationService.getLastKnownLocationJSON());
+                restApi.pushKeyValue(key, value, expireAfterMs, locationService.getLastKnownLocationJSON(), injectListener);
             else
-                restApi.pushKeyValue(key, value, expireAfterMs);
+                restApi.pushKeyValue(key, value, expireAfterMs, injectListener);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
 
-    public void getValue(String key, String identityKey, String identityValue) {
+    public void getValue(String key, String identityKey, String identityValue, ApiListener listener) {
 
         try {
-            restApi.getValue(key, identityKey, identityValue);
+            restApi.getValue(key, identityKey, identityValue, listener);
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
@@ -256,10 +255,6 @@ public class MofilerClient implements ApiListener {
 
     public void setIdentity(Hashtable hashIds) {
         restApi.setIdentity(hashIds);
-    }
-
-    public void setListener(ApiListener a_listener) {
-        this.listener = a_listener;
     }
 
     public String getURL() {
@@ -274,56 +269,9 @@ public class MofilerClient implements ApiListener {
 
     public void flushData() {
         try {
-            restApi.pushKeyValueStack(jsonUserValues);
+            restApi.pushKeyValueStack(jsonUserValues, injectListener);
         } catch (JSONException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject) {
-        if (a_vectBusinessObject.size() > 1) {
-            String methodname = (String) a_vectBusinessObject.elementAt(0);
-            if (a_methodCalled.startsWith("error")) {
-                JSONObject jsonErr = (JSONObject) a_vectBusinessObject.elementAt(1);
-
-                String strOriginalMethod = restApi.getMethodForError(a_methodCalled);
-
-                if (listener != null)
-                    listener.methodResponded(strOriginalMethod, a_vectBusinessObject);
-
-                if (bUseDeferredSend) {
-                    //TODO: in case deferred sending is enabled, then if an error happened, try resending stack later
-                    try {
-                        JSONArray jsonTmpArray = (JSONArray) new JSONArray((String) (a_vectBusinessObject.elementAt(2)));
-                        if (jsonTmpArray.length() > K_MOFILER_MAX_STACK_LENGTH) {
-                            //clean all
-                            jsonUserValues = new JSONArray();
-                            mofilerValues.setJsonStack(jsonUserValues);
-                            doSaveDataToDisk();
-                        } else {
-                            jsonUserValues = concatArray(jsonUserValues, jsonTmpArray);
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-            } else if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_inject)) {
-                if (bUseDeferredSend) {
-                    //all went good, so erase current value stack
-                    jsonUserValues = new JSONArray();
-                    mofilerValues.setJsonStack(jsonUserValues);
-                    doSaveDataToDisk();
-                }
-
-                if (listener != null)
-                    listener.methodResponded(a_methodCalled, a_vectBusinessObject);
-
-            } else if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get)) {
-                if (listener != null)
-                    listener.methodResponded(a_methodCalled, a_vectBusinessObject);
-            } /* end if */
         }
     }
 
@@ -338,7 +286,7 @@ public class MofilerClient implements ApiListener {
         /* instantiate mofiler stack */
         if (mofilerValues == null) {
             jsonUserValues = new JSONArray();
-            mofilerValues = new MofilerValueStack(null);
+            mofilerValues = new MofilerValueStack("[]");
         } else {
             try {
                 jsonUserValues = mofilerValues.getJsonStack();
@@ -374,5 +322,41 @@ public class MofilerClient implements ApiListener {
             result.put(arr2.get(i));
         }
         return result;
+    }
+
+
+    private class InjectListener implements ApiListener {
+
+        @Override
+        public void onResponse(int reqCode, JSONObject response) {
+            // no op, this successful listener is not used for injects
+            if (bUseDeferredSend) {
+                //all went good, so erase current value stack
+                jsonUserValues = new JSONArray();
+                mofilerValues.setJsonStack(jsonUserValues);
+                doSaveDataToDisk();
+            }
+        }
+
+        @Override
+        public void onError(int reqCode, JSONObject originalPayload, VolleyError error) {
+            // error listener only used for injects
+            if (bUseDeferredSend) {
+                try {
+                    JSONArray jsonTmpArray = originalPayload.getJSONArray(K_MOFILER_API_USER_VALUES);
+                    if (jsonTmpArray != null && jsonTmpArray.length() > K_MOFILER_MAX_STACK_LENGTH) {
+                        //clean all
+                        jsonUserValues = new JSONArray();
+                        mofilerValues.setJsonStack(jsonUserValues);
+                        doSaveDataToDisk();
+                    } else {
+                        jsonUserValues = concatArray(jsonUserValues, jsonTmpArray);
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 }

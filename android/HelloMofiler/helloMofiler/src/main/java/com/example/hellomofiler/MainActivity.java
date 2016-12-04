@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.mofiler.Mofiler;
 import com.mofiler.api.ApiListener;
 import com.mofiler.api.RESTApi;
@@ -65,8 +66,7 @@ public class MainActivity extends ActionBarActivity {
 
     	private Mofiler mof;
     	private int iTestCounter;
-    	private MofilerListener mofListenerExample = new MofilerListener();
-    	
+
     	
         public PlaceholderFragment() {
         	
@@ -92,8 +92,7 @@ public class MainActivity extends ActionBarActivity {
      	            mof.setUseVerboseContext(true); //defaults to false, but helps Mofiler get a lot of information about the device context if set to true
      	            //mof.setUseVerboseContext(false); //defaults to false, but helps Mofiler get a lot of information about the device context if set to true
      	            mof.setUseLocation(true); //defaults to true
-     	            mof.setListener(mofListenerExample);
-     	            
+
      	            Toast.makeText(getActivity(), "Mofiler initialized!", Toast.LENGTH_SHORT).show();
      	            btninit.setEnabled(false);
     			}
@@ -126,7 +125,21 @@ public class MainActivity extends ActionBarActivity {
     			public void onClick(View v) {
      	        	try
      	        	{
-     	                mof.getValue("mykey0", "username", "johndoe");
+     	                mof.getValue("mykey0", "username", "johndoe", new ApiListener() {
+							@Override
+							public void onResponse(int reqCode, JSONObject response) {
+								// no op
+								int i = 0 + 1;
+								i += reqCode;
+							}
+
+							@Override
+							public void onError(int reqCode, JSONObject originalPayload, VolleyError error) {
+								//no op
+								int i = 0 + 1;
+								i += reqCode;
+							}
+						});
      	        	}
      	        	catch(Exception ex)
      	        	{
@@ -159,68 +172,7 @@ public class MainActivity extends ActionBarActivity {
             return rootView;
         }
         
-        
-        private class MofilerListener implements ApiListener{
-        	@Override
-            public void methodResponded(String a_methodCalled, Vector a_vectBusinessObject)
-            {
-        		System.err.println("HelloMofilerAAAA: This is the handler: " + a_methodCalled);
-        		
-            	if (a_methodCalled.startsWith(RESTApi.K_MOFILER_API_METHOD_NAME_get))
-            	{
-            		System.err.println("HelloMofiler: This is the handler for the 'get' result");
-            		
-            		if (a_vectBusinessObject != null && a_vectBusinessObject.size() > 1)
-            		{
-            			JSONObject jsonResult = (JSONObject) a_vectBusinessObject.elementAt(1);
 
-            			try {
-            				
-            				System.out.println("HELLOMOFILER: resulting JSON object is: " + jsonResult.toString());
-            				
-        	                if (jsonResult.has("result")){
-        	                	String strResult = (String) jsonResult.getString("result");
-        	                	if (strResult.equals("ok")){
-        	                		
-        	                		//TODO HANDLE YOUR DATA HERE
-        	                		//TODO HANDLE YOUR DATA HERE
-        	                		//TODO HANDLE YOUR DATA HERE
-        	                		//TODO HANDLE YOUR DATA HERE
-        	                		
-        	    	        		System.err.println("HelloMofiler: This is the result of the get");
-        	    	        		//JSONObject jsonValue = jsonResult.getJSONObject("value");
-        	    	        		String jsonValue = jsonResult.getString("value");
-        	    	        		System.out.println(jsonValue);
-        	    	        		System.out.println("HELLOMOFILER READY");
-        	    	        		//TODO: do your work here, as in process the result, etc.
-        	    	        		//TODO: do your work here, as in process the result, etc.
-        	    	        		//TODO: do your work here, as in process the result, etc.
-        	                	}
-        	                } else if (jsonResult.has("error")){
-        	                	
-        	                	//TODO: HANDLE YOUR ERROR HERE
-        	                	//TODO: HANDLE YOUR ERROR HERE
-        	                	//TODO: HANDLE YOUR ERROR HERE
-        	                	//TODO: HANDLE YOUR ERROR HERE
-
-        	                	String strError = (String) jsonResult.getString("error");
-            	        		System.err.println(strError);
-            	        		System.err.println("HELLOMOFILER ERROR HANDLER");
-        	                }
-        	                	
-            			}
-            			catch(JSONException ex)
-            			{
-            				ex.printStackTrace();
-            			}
-            			
-            		}
-            		}
-            	}
-
-        	
-        }
-        
     }
 
     

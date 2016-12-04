@@ -171,12 +171,12 @@ public final class Mofiler {
     }
 
 
-    public void getValue(String key, String identityKey, String identityValue) throws AppKeyNotSetException, IdentityNotSetException {
+    public void getValue(String key, String identityKey, String identityValue, ApiListener listener) throws AppKeyNotSetException, IdentityNotSetException {
         if (appKey != null) {
             if (this.identity != null && (this.identity.size() > 0)) {
                 addAllAvailableHeaders();
                 moClient.setIdentity(identity);
-                moClient.getValue(key, identityKey, identityValue);
+                moClient.getValue(key, identityKey, identityValue, listener);
             } else
                 throw new IdentityNotSetException("Mofiler: user identity needs be set before you can send any values to the server");
         } else
@@ -194,10 +194,6 @@ public final class Mofiler {
 
     public void flushDataToMofiler() {
         moClient.flushData();
-    }
-
-    public void setListener(ApiListener a_apilistener) {
-        moClient.setListener(a_apilistener);
     }
 
     private void addAllAvailableHeaders() {
