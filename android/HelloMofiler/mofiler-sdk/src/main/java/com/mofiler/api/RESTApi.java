@@ -140,6 +140,7 @@ Request:
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(K_MOFILER_API_USER_VALUES, jsonData);
+        addIdentityAndDeviceContext(jsonObject);
 
         return postRequest(strURL, jsonObject, listener);
     }
