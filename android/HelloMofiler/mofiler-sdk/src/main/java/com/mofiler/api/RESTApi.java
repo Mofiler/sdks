@@ -80,7 +80,7 @@ Request:
         json.put("expireAfter", expireAfter);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -94,7 +94,7 @@ Request:
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -107,7 +107,7 @@ Request:
         json.put(a_strKey, a_strValue);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -120,7 +120,7 @@ Request:
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -132,7 +132,7 @@ Request:
         json.put(a_strKey, a_jsonValue);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -144,7 +144,7 @@ Request:
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -155,7 +155,7 @@ Request:
         json.put(a_strKey, a_jsonArray);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -165,7 +165,7 @@ Request:
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(K_MOFILER_API_USER_VALUES, jsonData);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, jsonObject, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, jsonObject, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -179,7 +179,7 @@ Request:
         }
 
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_get + manufacturer + "/" + a_identityKey + "/" + a_identityValue + "/" + a_strKey + "/";
-        RESTApiRequest request = new RESTApiRequest(Request.Method.GET, strURL, null, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.GET, strURL, null, mApplicationHeaders, listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
