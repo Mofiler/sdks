@@ -153,7 +153,7 @@ Request:
         }
 
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_get + manufacturer + "/" + a_identityKey + "/" + a_identityValue + "/" + a_strKey + "/";
-        RESTApiRequest request = new RESTApiRequest(Request.Method.GET, strURL, null, mApplicationHeaders, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.GET, strURL, null, getRequestHeaders(), listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
     }
@@ -231,9 +231,23 @@ Request:
     }
 
     private int postRequest(String url, JSONObject json, ApiListener listener){
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, url, json, mApplicationHeaders, listener);
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, url, json, getRequestHeaders(), listener);
         FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
         return request.getRequestCode();
+    }
+
+    private Hashtable getRequestHeaders() {
+        Hashtable headers = new Hashtable();
+
+        // first put technical constants
+        headers.put(Constants.K_MOFILER_API_HEADER_INSTALLID, mInstallationId);
+        headers.put(Constants.K_MOFILER_API_HEADER_SESSIONID, String.valueOf(mSessionId));
+        headers.put(Constants.K_MOFILER_API_HEADER_API_VERSION, Constants.K_MOFILER_API_VERSION);
+
+        // now add application headers
+        headers.putAll(mApplicationHeaders);
+
+        return headers;
     }
 
 }

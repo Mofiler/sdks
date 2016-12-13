@@ -3,7 +3,6 @@ package com.mofiler.api;
 public class Constants {
 
     public static String K_MOFILER_API_VERSION = "0.1";
-    public static String K_MOFILER_API_HEADER_NOISELEVEL = "X-Mofiler-NoiseLevel";
     public static String K_MOFILER_API_HEADER_SESSIONID = "X-Mofiler-SessionID";
     public static String K_MOFILER_API_HEADER_INSTALLID = "X-Mofiler-InstallID";
     public static String K_MOFILER_API_HEADER_API_VERSION = "X-Mofiler-ApiVersion";
