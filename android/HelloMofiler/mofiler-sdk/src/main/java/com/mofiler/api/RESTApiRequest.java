@@ -23,6 +23,7 @@ public class RESTApiRequest {
         mRequestCode = r.nextInt();
         mListener = listener;
         mOriginalPayload = jsonRequest;
+
         Response.Listener<JSONObject> localSuccessListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -59,4 +60,5 @@ public class RESTApiRequest {
     public int getRequestCode() {
         return mRequestCode;
     }
+
 }

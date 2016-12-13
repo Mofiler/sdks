@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -74,55 +75,35 @@ Request:
     */
     public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter, ApiListener listener) throws JSONException {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-
-        JSONObject json = new JSONObject();
-        json.put(a_strKey, a_strValue);
+        JSONObject json = getDecoratedJsonWithKeyValue(a_strKey, a_strValue);
         json.put("expireAfter", expireAfter);
-        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
-
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyValue(String a_strKey, String a_strValue, long expireAfter, JSONObject a_jsonLocation, ApiListener listener) throws JSONException {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
 
-        JSONObject json = new JSONObject();
-        json.put(a_strKey, a_strValue);
+        JSONObject json = getDecoratedJsonWithKeyValue(a_strKey, a_strValue);
         json.put("expireAfter", expireAfter);
-        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
 
     public int pushKeyValue(String a_strKey, String a_strValue, ApiListener listener) throws JSONException {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
-
-        JSONObject json = new JSONObject();
-        json.put(a_strKey, a_strValue);
-        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
-
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        JSONObject json = getDecoratedJsonWithKeyValue(a_strKey, a_strValue);
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyValue(String a_strKey, String a_strValue, JSONObject a_jsonLocation, ApiListener listener) throws JSONException {
         String strURL = K_MOFILER_API_URL_BASE + K_MOFILER_API_URL_METHOD_inject;
 
-        JSONObject json = new JSONObject();
-        json.put(a_strKey, a_strValue);
-        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        JSONObject json = getDecoratedJsonWithKeyValue(a_strKey, a_strValue);
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyValue(String a_strKey, JSONObject a_jsonValue, ApiListener listener) throws JSONException {
@@ -131,10 +112,9 @@ Request:
         JSONObject json = new JSONObject();
         json.put(a_strKey, a_jsonValue);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        addIdentityAndDeviceContext(json);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyValue(String a_strKey, JSONObject a_jsonValue, JSONObject a_jsonLocation, ApiListener listener) throws JSONException {
@@ -144,9 +124,7 @@ Request:
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
         json.put(K_MOFILER_API_LOCATION_KEY, a_jsonLocation);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyArray(String a_strKey, JSONArray a_jsonArray, ApiListener listener) throws JSONException {
@@ -155,9 +133,7 @@ Request:
         json.put(a_strKey, a_jsonArray);
         json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, json, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, json, listener);
     }
 
     public int pushKeyValueStack(JSONArray jsonData, ApiListener listener) throws JSONException {
@@ -165,9 +141,7 @@ Request:
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(K_MOFILER_API_USER_VALUES, jsonData);
 
-        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, strURL, jsonObject, mApplicationHeaders, listener);
-        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
-        return request.getRequestCode();
+        return postRequest(strURL, jsonObject, listener);
     }
 
     public int getValue(String a_strKey, String a_identityKey, String a_identityValue, ApiListener listener) throws JSONException {
@@ -192,6 +166,74 @@ Request:
 
     public String getServerURL() {
         return K_MOFILER_API_URL_BASE_POSTFIX;
+    }
+
+    private JSONArray buildIdentityVector(Hashtable identityPairs) {
+        Enumeration e = identityPairs.keys();
+        JSONArray jsonToReturn = new JSONArray();
+
+        try {
+            while ( e.hasMoreElements() ) {
+                String sKey = (String)e.nextElement();
+                JSONObject tmpObj = new JSONObject();
+                tmpObj.put(sKey, identityPairs.get(sKey));
+                jsonToReturn.put(tmpObj);
+            }
+        }
+        catch(JSONException ex) {
+            ex.printStackTrace();
+        }
+        return jsonToReturn;
+    }
+
+    private JSONObject buildDeviceContextJSONObject(Context context) {
+        JSONObject jsonobjInner = new JSONObject();
+
+        try {
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MANUFACTURER, MO_Device.getDeviceManufacturer());
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_MODELNAME, MO_Device.getDeviceModelName());
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_DISPLAYSIZE, MO_Device.getDisplaySize(context));
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_LOCALE, MO_Device.getLocale());
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_NETWORK, MO_Device.getConnectionString(context));
+
+        	/* 2014-03-24 added into the body */
+            jsonobjInner.put(Constants.K_MOFILER_API_HEADER_SESSIONID, mSessionId);
+            jsonobjInner.put(Constants.K_MOFILER_API_HEADER_INSTALLID, mInstallationId);
+
+        	/* 2014-11-16 added extras */
+            jsonobjInner.put(Constants.K_MOFILER_API_DEVICE_CONTEXT_EXTRAS, MO_Device.getExtras(context, mUseVerboseExtras));
+
+        }
+        catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        return jsonobjInner;
+    }
+
+    private JSONObject addIdentityAndDeviceContext(JSONObject json) throws JSONException {
+        json.put(Constants.K_MOFILER_API_IDENTITY, buildIdentityVector(mIdentities));
+        json.put(Constants.K_MOFILER_API_DEVICE_CONTEXT, buildDeviceContextJSONObject(mContext));
+        return json;
+    }
+
+    private JSONObject getBasicJsonWithKeyValue(String key, String value) throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put(key, value);
+        json.put(K_MOFILER_API_TIMESTAMP_KEY, System.currentTimeMillis());
+        return json;
+    }
+
+    private JSONObject getDecoratedJsonWithKeyValue(String key, String value) throws JSONException {
+        JSONObject json = getBasicJsonWithKeyValue(key, value);
+        addIdentityAndDeviceContext(json);
+        return json;
+    }
+
+    private int postRequest(String url, JSONObject json, ApiListener listener){
+        RESTApiRequest request = new RESTApiRequest(Request.Method.POST, url, json, mApplicationHeaders, listener);
+        FetcherQueue.getInstance(mContext).addToRequestQueue(request.getJsonObjectRequest());
+        return request.getRequestCode();
     }
 
 }
