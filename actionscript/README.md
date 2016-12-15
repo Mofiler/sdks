@@ -43,7 +43,7 @@ This is all the code you need:
 
 In the HelloMofiler project you will find an example of how to obtain different variables that identify the device and the user that may help creating the identity. For these to work, you need to use an already built ANE (device-info-util.ane) that you will find in the project /lib folder.
 
-NOTE: the ANE was built based on https://github.com/katopz/ane-device-file-util/ and was modified to support Android and BlackBerry. 
+NOTE: the ANE was built based on https://github.com/katopz/ane-device-info-util/ and was modified https://github.com/btafel/ane-device-info-util/ to support Android and BlackBerry. 
 
 This ANE will provide methods to access cross-platform native information like Mac Address, Device Name, etc. and some specific information like PIN unique to BlackBerry Platform. 
 
