@@ -1,7 +1,6 @@
 package
 {
-	import com.debokeh.anes.utils.DeviceInfoUtil;
-	import com.mofiler.Mofiler;
+	import com.mofiler.anes.Mofiler;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -42,68 +41,40 @@ package
 			helloButton.addEventListener(MouseEvent.CLICK, onHelloButtonClick);
 			helloButton.enabled = true;
 			addChild(helloButton);
-			stage.nativeWindow.visible = true;
+//			stage.nativeWindow.visible = true;
 			
 		}
 		
 		private function onHelloButtonClick(event:MouseEvent):void
 		{
-			var m:Mofiler = new Mofiler();
+			var m:Mofiler = Mofiler.getInstance();
 			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
 			m.setAppName("App Test Flash");
-			m.setAppVersion("1.0");
 			m.setURL("mofiler.com:8081");
-			
+			m.setUseVerboseContext(true);
+			m.setUseLocation(false);
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
-			
-			//m.addIdentity("username", "flash_jhondoe1");
-			//m.addIdentity("pin", "2b2c78f1");
-			
-			m.addIdentity("userid", "usr"+new Date().getMilliseconds());
-			
-			if(DeviceInfoUtil.getPIN()!=null){
-				m.addIdentity("pin", DeviceInfoUtil.getPIN());
-			}
-			if(DeviceInfoUtil.getCurrentMACAddress()!=null){
-				m.addIdentity("macAddress", DeviceInfoUtil.getCurrentMACAddress());
-			}
-			if(DeviceInfoUtil.getIMEI()!=null){
-				m.addIdentity("imei", DeviceInfoUtil.getIMEI());
-			}
+			m.addIdentity("username", "flash_jhondoe1");
+			m.addIdentity("pin", "2b2c78f1");
 
+			//INJECT VALUES
+			m.injectValue("testKey0-1", "testValue0");
+			m.injectValue("testKey-1", "testValue");
+			m.injectValue("testKey-1", "testValue");
+			m.injectValue("testKey1-1", "testValue");
+			m.injectValue("testKey1-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey2-1", "testValue");
+			m.injectValue("testKey3-1", "testValue");
+			m.injectValue("testKey4-1", "testValue");
+			m.injectValue("testKey5-1", "testValue");
 			
-			txtField.text = "Pin: "+DeviceInfoUtil.getPIN()+"\n";
-			txtField.text += "deviceName"+DeviceInfoUtil.getCurrentDeviceName()+"\n";;
-			txtField.text += "macAddress: "+DeviceInfoUtil.getCurrentMACAddress()+"\n";;
-			txtField.text += "ssid: "+DeviceInfoUtil.getCurrentSSID()+"\n";;
-			txtField.text += "imei: "+DeviceInfoUtil.getIMEI()+"\n";;
-			txtField.text += "deviceModelName: "+DeviceInfoUtil.getDeviceModelName()+"\n";;
-				
-			//INJECT VALUES FOR THE USER
-			if(DeviceInfoUtil.getDeviceModelName()!=null){
-				m.injectValue("deviceModelName", DeviceInfoUtil.getDeviceModelName(), 0);
-			}
-			if(DeviceInfoUtil.getCurrentDeviceName()!=null){
-				m.injectValue("deviceName", DeviceInfoUtil.getCurrentDeviceName(), 0);
-			}
-			if(DeviceInfoUtil.getCurrentSSID()!=null){
-				m.injectValue("ssid", DeviceInfoUtil.getCurrentSSID(), 0);
-			}
-			m.injectValue("testKey0-1", "testValue0", 0);
-			m.injectValue("testKey-1", "testValue", 0);
-			m.injectValue("testKey-1", "testValue", 0);
-			m.injectValue("testKey1-1", "testValue", 0);
-			m.injectValue("testKey1-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey2-1", "testValue", 0);
-			m.injectValue("testKey3-1", "testValue", 0);
-			m.injectValue("testKey4-1", "testValue", 0);
-			m.injectValue("testKey5-1", "testValue", 0);
+			m.flushDataToMofiler();
 			
 		}
 	}
