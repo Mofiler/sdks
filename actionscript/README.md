@@ -5,7 +5,7 @@ Check the HelloMofiler project to see rapidly how to use the Mofiler SDK.
 
 ## Quick stuff to get you going
 
-Include the mofiler-sdk.swc file as a library to your project (see Library path tab in the project properties for the HelloMofiler example)
+Include the mofiler-sdk.ane file as a library (Native Extension) to your project (see Native Extensions tab in the project properties of the HelloMofiler example)
 
 Add these permissions to your project: 
 
