@@ -1,7 +1,7 @@
 package
 {
 	import com.mofiler.anes.Mofiler;
-	
+
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -47,16 +47,18 @@ package
 		
 		private function onHelloButtonClick(event:MouseEvent):void
 		{
+			
 			var m:Mofiler = Mofiler.getInstance();
 			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
 			m.setAppName("App Test Flash");
+//			m.setURL("mofiler.com/mock");
 			m.setURL("mofiler.com:8081");
 			m.setUseVerboseContext(true);
-			m.setUseLocation(false);
+			m.setUseLocation(true);
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
-			m.addIdentity("username", "flash_jhondoe1");
-			m.addIdentity("pin", "2b2c78f1");
+			m.addIdentity("username", "flash_jhondoe2");
+			m.addIdentity("pin", "123456");
 
 			//INJECT VALUES
 			m.injectValue("testKey0-1", "testValue0");
@@ -78,8 +80,10 @@ package
 			
 		}
 	}
+
 	
 }
+
 import flash.display.Shape;
 import flash.display.SimpleButton;
 class CustomSimpleButton extends SimpleButton {
