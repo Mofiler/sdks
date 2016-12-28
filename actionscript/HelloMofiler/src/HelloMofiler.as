@@ -58,7 +58,7 @@ package
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
 			m.addIdentity("username", "flash_jhondoe2");
-			m.addIdentity("pin", "123456");
+			m.addIdentity("pin", "12345");
 
 			//INJECT VALUES
 			m.injectValue("testKey0-1", "testValue0");
