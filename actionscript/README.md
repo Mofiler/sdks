@@ -11,79 +11,53 @@ Add these permissions to your project:
 
 For Android add to project_name-app.xml file:
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
+  <uses-permission android:name="android.permission.READ_SMS" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+If you are going to use the Verbose Extras mode, you also should add these to your manifest:
 
-For BlackBerry add to bar-descriptor.xml: <br>
-   < permission>read_device_identifying_information< /permission><br>
-   < permission>read_personally_identifiable_information< /permission><br>
-   < permission>access_internet< /permission><br>
-   < permission>access_shared< /permission><br>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 This is all the code you need:
 
 ### Initialization
         import com.mofiler.Mofiler;
 
-        var mof:Mofiler = new Mofiler();
-        mof.setAppKey("myAppKey");
-        mof.setAppName("myAppName");
-        mof.setAppVersion("1.0");
-        mof.setURL("mofiler.com:8081");
-        mof.addIdentity("username", "flash_jhondoe");
-        mof.addIdentity("email", "john@doe.com");
+
+      var m:Mofiler = Mofiler.getInstance();
+      m.setAppKey("myAppKey");
+      m.setAppName("myAppName");
+      m.setURL("mofiler.com:8081");
+      m.setUseVerboseContext(true);
+      m.setUseLocation(true);
+      
+### Define unique identifiers for your user:
+
+      m.addIdentity("username", "flash_jhondoe2");
+      m.addIdentity("pin", "12345");
 
 ### Inject values to Mofiler:
-        
-        mof.injectValue("mykey2", "myvalue2", 0); <-- no expiration
-        mof.injectValue("mykey2", "myvalue2", new Date().getTime() + (1000*60*60*24)); <-- expires tomorrow
 
-### Obtaining user identification properties
+      m.injectValue("testKey0-1", "testValue0");
+      m.injectValue("testKey1-1", "testValue");
+      m.injectValue("testKey2-1", "testValue");
+      
+      m.flushDataToMofiler(); //<--force flush to API server
 
-In the HelloMofiler project you will find an example of how to obtain different variables that identify the device and the user that may help creating the identity. For these to work, you need to use an already built ANE (device-info-util.ane) that you will find in the project /lib folder.
-
-NOTE: the ANE was built based on https://github.com/katopz/ane-device-info-util/ and was modified https://github.com/btafel/ane-device-info-util/ to support Android and BlackBerry. 
-
-This ANE will provide methods to access cross-platform native information like Mac Address, Device Name, etc. and some specific information like PIN unique to BlackBerry Platform. 
-
-HOW TO USE IT
-Add thise code to your AS3/Flash project
-
-    import com.debokeh.anes.utils.DeviceInfoUtil;
-
-    if(DeviceInfoUtil.getPIN()!=null){
-        mof.addIdentity("pin", DeviceInfoUtil.getPIN());
-    }
-    if(DeviceInfoUtil.getCurrentDeviceName()!=null){
-        mof.addIdentity("deviceName", DeviceInfoUtil.getCurrentDeviceName());
-    }
-    if(DeviceInfoUtil.getCurrentMACAddress()!=null){
-        mof.addIdentity("macAddress", DeviceInfoUtil.getCurrentMACAddress());
-    }
-    if(DeviceInfoUtil.getCurrentSSID()!=null){
-        mof.addIdentity("ssid", DeviceInfoUtil.getCurrentSSID());
-    }
-    if(DeviceInfoUtil.getIMEI()!=null){
-        mof.addIdentity("imei", DeviceInfoUtil.getIMEI());
-    }
-    if(DeviceInfoUtil.getDeviceModelName()!=null){
-        mof.addIdentity("deviceModelName", DeviceInfoUtil.getDeviceModelName());
-    }
 
 -- TO BE IMPLEMTED
-In future releases...
-
-        Mofiler uses an internal stack and persistence in order to collect data from your application before attempting to send it over to the server, thus
-        ensuring internet usage and user experience is taken care of.
-        Should you want to send data over to Mofiler server right away, you just need to perform the following call:
-
-                mof.flushDataToMofiler();
-
+In future release...
 
         ### Get values from Mofiler:
 
-                mof.getValue("mykey", "username", "johndoe");
+                m.getValue("mykey", "username", "johndoe");
 
         - usage: key to retrieve; identifier key to use, identifier key value to use.
 
@@ -98,6 +72,7 @@ In future releases...
         Otherwise, you get the "result" key.
         In all cases, this is true even if the mofiler SDK could not connect to the server, so this way you can handle errors
         in the same way.
+
 -- /TO BE IMPLEMTED
 
 
