@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Mofiler' target in the 'Mofiler' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
