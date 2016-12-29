@@ -28,7 +28,7 @@ If you are going to use the Verbose Extras mode, you also should add these to yo
 This is all the code you need:
 
 ### Initialization
-        import com.mofiler.Mofiler;
+      import com.mofiler.anes.Mofiler;
 
 
       var m:Mofiler = Mofiler.getInstance();
