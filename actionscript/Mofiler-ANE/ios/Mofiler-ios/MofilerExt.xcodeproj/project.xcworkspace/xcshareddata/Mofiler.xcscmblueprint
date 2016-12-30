@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "DDC1C11BE3AF7A4CBF40C3C4B2EABCA38351272F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "DDC1C11BE3AF7A4CBF40C3C4B2EABCA38351272F" : 9223372036854775807,
+    "AC4A75F7B8606399A5773183553D1214AC5FCE94" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7F24A61E-461D-436D-8CC5-D6F7E134D67D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "DDC1C11BE3AF7A4CBF40C3C4B2EABCA38351272F" : "sdks\/",
+    "AC4A75F7B8606399A5773183553D1214AC5FCE94" : "sdk-ios\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Mofiler",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "actionscript\/Mofiler-ANE\/ios\/Mofiler-ios\/Mofiler.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Mofiler\/sdk-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AC4A75F7B8606399A5773183553D1214AC5FCE94"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Mofiler\/sdks.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DDC1C11BE3AF7A4CBF40C3C4B2EABCA38351272F"
+    }
+  ]
+}
