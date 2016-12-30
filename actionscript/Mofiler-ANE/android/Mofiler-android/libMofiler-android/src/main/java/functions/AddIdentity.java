@@ -32,15 +32,15 @@ public class AddIdentity implements FREFunction {
 					new Thread(new Runnable() {
 						public void run() {
 							try {
-								_mof.addIdentity("dvertisingIdentifier", AdvertisingIdClient.getAdvertisingIdInfo(_context).getId());
+								_mof.addIdentity("advertisingIdentifier", AdvertisingIdClient.getAdvertisingIdInfo(_context).getId());
 							} catch (Exception e) {
-								Log.e(TAG, "dvertisingIdentifier error", e);
+								Log.e(TAG, "advertisingIdentifier error", e);
 							}
 						}
 					}).start();
 				}
 			} catch (Exception e) {
-				Log.e(TAG, "dvertisingIdentifier error", e);
+				Log.e(TAG, "advertisingIdentifier error", e);
 			}
 			try {
 				if(mof.getIdentity("android_id")==null){
