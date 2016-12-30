@@ -15,7 +15,8 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>HelloMofiler.debug</id>
+	<!--<id>HelloMofiler</id>-->
+	<id>com.mofiler.demo.HelloMofiler</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>HelloMofiler</filename>
@@ -281,6 +282,8 @@
 				<string>1</string>
 				<string>2</string>
 			</array>
+			<key>MinimumOSVersion</key>
+			<string>8.0</string>
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
@@ -288,9 +291,10 @@
 	
 	
 <extensions>
-    <extensionID>com.mofiler.anes.Mofiler</extensionID>
+    
     
 	
     
+    <extensionID>com.mofiler.anes.Mofiler</extensionID>
     </extensions>
 </application>
