@@ -57,10 +57,10 @@ package
 			m.setUseLocation(true);
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
-			m.addIdentity("username", "flash_jhondoe2");
-			m.addIdentity("pin", (Math.random()*9999999).toString());
+			m.addIdentity("username", "flash_jhondoe");
 
 			//INJECT VALUES
+			m.injectValue("randomValue", (Math.random()*9999999).toString());
 			m.injectValue("testKey0-1", "testValue0");
 			m.injectValue("testKey-1", "testValue");
 			m.injectValue("testKey-1", "testValue");
