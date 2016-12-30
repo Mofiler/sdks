@@ -268,8 +268,24 @@
 			    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 			    <uses-permission android:name="android.permission.WAKE_LOCK" />
 			    			    
-			    
+			    <application>
+				  	<!-- MOFILER SERVICES -->
+				    <service android:name="com.mofiler.service.AlarmService" />
 				
+				
+				    <!-- MOFILER RECEIVERS -->
+				    <receiver
+				        android:name="com.mofiler.receivers.AlarmNotificationReceiver"
+				        android:enabled="true" />
+				    <receiver
+				        android:name="com.mofiler.receivers.OnBootReceiver"
+				        android:enabled="true" >
+				        <intent-filter>
+				            <action android:name="android.intent.action.BOOT_COMPLETED" >
+				            </action>
+				        </intent-filter>
+				    </receiver>
+				</application>
 
 			</manifest>
 			

@@ -51,14 +51,14 @@ package
 			var m:Mofiler = Mofiler.getInstance();
 			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
 			m.setAppName("App Test Flash");
-//			m.setURL("mofiler.com/mock");
-			m.setURL("mofiler.com:8081");
+			m.setURL("mofiler.com/mock");
+//			m.setURL("mofiler.com:8081");
 			m.setUseVerboseContext(true);
 			m.setUseLocation(true);
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
 			m.addIdentity("username", "flash_jhondoe2");
-			m.addIdentity("pin", "12345");
+			m.addIdentity("pin", (Math.random()*9999999).toString());
 
 			//INJECT VALUES
 			m.injectValue("testKey0-1", "testValue0");
