@@ -58,6 +58,7 @@ package
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
 			m.addIdentity("username", "flash_jhondoe");
+			m.addIdentity("email", "flash@jhondoe.com");
 
 			//INJECT VALUES
 			m.injectValue("randomValue", (Math.random()*9999999).toString());
