@@ -34,7 +34,7 @@ This is all the code you need:
       var m:Mofiler = Mofiler.getInstance();
       m.setAppKey("myAppKey");
       m.setAppName("myAppName");
-      m.setURL("mofiler.com:8081");
+      m.setURL("mofiler.com");
       m.setUseVerboseContext(true);
       m.setUseLocation(true);
       
