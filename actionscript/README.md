@@ -10,7 +10,7 @@ Include the mofiler-sdk.ane file as a library (Native Extension) to your project
 Add these permissions to your project: 
 
 For Android add to project_name-app.xml file:
-
+```
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -18,13 +18,14 @@ For Android add to project_name-app.xml file:
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
   <uses-permission android:name="android.permission.READ_SMS" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+```
 
 If you are going to use the Verbose Extras mode, you also should add these to your manifest:
-
+```
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
   <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+```
 This is all the code you need:
 
 ### Initialization
@@ -34,7 +35,7 @@ This is all the code you need:
       var m:Mofiler = Mofiler.getInstance();
       m.setAppKey("myAppKey");
       m.setAppName("myAppName");
-      m.setURL("mofiler.com:8081");
+      m.setURL("mofiler.com");
       m.setUseVerboseContext(true);
       m.setUseLocation(true);
       
