@@ -1,7 +1,0 @@
-<linker>
-	<assembly fullname="Assembly-CSharp">
-		<type fullname="MofilerManager">
-			<method name="OnButtonTest"/>
-		</type>
-	</assembly>
-</linker>
