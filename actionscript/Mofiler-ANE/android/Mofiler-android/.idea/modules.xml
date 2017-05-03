@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Mofiler-android.iml" filepath="$PROJECT_DIR$/Mofiler-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Mofiler-android.iml" filepath="$PROJECT_DIR$/Mofiler-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libMofiler-android/libMofiler-android.iml" filepath="$PROJECT_DIR$/libMofiler-android/libMofiler-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/libMofiler-android/libMofiler-android.iml" filepath="$PROJECT_DIR$/libMofiler-android/libMofiler-android.iml" />
     </modules>
   </component>
