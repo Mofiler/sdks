@@ -26,7 +26,7 @@ public class MofilerManager : MonoBehaviour {
 		urlText.text = "Test2";
 
 		MofilerBridge.SetAppKey ("myAppKey");
-		urlText.text = MofilerBridge.SetURL ("mofiler.com/mock");
+		MofilerBridge.SetURL ("mofiler.com/mock");
 		MofilerBridge.SetAppName ("myApp");
 		MofilerBridge.AddIdentity ("username", "mofUnityAndroid");
 		MofilerBridge.InjectValue ("test-key0", "testvalueAndroid");

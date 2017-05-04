@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidUnity.iml" filepath="$PROJECT_DIR$/AndroidUnity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MofilerAndroid.iml" filepath="$PROJECT_DIR$/MofilerAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/mofiler/mofiler.iml" filepath="$PROJECT_DIR$/mofiler/mofiler.iml" />
     </modules>
   </component>

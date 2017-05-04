@@ -85,7 +85,6 @@ public class MofilerBridge {
 
 	#elif UNITY_IOS
 
-
 	[DllImport ("__Internal")]
 	private static extern void _SetURL (string urlString);
 	public static void SetURL(string urlString)
@@ -164,15 +163,16 @@ public class MofilerBridge {
 	}
 
 	[DllImport ("__Internal")]
-	private static extern void _SetUserLocation (bool state);
-	public static void SetUserLocation(bool state)
+	private static extern void _SetUseLocation (bool state);
+	public static void SetUseLocation(bool state)
 	{
 		// Call plugin only when running on real device
 		if (Application.platform != RuntimePlatform.OSXEditor)
-			_SetUserLocation (state);
+			_SetUseLocation (state);
 		else
 			Debug.Log ("SETURL: Working on Editor");
 	}
+
 	#endif
 
 }
