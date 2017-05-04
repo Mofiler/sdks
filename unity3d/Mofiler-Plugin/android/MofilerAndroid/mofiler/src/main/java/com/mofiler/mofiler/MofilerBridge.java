@@ -26,7 +26,7 @@ public class MofilerBridge {
     public static String _SetAppKey(String key)
     {
         Mofiler mof = Mofiler.getInstance(UnityPlayer.currentActivity.getApplicationContext());
-        mof.setSdkTypeAndVersion("Unity Android SDK", "1.0.1");
+        mof.setSdkTypeAndVersion("Unity Android SDK", "1.0.2");
         mof.setAppKey(key);
         return mof.getAppKey();
 
