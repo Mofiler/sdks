@@ -28,7 +28,7 @@
                     :(const char*)value ;
 
 - (bool)  setUseVerboseContext: (bool) state;
-- (bool)  SetUserLocation: (bool) state;
+- (bool)  SetUseLocation: (bool) state;
 
 
 @end

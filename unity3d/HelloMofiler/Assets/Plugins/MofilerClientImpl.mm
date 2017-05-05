@@ -43,6 +43,8 @@ NSString* appKey;
     appKey =[NSString stringWithUTF8String:appKeyString];
     
     mof.appKey = [NSString stringWithUTF8String:appKeyString];
+    
+    [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.2"];
     NSLog(@"%@", mof.appKey);
     
     return true;
@@ -78,7 +80,7 @@ NSString* appKey;
     return true;
 }
 
-- (bool)  SetUserLocation: (bool) state
+- (bool)  SetUseLocation: (bool) state
 {
     //Mofiler* mof = [Mofiler sharedInstance];
   
@@ -149,11 +151,11 @@ extern "C" {
         [delegateObject setAppName:appNameString];
     }
     
-    void _SetUserLocation(bool state)
+    void _SetUseLocation(bool state)
     {
         if (delegateObject == nil)
             delegateObject = [[MofilerUnityDelegate alloc] init];
-        [delegateObject SetUserLocation:state];
+        [delegateObject SetUseLocation:state];
     }
 
     void _SetUseVerboseContext(bool state)
