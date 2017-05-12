@@ -44,7 +44,7 @@ NSString* appKey;
     
     mof.appKey = [NSString stringWithUTF8String:appKeyString];
     
-    [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.2"];
+    [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.3"];
     
     //TODO setUseLocation
     if(mof.appName != nil)
