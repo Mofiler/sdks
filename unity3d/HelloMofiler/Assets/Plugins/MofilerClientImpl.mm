@@ -45,6 +45,11 @@ NSString* appKey;
     mof.appKey = [NSString stringWithUTF8String:appKeyString];
     
     [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.2"];
+    
+    //TODO setUseLocation
+    if(mof.appName != nil)
+        [mof initializeWithAppKey: appKey appName: mof.appName useLoc: true useAdvertisingId: true];
+    
     NSLog(@"%@", mof.appKey);
     
     return true;
@@ -69,6 +74,10 @@ NSString* appKey;
     Mofiler* mof = [Mofiler sharedInstance];
     mof.appName = [NSString stringWithUTF8String:appNameString];
     appName =[NSString stringWithUTF8String:appNameString];
+    
+    //TODO setUseLocation
+    if(mof.appKey != nil)
+        [mof initializeWithAppKey: mof.appKey appName: appName useLoc: true useAdvertisingId: true];
     
     NSLog(@"%@", mof.appName);
     return true;
