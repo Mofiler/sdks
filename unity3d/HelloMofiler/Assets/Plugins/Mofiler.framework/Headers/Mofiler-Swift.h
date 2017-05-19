@@ -154,6 +154,7 @@ SWIFT_CLASS("_TtC7Mofiler7Mofiler")
 @interface Mofiler : MOGenericManager <CLLocationManagerDelegate>
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) Mofiler * _Nonnull sharedInstance;)
 + (Mofiler * _Nonnull)sharedInstance SWIFT_WARN_UNUSED_RESULT;
+@property (nonatomic) BOOL isInitialized;
 @property (nonatomic, strong) id <MofilerDelegate> _Nullable delegate;
 @property (nonatomic, copy) NSString * _Nonnull appKey;
 @property (nonatomic, copy) NSString * _Nonnull appName;
@@ -166,6 +167,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) Mofiler * _N
 @property (nonatomic) BOOL isLoadingPost;
 - (void)initializeWithAppKey:(NSString * _Nonnull)appKey appName:(NSString * _Nonnull)appName useLoc:(BOOL)useLoc useAdvertisingId:(BOOL)useAdvertisingId;
 - (void)addIdentityWithIdentity:(NSDictionary<NSString *, NSString *> * _Nonnull)identity;
+- (NSDictionary<NSString *, NSString *> * _Nullable)getIdentityWith_key:(NSString * _Nonnull)_key SWIFT_WARN_UNUSED_RESULT;
 - (void)setSdkTypeAndVersionWithSdk_type:(NSString * _Nonnull)sdk_type sdk_version:(NSString * _Nonnull)sdk_version;
 - (void)injectValueWithNewValue:(NSDictionary<NSString *, NSString *> * _Nonnull)newValue expirationDateInMilliseconds:(NSNumber * _Nullable)expirationDateInMilliseconds;
 - (void)flushDataToMofiler;

@@ -2,10 +2,55 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 
+
+/// <summary>
+/// Mofiler Bridge to native plugin.
+/// For iOS Build, You will have to add the mofiler.framework to the embed libraries group in order to work. 
+/// </summary>
 public class MofilerBridge {
 
 
-	#if UNITY_ANDROID
+	#if UNITY_EDITOR
+
+	public static string SetURL(string urlString)
+	{
+		return urlString;
+	}
+
+	public static void SetAppKey(string key)
+	{
+	}
+
+	public static void SetAppName(string name)
+	{
+
+	}
+
+	public static void AddIdentity(string key, string value)
+	{
+		
+	}
+
+	public static void InjectValue(string key, string value)
+	{
+		
+	}
+
+	public static void SetUseVerboseContext(bool value)
+	{
+		
+	}
+
+	public static void SetUseLocation(bool value)
+	{
+
+	}
+
+	public static void FlushDataToMofiler()
+	{
+	}
+
+	#elif UNITY_ANDROID
 
 	[DllImport("__Internal")]
 	extern static public string _SetURL(string urlString);
@@ -85,15 +130,15 @@ public class MofilerBridge {
 
 	#elif UNITY_IOS
 
+
 	[DllImport ("__Internal")]
 	private static extern void _SetURL (string urlString);
-	public static void SetURL(string urlString)
+	public static string SetURL(string urlString)
 	{
 		// Call plugin only when running on real device
 		if (Application.platform != RuntimePlatform.OSXEditor)
 			_SetURL (urlString);
-		else
-			Debug.Log ("SETURL: Working on Editor");
+		return urlString;
 	}
 
 	[DllImport ("__Internal")]
@@ -172,7 +217,6 @@ public class MofilerBridge {
 		else
 			Debug.Log ("SETURL: Working on Editor");
 	}
-
 	#endif
 
 }

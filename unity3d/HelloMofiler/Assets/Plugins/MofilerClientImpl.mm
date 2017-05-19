@@ -36,30 +36,36 @@ NSString* appKey;
 
 -(bool)setAppKey:(const char*)appKeyString{
     // Mofiler* mof = [Mofiler sharedInstance];
-    NSLog(@"----Inside Implementation");
     NSLog(@"----Inside Implementation setAppKey");
     Mofiler* mof = [Mofiler sharedInstance];
+
+    if(!mof.isInitialized) {
+        appKey =[NSString stringWithUTF8String:appKeyString];
     
-    appKey =[NSString stringWithUTF8String:appKeyString];
+        mof.appKey = [NSString stringWithUTF8String:appKeyString];
     
-    mof.appKey = [NSString stringWithUTF8String:appKeyString];
+        [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.3"];
     
-    [mof setSdkTypeAndVersionWithSdk_type: @"Unity iOS SDK" sdk_version:@"1.0.3"];
+        //TODO setUseLocation
+        if(![mof.appName  isEqual: @""])
+            [mof initializeWithAppKey: appKey appName: mof.appName useLoc: true useAdvertisingId: true];
     
-    //TODO setUseLocation
-    if(mof.appName != nil)
-        [mof initializeWithAppKey: appKey appName: mof.appName useLoc: true useAdvertisingId: true];
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
     
-    NSLog(@"%@", mof.appKey);
-    
-    return true;
+        return true;
+    } else {
+        NSLog(@"Already initialized!");
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return false;
+    }
     
 }
 
 
 -(bool)setURL:(const char*)urlString{
-    NSLog(@"----Inside Implementation");
-    NSLog(@"----Inside Implementation setAppKey");
+    NSLog(@"----Inside Implementation setURL");
     Mofiler* mof = [Mofiler sharedInstance];
     
     mof.url = [NSString stringWithUTF8String:urlString];
@@ -71,16 +77,29 @@ NSString* appKey;
 
 - (bool) setAppName:(const char*)appNameString
 {
+    NSLog(@"----Inside Implementation setAppName");
     Mofiler* mof = [Mofiler sharedInstance];
-    mof.appName = [NSString stringWithUTF8String:appNameString];
-    appName =[NSString stringWithUTF8String:appNameString];
+
+    if(!mof.isInitialized) {
+
+        mof.appName = [NSString stringWithUTF8String:appNameString];
+        appName =[NSString stringWithUTF8String:appNameString];
     
-    //TODO setUseLocation
-    if(mof.appKey != nil)
-        [mof initializeWithAppKey: mof.appKey appName: appName useLoc: true useAdvertisingId: true];
-    
-    NSLog(@"%@", mof.appName);
-    return true;
+        //TODO setUseLocation
+        if(![mof.appKey  isEqual: @""])
+            [mof initializeWithAppKey: mof.appKey appName: appName useLoc: true useAdvertisingId: true];
+
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return true;
+    } else {
+        NSLog(@"Already initialized!");
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return false;
+    }
+
+
 }
 - (bool)  setUseVerboseContext: (bool) state
 {

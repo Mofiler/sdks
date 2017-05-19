@@ -19,24 +19,47 @@ public class MofilerManager : MonoBehaviour {
 	void Update () {
 		
 	}
+	public int session = 0;
 
 	public void OnButtonTest()
 	{
 		testText.text = "Test1";
 		urlText.text = "Test2";
 
-		MofilerBridge.SetAppKey ("myAppKey");
+//		MofilerBridge.SetAppKey ("myAppKey");
+//		MofilerBridge.SetURL ("mofiler.com/mock");
+//		MofilerBridge.SetAppName ("myApp");
+//		MofilerBridge.AddIdentity ("username", "mofUnityAndroid");
+//		MofilerBridge.InjectValue ("test-key0", "testvalueAndroid");
+//		MofilerBridge.SetUseVerboseContext(true);
+//		MofilerBridge.SetUseLocation(true);
+//		MofilerBridge.FlushDataToMofiler();
+
+
+//		MofilerBridge.SetAppKey ("LOGIC-TRACES1");
+//		MofilerBridge.SetAppName ("Logic Traces");
+//
+//		MofilerBridge.SetURL ("mofiler.com/mock"); // TEST
+//		//MofilerBridge.SetURL ("mofiler.com");
+//
+//		MofilerBridge.SetUseVerboseContext (true);
+//		MofilerBridge.SetUseLocation (true);
+//
+//		MofilerBridge.AddIdentity("username", "bt");
+//		//MofilerBridge.AddIdentity("pin", "12345");
+//
+//		MofilerBridge.InjectValue("sessionNumber", ++session+"");
+//
+//		MofilerBridge.FlushDataToMofiler();
+
 		MofilerBridge.SetURL ("mofiler.com/mock");
-		MofilerBridge.SetAppName ("myApp");
-		MofilerBridge.AddIdentity ("username", "mofUnityAndroid");
-		MofilerBridge.InjectValue ("test-key0", "testvalueAndroid");
+		MofilerBridge.SetAppKey ("LOGIC-TRACES1");
+		MofilerBridge.SetAppName ("Logic Traces");
+		MofilerBridge.AddIdentity("username", "bt");
+		MofilerBridge.InjectValue("sessionNumber", ++session+"");
 		MofilerBridge.SetUseVerboseContext(true);
 		MofilerBridge.SetUseLocation(true);
 		MofilerBridge.FlushDataToMofiler();
-
-
-
-
 
 
 		/*
