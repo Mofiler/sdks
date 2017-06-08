@@ -55,10 +55,11 @@ public class MofilerManager : MonoBehaviour {
 		MofilerBridge.SetURL ("mofiler.com/mock");
 		MofilerBridge.SetAppKey ("LOGIC-TRACES1");
 		MofilerBridge.SetAppName ("Logic Traces");
-		MofilerBridge.AddIdentity("username", "bt");
-		MofilerBridge.InjectValue("sessionNumber", ++session+"");
 		MofilerBridge.SetUseVerboseContext(true);
 		MofilerBridge.SetUseLocation(true);
+
+		MofilerBridge.AddIdentity("username", "bt");
+		MofilerBridge.InjectValue("sessionNumber", ++session+"");
 		MofilerBridge.FlushDataToMofiler();
 
 
