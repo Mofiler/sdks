@@ -15,7 +15,7 @@
 //#import <sys/sysctl.h>
 //#import <net/if.h>
 //#import <net/if_dl.h>
-//#import <Mofiler/Mofiler-Swift.h>
+#import <Mofiler/Mofiler-Swift.h>
 
 //------------------------------------
 //
@@ -36,6 +36,9 @@
 //------------------------------------
 
 
+NSString* appName;
+NSString* appKey;
+
 FREObject setURL(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
     
@@ -44,10 +47,10 @@ FREObject setURL(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]
     FREGetObjectAsUTF8(argv[0], &string1Length, &url);
 //    
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    
+    Mofiler* mof = [Mofiler sharedInstance];
+//
 //    //Inicializa las demas propiedades que no son obligatorias
-//    mof.url = [NSString stringWithUTF8String:(char*)url];
+    mof.url = [NSString stringWithUTF8String:(char*)url];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -64,9 +67,33 @@ FREObject setAppKey(FREContext ctx, void* funcData, uint32_t argc, FREObject arg
     FREGetObjectAsUTF8(argv[0], &string1Length, &appKey);
 //    
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    
+    Mofiler* mof = [Mofiler sharedInstance];
+//
 //    mof.appKey = [NSString stringWithUTF8String:(char*)appKey];
+    
+    if(!mof.isInitialized) {
+        appKey =[NSString stringWithUTF8String:(char*)appKey];
+        
+        mof.appKey = [NSString stringWithUTF8String:(char*)appKey];
+        
+        [mof setSdkTypeAndVersionWithSdk_type: @"Adobe Air iOS SDK" sdk_version:@"1.0.6"];
+        
+        //TODO setUseLocation
+        if(![mof.appName  isEqual: @""])
+            [mof initializeWithAppKey: appKey appName: mof.appName useLoc: true useAdvertisingId: true];
+        
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        
+        return true;
+    } else {
+        NSLog(@"Already initialized!");
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return false;
+    }
+
+    
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -83,9 +110,28 @@ FREObject setAppName(FREContext ctx, void* funcData, uint32_t argc, FREObject ar
     FREGetObjectAsUTF8(argv[0], &string1Length, &appName);
     
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    
+    Mofiler* mof = [Mofiler sharedInstance];
+//
 //    mof.appKey = [NSString stringWithUTF8String:(char*)appName];
+    if(!mof.isInitialized) {
+        
+        mof.appName = [NSString stringWithUTF8String:(char*)appName];
+        appName =[NSString stringWithUTF8String:(char*)appName];
+        
+        //TODO setUseLocation
+        if(![mof.appKey  isEqual: @""])
+            [mof initializeWithAppKey: mof.appKey appName: appName useLoc: true useAdvertisingId: true];
+        
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return true;
+    } else {
+        NSLog(@"Already initialized!");
+        NSLog(@"--AppKey %@", mof.appKey);
+        NSLog(@"--AppName %@", mof.appName);
+        return false;
+    }
+    
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -111,8 +157,8 @@ FREObject addIdentity(FREContext ctx, void* funcData, uint32_t argc, FREObject a
     FREGetObjectAsUTF8(element, &string2Length, &value);
     
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    [mof addIdentityWithIdentity:@{[NSString stringWithUTF8String:(char*)key]:[NSString stringWithUTF8String:(char*)value]}];
+    Mofiler* mof = [Mofiler sharedInstance];
+    [mof addIdentityWithIdentity:@{[NSString stringWithUTF8String:(char*)key]:[NSString stringWithUTF8String:(char*)value]}];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -138,8 +184,8 @@ FREObject injectValue(FREContext ctx, void* funcData, uint32_t argc, FREObject a
     FREGetObjectAsUTF8(element, &string2Length, &value);
     
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    [mof injectValueWithNewValue:@{[NSString stringWithUTF8String:(char*)key]:[NSString stringWithUTF8String:(char*)value]} expirationDateInMilliseconds:nil];
+    Mofiler* mof = [Mofiler sharedInstance];
+    [mof injectValueWithNewValue:@{[NSString stringWithUTF8String:(char*)key]:[NSString stringWithUTF8String:(char*)value]} expirationDateInMilliseconds:nil];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -155,9 +201,9 @@ FREObject setUseVerboseContext(FREContext ctx, void* funcData, uint32_t argc, FR
     FREGetObjectAsBool(argv[0], &boolean);
     
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    
-//    mof.useVerboseContext = boolean;
+    Mofiler* mof = [Mofiler sharedInstance];
+//
+    mof.useVerboseContext = boolean;
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
@@ -174,7 +220,7 @@ FREObject setUseLocation(FREContext ctx, void* funcData, uint32_t argc, FREObjec
     
 //    //Singleton de mofiler
 //    Mofiler* mof = [Mofiler sharedInstance];
-//    
+//
 //    mof.useLocation = boolean;
     
     FREObject retBool = nil;
@@ -188,10 +234,10 @@ FREObject flushDataToMofiler(FREContext ctx, void* funcData, uint32_t argc, FREO
 {
     
 //    //Singleton de mofiler
-//    Mofiler* mof = [Mofiler sharedInstance];
-//    
+    Mofiler* mof = [Mofiler sharedInstance];
+//
 //    //Fuerza el envio de datos alojados
-//    [mof flushDataToMofiler];
+    [mof flushDataToMofiler];
     
     FREObject retBool = nil;
     FRENewObjectFromBool(true, &retBool);
