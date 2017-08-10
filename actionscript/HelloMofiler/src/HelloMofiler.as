@@ -51,8 +51,8 @@ package
 			var m:Mofiler = Mofiler.getInstance();
 			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
 			m.setAppName("App Test Flash");
-//			m.setURL("mofiler.com/mock");
-			m.setURL("mofiler.com");
+			m.setURL("mofiler.com/mock");
+//			m.setURL("mofiler.com");
 			m.setUseVerboseContext(true);
 			m.setUseLocation(true);
 			

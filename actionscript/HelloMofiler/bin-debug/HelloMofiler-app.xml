@@ -260,6 +260,7 @@
 				<uses-permission android:name="android.permission.INTERNET"/>
 			    <uses-permission android:name="android.permission.READ_SMS" />
 			    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+				<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 			    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 			    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -267,6 +268,14 @@
 			    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 			    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 			    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+				 <uses-permission
+				        android:name="android.permission.BLUETOOTH"
+				        android:required="false" />
+				    <uses-permission
+				        android:name="android.permission.BLUETOOTH_ADMIN"
+				        android:required="false" />
+
 			    			    
 			    <application>
 				  	<!-- MOFILER SERVICES -->
@@ -285,8 +294,46 @@
 				            </action>
 				        </intent-filter>
 				    </receiver>
+					<receiver
+					    android:name="com.mofiler.receivers.PackageNotificationReceiver"
+					    android:enabled="true"
+					    android:exported="true" >
+					    <intent-filter>
+					        <action android:name="android.intent.action.PACKAGE_REMOVED" />
+					        <action android:name="android.intent.action.PACKAGE_ADDED" />
+					        <action android:name="android.intent.action.PACKAGE_CHANGED" />
+					        <action android:name="android.intent.action.PACKAGE_REPLACED" />
+					        <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+					        <data android:scheme="package"/>
+					    </intent-filter>
+					</receiver>	
+	
+        <receiver android:name="org.altbeacon.beacon.startup.StartupBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="org.altbeacon.beacon.service.BeaconService"
+            android:enabled="true"
+            android:exported="false"
+            android:isolatedProcess="false"
+            android:label="beacon" />
+        <service
+            android:name="org.altbeacon.beacon.BeaconIntentProcessor"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="org.altbeacon.beacon.service.ScanJob"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+            
 				</application>
 
+
+    
 			</manifest>
 			
 		]]></manifestAdditions>
