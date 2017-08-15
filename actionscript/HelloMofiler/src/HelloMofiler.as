@@ -1,7 +1,8 @@
 package
 {
 	import com.mofiler.anes.Mofiler;
-
+	
+	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -14,12 +15,27 @@ package
 	{
 		private var helloButton:CustomSimpleButton;
 		private var txtField:TextField;
-		
+		private var m:Mofiler;
 		
 		public function HelloMofiler()
 		{
 			super();
 
+			NativeApplication.nativeApplication.autoExit = false;
+			NativeApplication.nativeApplication.executeInBackground = true;
+			
+			
+			m = Mofiler.getInstance();
+			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
+			m.setAppName("App Test Flash");
+			m.setURL("mofiler.com/mock");
+			//			m.setURL("mofiler.com");
+			m.setUseVerboseContext(true);
+			m.setUseLocation(true);
+			
+			//SET UNIQUE IDENTIFIERS FOR YOUR USER
+			m.addIdentity("username", "flash_jhondoe");
+			m.addIdentity("email", "flash@jhondoe.com");
 			
 			
 			stage.align = StageAlign.TOP_LEFT;
@@ -48,18 +64,7 @@ package
 		private function onHelloButtonClick(event:MouseEvent):void
 		{
 			
-			var m:Mofiler = Mofiler.getInstance();
-			m.setAppKey("SENSEBYTEMOBILE_TEST_FLASH");
-			m.setAppName("App Test Flash");
-			m.setURL("mofiler.com/mock");
-//			m.setURL("mofiler.com");
-			m.setUseVerboseContext(true);
-			m.setUseLocation(true);
 			
-			//SET UNIQUE IDENTIFIERS FOR YOUR USER
-			m.addIdentity("username", "flash_jhondoe");
-			m.addIdentity("email", "flash@jhondoe.com");
-
 			//INJECT VALUES
 			m.injectValue("randomValue", (Math.random()*9999999).toString());
 			m.injectValue("testKey0-1", "testValue0");

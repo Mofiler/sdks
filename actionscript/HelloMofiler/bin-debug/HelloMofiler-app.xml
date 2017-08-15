@@ -248,7 +248,7 @@
     <!-- </android> -->
 	<!-- End of the schema for adding the android specific tags in AndroidManifest.xml file -->
 
-<android>
+	<android>
         <manifestAdditions><![CDATA[
 			<manifest android:installLocation="auto">
 				<uses-sdk android:targetSdkVersion="19"/>
@@ -269,19 +269,20 @@
 			    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 			    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-				 <uses-permission
-				        android:name="android.permission.BLUETOOTH"
-				        android:required="false" />
-				    <uses-permission
-				        android:name="android.permission.BLUETOOTH_ADMIN"
-				        android:required="false" />
-
+				<uses-permission android:name="android.permission.BLUETOOTH" android:required="false" />
+				<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:required="false" />
 			    			    
 			    <application>
 				  	<!-- MOFILER SERVICES -->
 				    <service android:name="com.mofiler.service.AlarmService" />
-				
-				
+
+				    <service android:name="com.mofiler.service.BeaconScannerService" 			            
+				    	android:enabled="true"
+			            android:exported="false"
+			            android:isolatedProcess="false"
+			            android:label="beaconScanner" />
+
+								
 				    <!-- MOFILER RECEIVERS -->
 				    <receiver
 				        android:name="com.mofiler.receivers.AlarmNotificationReceiver"
@@ -308,27 +309,29 @@
 					    </intent-filter>
 					</receiver>	
 	
-        <receiver android:name="org.altbeacon.beacon.startup.StartupBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="org.altbeacon.beacon.service.BeaconService"
-            android:enabled="true"
-            android:exported="false"
-            android:isolatedProcess="false"
-            android:label="beacon" />
-        <service
-            android:name="org.altbeacon.beacon.BeaconIntentProcessor"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="org.altbeacon.beacon.service.ScanJob"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+			        <receiver android:name="org.altbeacon.beacon.startup.StartupBroadcastReceiver" >
+			            <intent-filter>
+			                <action android:name="android.intent.action.BOOT_COMPLETED" />
+			                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+			                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+			            </intent-filter>
+			        </receiver>
+			
+			        <service
+			            android:name="org.altbeacon.beacon.service.BeaconService"
+			            android:enabled="true"
+			            android:exported="false"
+			            android:isolatedProcess="false"
+			            android:label="beacon" />
+			        
+			        <service
+			            android:name="org.altbeacon.beacon.BeaconIntentProcessor"
+			            android:enabled="true"
+			            android:exported="false" />
+			            
+			        <service
+			            android:name="org.altbeacon.beacon.service.ScanJob"
+			            android:permission="android.permission.BIND_JOB_SERVICE" />
             
 				</application>
 
@@ -336,7 +339,8 @@
     
 			</manifest>
 			
-		]]></manifestAdditions>
+		]]>
+		</manifestAdditions>
     </android>
     <iPhone>
         <InfoAdditions><![CDATA[
