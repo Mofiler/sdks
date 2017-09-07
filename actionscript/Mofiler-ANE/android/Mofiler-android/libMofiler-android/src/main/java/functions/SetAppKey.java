@@ -19,7 +19,7 @@ public class SetAppKey implements FREFunction {
 
 			Mofiler mof = Mofiler.getInstance(arg0.getActivity());
 
-			mof.setSdkTypeAndVersion("Adobe Air Android SDK", "2.1.7.5");
+			mof.setSdkTypeAndVersion("Adobe Air Android SDK", "2.1.8");
 
 			mof.setAppKey(arg1[0].getAsString());
 			result = FREObject.newObject(true);

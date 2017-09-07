@@ -116,6 +116,18 @@ package com.mofiler.anes
 //			}
 			
 		}
+
+		public function setReadPhoneState(state:Boolean):void
+		{
+			try
+			{
+				context.call('setReadPhoneState', state);
+			}
+			catch (error:Error)
+			{
+				trace(error.message);
+			}
+		}
 		
 		public function setUseLocation(state:Boolean):void
 		{

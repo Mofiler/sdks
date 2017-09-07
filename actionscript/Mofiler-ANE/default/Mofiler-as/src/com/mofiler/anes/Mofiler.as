@@ -61,6 +61,9 @@ public class Mofiler{
 	public function setUseVerboseContext(state:Boolean):void {
 		//not implemented
 	}
+	public function setReadPhoneState(state:Boolean):void {
+		//not implemented
+	}
 	public function setUseLocation(state:Boolean):void {
 		//not implemented
 	}
