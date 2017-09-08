@@ -11,6 +11,7 @@ import functions.GetValue;
 import functions.InjectValue;
 import functions.SetAppKey;
 import functions.SetAppName;
+import functions.SetReadPhoneState;
 import functions.SetURL;
 import functions.SetUseLocation;
 import functions.SetUseVerboseContext;
@@ -32,6 +33,7 @@ public class MofilerExt extends FREContext {
 		functions.put("setAppName", new SetAppName());
 		functions.put("addIdentity", new AddIdentity());
 		functions.put("setUseVerboseContext", new SetUseVerboseContext());
+		functions.put("setReadPhoneState", new SetReadPhoneState());
 		functions.put("setUseLocation", new SetUseLocation());
 		functions.put("injectValue", new InjectValue());
 		functions.put("flushDataToMofiler", new FlushDataToMofiler());
