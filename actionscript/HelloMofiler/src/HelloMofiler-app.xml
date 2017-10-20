@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<application xmlns="http://ns.adobe.com/air/application/24.0">
+<application xmlns="http://ns.adobe.com/air/application/27.0">
 
 <!-- Adobe AIR Application Descriptor File Template.
 
@@ -16,8 +16,8 @@
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
 	<!--<id>HelloMofiler</id>-->
-	<!-- <id>com.mofiler.demo.HelloMofiler</id> -->
-	<id>com.yuisy.tuttibugs</id>
+	<id>com.mofiler.demo.HelloMofiler</id>
+	<!-- <id>com.yuisy.tuttibugs</id> -->
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>HelloMofiler</filename>
@@ -351,18 +351,15 @@
 				<string>2</string>
 			</array>
 			<key>MinimumOSVersion</key>
-			<string>8.0</string>
+			<string>9.3</string>
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
 
 	
 	
+
 <extensions>
-    
-    
-	
-    
-    <extensionID>com.mofiler.anes.Mofiler</extensionID>
+        <extensionID>com.mofiler.anes.Mofiler</extensionID>
     </extensions>
 </application>
