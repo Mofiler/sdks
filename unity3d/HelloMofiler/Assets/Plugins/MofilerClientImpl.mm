@@ -192,7 +192,11 @@ extern "C" {
             delegateObject = [[MofilerUnityDelegate alloc] init];
         [delegateObject setUseVerboseContext:state];
     }
-    
+
+    void _SetReadPhoneState(bool state)
+    {
+    }
+
   
     void _AddIdentity(const char* keyString, const char* valueString)
     {
