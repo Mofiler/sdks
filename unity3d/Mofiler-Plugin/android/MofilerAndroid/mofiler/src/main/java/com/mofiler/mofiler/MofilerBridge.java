@@ -1,14 +1,9 @@
 package com.mofiler.mofiler;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.Debug;
-import android.provider.Settings;
-import android.util.DebugUtils;
 import android.util.Log;
 
-import com.unity3d.player.UnityPlayer;
 import com.mofiler.Mofiler;
+import com.unity3d.player.UnityPlayer;
 
 /**
  * Created by hernaez on 5/3/17.
@@ -26,7 +21,7 @@ public class MofilerBridge {
     public static String _SetAppKey(String key)
     {
         Mofiler mof = Mofiler.getInstance(UnityPlayer.currentActivity.getApplicationContext());
-        mof.setSdkTypeAndVersion("Unity Android SDK", "1.0.5");
+        mof.setSdkTypeAndVersion("Unity Android SDK", "1.0.6");
         mof.setAppKey(key);
         return mof.getAppKey();
 
@@ -51,6 +46,12 @@ public class MofilerBridge {
         Mofiler mof = Mofiler.getInstance(UnityPlayer.currentActivity.getApplicationContext());
         mof.setUseVerboseContext(value);
         return "Verbose";
+    }
+
+    public static String _SetReadPhoneState(boolean value) {
+        Mofiler mof = Mofiler.getInstance(UnityPlayer.currentActivity.getApplicationContext());
+        mof.setReadPhoneState(value);
+        return "ReadPhoneState";
     }
     public static String _SetUseLocation(boolean value) {
         Mofiler mof = Mofiler.getInstance(UnityPlayer.currentActivity.getApplicationContext());

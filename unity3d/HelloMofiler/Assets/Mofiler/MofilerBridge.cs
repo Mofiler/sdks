@@ -38,7 +38,12 @@ public class MofilerBridge {
 
 	public static void SetUseVerboseContext(bool value)
 	{
+
+	}
 		
+	public static void SetReadPhoneState(bool value)
+	{
+
 	}
 
 	public static void SetUseLocation(bool value)
@@ -106,6 +111,15 @@ public class MofilerBridge {
 		AndroidJavaClass pluginClass = new AndroidJavaClass("com.mofiler.mofiler.MofilerBridge");	
 		pluginClass.CallStatic<string> ("_SetUseVerboseContext", value);
 		Debug.Log ("SetUseVerboseContext " + value);
+	}
+
+	[DllImport("__Internal")]
+	extern static public string _SetReadPhoneState(bool value);
+	public static void SetReadPhoneState(bool value)
+	{
+		AndroidJavaClass pluginClass = new AndroidJavaClass("com.mofiler.mofiler.MofilerBridge");	
+		pluginClass.CallStatic<string> ("_SetReadPhoneState", value);
+		Debug.Log ("SetReadPhoneState " + value);
 	}
 
 	[DllImport("__Internal")]
@@ -205,6 +219,13 @@ public class MofilerBridge {
 			_SetUseVerboseContext (state);
 		else
 			Debug.Log ("SETURL: Working on Editor");
+	}
+
+	[DllImport ("__Internal")]
+	private static extern void _SetReadPhoneState (bool state);
+	public static void SetReadPhoneState(bool state)
+	{
+		Debug.Log ("ReadPhoneState: not implemented on iOS");
 	}
 
 	[DllImport ("__Internal")]
