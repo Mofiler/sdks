@@ -32,7 +32,7 @@ package
 			//			m.setURL("mofiler.com");
 			m.setUseVerboseContext(true);
 			m.setUseLocation(true);
-			//m.setReadPhoneState(false);
+			m.setReadPhoneState(false);
 			
 			//SET UNIQUE IDENTIFIERS FOR YOUR USER
 			m.addIdentity("username", "flash_jhondoe");

@@ -230,6 +230,22 @@ FREObject setUseLocation(FREContext ctx, void* funcData, uint32_t argc, FREObjec
     return retBool;
 }
 
+FREObject setReadPhoneState(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
+{
+    uint32_t boolean;
+    FREGetObjectAsBool(argv[0], &boolean);
+    
+    //    //Singleton de mofiler
+    //    Mofiler* mof = [Mofiler sharedInstance];
+    //    setReadPhoneState
+    
+    FREObject retBool = nil;
+    FRENewObjectFromBool(true, &retBool);
+    
+    // Return data back to ActionScript
+    return retBool;
+}
+
 FREObject flushDataToMofiler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
     
@@ -265,10 +281,11 @@ void MofilerContextInitializer(void* extData, const uint8_t* ctxType, FREContext
         MAP_FUNCTION(setAppKey, NULL),
         MAP_FUNCTION(setAppName, NULL),
         MAP_FUNCTION(addIdentity, NULL),
+        MAP_FUNCTION(setReadPhoneState, NULL),
         MAP_FUNCTION(setUseVerboseContext, NULL),
         MAP_FUNCTION(setUseLocation, NULL),
         MAP_FUNCTION(injectValue, NULL),
-        MAP_FUNCTION(flushDataToMofiler, NULL)
+        MAP_FUNCTION(flushDataToMofiler, NULL),
     };
     
     *numFunctionsToSet = sizeof( functionMap ) / sizeof( FRENamedFunction );
