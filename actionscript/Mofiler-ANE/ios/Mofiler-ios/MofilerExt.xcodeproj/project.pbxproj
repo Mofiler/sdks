@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		83A31864166B8AFE006798FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A31863166B8AFE006798FF /* Foundation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		83A3186B166B8AFE006798FF /* MofilerExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 83A3186A166B8AFE006798FF /* MofilerExt.m */; };
-		B7468EAD1E161304007C83C3 /* Mofiler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7468EAC1E161304007C83C3 /* Mofiler.framework */; };
+		F8C1A4C621AECDFC007A73A7 /* Mofiler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8C1A4C521AECDFC007A73A7 /* Mofiler.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -17,7 +17,7 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/${PRODUCT_NAME}";
-			dstSubfolderSpec = 16;
+			dstSubfolderSpec = 10;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -30,7 +30,8 @@
 		83A31867166B8AFE006798FF /* MofilerExt-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MofilerExt-Prefix.pch"; sourceTree = "<group>"; };
 		83A3186A166B8AFE006798FF /* MofilerExt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MofilerExt.m; sourceTree = "<group>"; };
 		83A8C01D16710C7700A96A39 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
-		B7468EAC1E161304007C83C3 /* Mofiler.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mofiler.framework; sourceTree = "<group>"; };
+		F8C1A4C521AECDFC007A73A7 /* Mofiler.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mofiler.framework; path = "../../../../../sdk-ios/Build/Products/Release-iphoneos/Mofiler.framework"; sourceTree = "<group>"; };
+		F8C1A4C721AECE3B007A73A7 /* Mofiler.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mofiler.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				83A31864166B8AFE006798FF /* Foundation.framework in Frameworks */,
-				B7468EAD1E161304007C83C3 /* Mofiler.framework in Frameworks */,
+				F8C1A4C621AECDFC007A73A7 /* Mofiler.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +50,7 @@
 		83A31855166B8AFE006798FF = {
 			isa = PBXGroup;
 			children = (
+				F8C1A4C521AECDFC007A73A7 /* Mofiler.framework */,
 				83A31865166B8AFE006798FF /* MofilerExt */,
 				83A31862166B8AFE006798FF /* Frameworks */,
 				83A31861166B8AFE006798FF /* Products */,
@@ -66,7 +68,7 @@
 		83A31862166B8AFE006798FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B7468EAC1E161304007C83C3 /* Mofiler.framework */,
+				F8C1A4C721AECE3B007A73A7 /* Mofiler.framework */,
 				83A31863166B8AFE006798FF /* Foundation.framework */,
 			);
 			name = Frameworks;
