@@ -76,7 +76,7 @@ FREObject setAppKey(FREContext ctx, void* funcData, uint32_t argc, FREObject arg
         
         mof.appKey = [NSString stringWithUTF8String:(char*)appKey];
         
-        [mof setSdkTypeAndVersionWithSdk_type: @"Adobe Air iOS SDK" sdk_version:@"1.0.7"];
+        [mof setSdkTypeAndVersionWithSdk_type: @"Adobe Air iOS SDK" sdk_version:@"1.0.8"];
         
         //TODO setUseLocation
         if(![mof.appName  isEqual: @""])
