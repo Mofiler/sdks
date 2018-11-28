@@ -70,7 +70,7 @@ public class MO_Device {
 	{
 
 		var loader:URLLoader = new URLLoader();
-		var request:URLRequest = new URLRequest("http://"+getURL()+K_MOFILER_API_URL_METHOD_inject);
+		var request:URLRequest = new URLRequest("https://"+getURL()+K_MOFILER_API_URL_METHOD_inject);
 		request.method = URLRequestMethod.POST;
 		request.contentType = "application/json";
 		
