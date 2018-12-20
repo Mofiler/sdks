@@ -154,7 +154,7 @@ FREObject addIdentity(FREContext ctx, void* funcData, uint32_t argc, FREObject a
     
     uint32_t string2Length;
     const uint8_t *value;
-    FREGetObjectAsUTF8(element, &string2Length, &value);
+    FREGetObjectAsUTF8(element2, &string2Length, &value);
     
 //    //Singleton de mofiler
     Mofiler* mof = [Mofiler sharedInstance];
