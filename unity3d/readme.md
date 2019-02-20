@@ -5,6 +5,7 @@ MofilerBridge.SetAppKey ("APP-KEY-1");
 MofilerBridge.SetAppName (“App Name");
 MofilerBridge.SetUseVerboseContext(true);
 MofilerBridge.SetUseLocation(true);
+MofilerBridge.SetReadPhoneState(false);
 
 // any user identification, at least one
 MofilerBridge.AddIdentity("user_id", "12345"); 
