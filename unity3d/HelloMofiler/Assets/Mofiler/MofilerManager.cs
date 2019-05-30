@@ -53,8 +53,8 @@ public class MofilerManager : MonoBehaviour {
 //		MofilerBridge.FlushDataToMofiler();
 
 		MofilerBridge.SetURL ("mofiler.com/mock");
-		MofilerBridge.SetAppKey ("LOGIC-TRACES1");
-		MofilerBridge.SetAppName ("Logic Traces");
+		MofilerBridge.SetAppKey ("LOGIC-TRACES1", true);
+		MofilerBridge.SetAppName ("Logic Traces", true);
 		MofilerBridge.SetUseVerboseContext(true);
 		MofilerBridge.SetUseLocation(true);
 

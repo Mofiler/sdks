@@ -17,11 +17,11 @@ public class MofilerBridge {
 		return urlString;
 	}
 
-	public static void SetAppKey(string key)
+	public static void SetAppKey(string key, bool value)
 	{
 	}
 
-	public static void SetAppName(string name)
+	public static void SetAppName(string name, bool value)
 	{
 
 	}
@@ -55,7 +55,7 @@ public class MofilerBridge {
 	{
 	}
 
-	#elif UNITY_ANDROID
+#elif UNITY_ANDROID
 
 	[DllImport("__Internal")]
 	extern static public string _SetURL(string urlString);
@@ -68,8 +68,8 @@ public class MofilerBridge {
 	}
 
 	[DllImport("__Internal")]
-	extern static public string _SetAppKey(string key);
-	public static void SetAppKey(string key)
+	extern static public string _SetAppKey(string key, bool value);
+	public static void SetAppKey(string key, bool value)
 	{
 		AndroidJavaClass pluginClass = new AndroidJavaClass("com.mofiler.mofiler.MofilerBridge");	
 		string localKey = pluginClass.CallStatic<string> ("_SetAppKey", key);
@@ -77,8 +77,8 @@ public class MofilerBridge {
 	}
 
 	[DllImport("__Internal")]
-	extern static public string _SetAppName(string name);
-	public static void SetAppName(string name)
+	extern static public string _SetAppName(string name, bool value);
+	public static void SetAppName(string name, bool value)
 	{
 		AndroidJavaClass pluginClass = new AndroidJavaClass("com.mofiler.mofiler.MofilerBridge");	
 		string localName = pluginClass.CallStatic<string> ("_SetAppName", name);
@@ -142,7 +142,7 @@ public class MofilerBridge {
 
 
 
-	#elif UNITY_IOS
+#elif UNITY_IOS
 
 
 	[DllImport ("__Internal")]
@@ -156,12 +156,12 @@ public class MofilerBridge {
 	}
 
 	[DllImport ("__Internal")]
-	private static extern void _SetAppKey (string appKey);
-	public static void SetAppKey(string appKey)
+	private static extern void _SetAppKey (string appKey, bool value);
+	public static void SetAppKey(string appKey, bool value)
 	{
 		// Call plugin only when running on real device
 		if (Application.platform != RuntimePlatform.OSXEditor)
-			_SetAppKey (appKey);
+			_SetAppKey (appKey, value);
 		else
 			Debug.Log ("SETURL: Working on Editor");
 	}
@@ -178,12 +178,12 @@ public class MofilerBridge {
 	}
 
 	[DllImport ("__Internal")]
-	private static extern void _SetAppName (string appName);
-	public static void SetAppName(string appName)
+	private static extern void _SetAppName (string appName, bool value);
+	public static void SetAppName(string appName, bool value)
 	{
 		// Call plugin only when running on real device
 		if (Application.platform != RuntimePlatform.OSXEditor)
-			_SetAppName (appName);
+			_SetAppName (appName, value);
 		else
 			Debug.Log ("SETURL: Working on Editor");
 	}
@@ -238,6 +238,6 @@ public class MofilerBridge {
 		else
 			Debug.Log ("SETURL: Working on Editor");
 	}
-	#endif
+#endif
 
 }
