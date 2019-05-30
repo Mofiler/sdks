@@ -34,7 +34,9 @@ NSString* appKey;
     return true;
 }
 
--(bool)setAppKey:(const char*)appKeyString{
+-(bool)setAppKey:(const char*)appKeyString
+                :(const bool)useLoc
+{
     // Mofiler* mof = [Mofiler sharedInstance];
     NSLog(@"----Inside Implementation setAppKey");
     Mofiler* mof = [Mofiler sharedInstance];
@@ -48,7 +50,7 @@ NSString* appKey;
     
         //TODO setUseLocation
         if(![mof.appName  isEqual: @""])
-            [mof initializeWithAppKey: appKey appName: mof.appName useLoc: true useAdvertisingId: true];
+            [mof initializeWithAppKey: appKey appName: mof.appName useLoc: useLoc useAdvertisingId: true];
     
         NSLog(@"--AppKey %@", mof.appKey);
         NSLog(@"--AppName %@", mof.appName);
@@ -76,6 +78,7 @@ NSString* appKey;
 }
 
 - (bool) setAppName:(const char*)appNameString
+                   :(const bool)useLoc
 {
     NSLog(@"----Inside Implementation setAppName");
     Mofiler* mof = [Mofiler sharedInstance];
@@ -87,7 +90,7 @@ NSString* appKey;
     
         //TODO setUseLocation
         if(![mof.appKey  isEqual: @""])
-            [mof initializeWithAppKey: mof.appKey appName: appName useLoc: true useAdvertisingId: true];
+            [mof initializeWithAppKey: mof.appKey appName: appName useLoc: useLoc useAdvertisingId: true];
 
         NSLog(@"--AppKey %@", mof.appKey);
         NSLog(@"--AppName %@", mof.appName);
@@ -162,22 +165,35 @@ extern "C" {
         
     }
     
-    void _SetAppKey(const char* appKeyString)
+    void _SetAppKey(const char* appKeyString, const bool useLoc)
     {
         NSLog(@"----Entered Plugin");
         //return retBool;
         if (delegateObject == nil)
             delegateObject = [[MofilerUnityDelegate alloc] init];
         NSLog(@"----Init Plugin");
-        [delegateObject setAppKey:appKeyString];
+        [delegateObject setAppKey:appKeyString
+                                 :useLoc];
     }
     
-    void _SetAppName(const char* appNameString)
+//    void _SetAppKey(const char* appKeyString)
+//    {
+//        [self _SetAppKey:appKeyString
+//                        :true]
+//    }
+    
+    void _SetAppName(const char* appNameString, const bool useLoc)
     {
         if (delegateObject == nil)
             delegateObject = [[MofilerUnityDelegate alloc] init];
-        [delegateObject setAppName:appNameString];
+        [delegateObject setAppName:appNameString
+                                  :useLoc];
     }
+//    void _SetAppName(const char* appKeyString)
+//    {
+//        [self _SetAppName:appNameString
+//                        :true]
+//    }
     
     void _SetUseLocation(bool state)
     {

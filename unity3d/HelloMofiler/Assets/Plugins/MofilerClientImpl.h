@@ -18,10 +18,13 @@
 @interface MofilerUnityDelegate : NSObject
 
 //-(NSString*) getAppKey;
-- (bool) setAppKey:(const char*)appKeyString;
+- (bool) setAppKey:(const char*)appKeyString
+                  :(const bool)useLoc;
+
 - (bool) setURL:(const char*)urlString;
 - (bool)  flushDataToMofiler;
-- (bool) setAppName:(const char*)appNameString;
+- (bool) setAppName:(const char*)appNameString
+                   :(const bool)useLoc;
 - (bool) addIdentity:(const char*)key
                     :(const char*)value ;
 - (bool) injectValue:(const char*)key
